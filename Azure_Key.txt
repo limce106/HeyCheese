@@ -1,0 +1,8 @@
+키1
+9RVAqsHQGTc0Iq5WXKqDTr6NQnkHV07lbTL6FzIEQdGPu5FOnwYhJQQJ99BCAC3pKaRXJ3w3AAAKACOGmecp
+
+키2
+7fSTMDc8ZNnD2LQACotnHjTNLfDevUpVYHqhY7Wj7UROKkzw2GCwJQQJ99BCAC3pKaRXJ3w3AAAKACOGyOUU
+
+엔드포인트
+https://emotiongame-faceapi.cognitiveservices.azure.com/
