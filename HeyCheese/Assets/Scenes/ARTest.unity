@@ -657,7 +657,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CurEmotion: 0
   EmotionMaterials:
-  - {fileID: 2100000, guid: 857d72b4be4adb44b9b2d1c9651acbb4, type: 2}
+  - {fileID: 2100000, guid: 105fa3132081d8f418844d97f9fb8993, type: 2}
   - {fileID: 2100000, guid: 857d72b4be4adb44b9b2d1c9651acbb4, type: 2}
   - {fileID: 2100000, guid: 857d72b4be4adb44b9b2d1c9651acbb4, type: 2}
   - {fileID: 2100000, guid: 857d72b4be4adb44b9b2d1c9651acbb4, type: 2}
