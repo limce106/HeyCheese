@@ -656,11 +656,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CurEmotion: 0
-  EmotionMaterials:
-  - {fileID: 2100000, guid: 105fa3132081d8f418844d97f9fb8993, type: 2}
-  - {fileID: 2100000, guid: 857d72b4be4adb44b9b2d1c9651acbb4, type: 2}
-  - {fileID: 2100000, guid: 857d72b4be4adb44b9b2d1c9651acbb4, type: 2}
-  - {fileID: 2100000, guid: 857d72b4be4adb44b9b2d1c9651acbb4, type: 2}
+  HappyPrefabs:
+  - {fileID: 5686595678657446986, guid: 36826ef0fa54de74fa5dd1de4aef1f32, type: 3}
+  - {fileID: 1213004102560098654, guid: b31b8cccc4b076b469a67747023d9ac2, type: 3}
+  - {fileID: 3036781314492434298, guid: 26f0a8ec4829ffc4e99c44eb0389d252, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

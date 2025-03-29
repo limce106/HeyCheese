@@ -15,13 +15,27 @@ public class ARFaceImageOverlay : MonoBehaviour
 {
     private ARFaceManager arFaceManager;
     public EEmotion CurEmotion = EEmotion.Happy;
+    private ARFace trackedFace;
 
     // 표정 가이드라인 Material 배열
-    public Material[] EmotionMaterials;
+    // 왼쪽 눈, 오른쪽, 입 순서대로 값 설정할 것!
+    public GameObject[] HappyPrefabs;
+    //public GameObject[] SadPrefabs;
+    //public GameObject[] AngryPrefabs;
+    //public GameObject[] SurprisePrefabs;
+
+    private GameObject LeftEyePrefab;
+    private GameObject RightEyePrefab;
+    private GameObject MouthPrefab;
 
     private void Awake()
     {
         arFaceManager = GetComponent<ARFaceManager>();
+    }
+
+    private void Start()
+    {
+        InstantiateEmotionPrefabs();
     }
 
     void Update()
@@ -31,33 +45,73 @@ public class ARFaceImageOverlay : MonoBehaviour
 
     void ApplyFaceMaterial()
     {
-        Material FaceGuideMaterial = null;
+        foreach (ARFace face in arFaceManager.trackables)
+        {
+            Vector3 LeftEyePos = face.leftEye.position;
+            Vector3 RightEyePos = face.rightEye.position;
+            Vector3 MouthPos = GetMouthCenter(face);
+
+            if(face.leftEye != null && LeftEyePrefab != null)
+            {
+                LeftEyePrefab.transform.position = LeftEyePos;
+                LeftEyePrefab.transform.LookAt(Camera.main.transform);
+            }
+            if (face.rightEye != null && RightEyePrefab != null)
+            {
+                RightEyePrefab.transform.position = RightEyePos;
+                RightEyePrefab.transform.LookAt(Camera.main.transform);
+            }
+            if (MouthPrefab != null)
+            {
+                MouthPrefab.transform.position = MouthPos;
+                MouthPrefab.transform.LookAt(Camera.main.transform);
+            }
+        }
+    }
+
+    Vector3 GetMouthCenter(ARFace face)
+    {
+        const int upperLipIndex = 13;  // 입술 위쪽 중앙
+        const int lowerLipIndex = 14;  // 입술 아래쪽 중앙
+
+        if (face.vertices.Length > lowerLipIndex)
+        {
+            Vector3 upperLip = face.vertices[upperLipIndex];
+            Vector3 lowerLip = face.vertices[lowerLipIndex];
+            return (upperLip + lowerLip) / 2; // 평균값으로 입술 중앙 계산
+        }
+
+        return Vector3.zero;
+    }
+
+    void InstantiateEmotionPrefabs()
+    {
+        GameObject[] CurPrefabs = null;
 
         switch (CurEmotion)
         {
             case EEmotion.Happy:
-                FaceGuideMaterial = EmotionMaterials[0];
+                CurPrefabs = HappyPrefabs;
                 break;
             case EEmotion.Sad:
-                FaceGuideMaterial = EmotionMaterials[1];
+                //CurPrefabs = SadPrefabs;
                 break;
             case EEmotion.Angry:
-                FaceGuideMaterial = EmotionMaterials[2];
+                //CurPrefabs = AngryPrefabs;
                 break;
             case EEmotion.Surprise:
-                FaceGuideMaterial = EmotionMaterials[3];
+                //CurPrefabs = SurprisePrefabs;
                 break;
             default:
                 Debug.LogWarning("Invalid Emotion!");
                 break;
         }
 
-        if (FaceGuideMaterial != null)
+        if(CurPrefabs != null)
         {
-            foreach (ARFace face in arFaceManager.trackables)
-            {
-                face.GetComponent<MeshRenderer>().material = FaceGuideMaterial;
-            }
+            LeftEyePrefab = Instantiate(CurPrefabs[0]);
+            RightEyePrefab = Instantiate(CurPrefabs[1]);
+            MouthPrefab = Instantiate(CurPrefabs[2]);
         }
     }
 }
