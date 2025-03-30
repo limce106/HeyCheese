@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
 
 public enum EEmotion
 {
@@ -24,22 +25,30 @@ public class ARFaceImageOverlay : MonoBehaviour
     //public GameObject[] AngryPrefabs;
     //public GameObject[] SurprisePrefabs;
 
-    private GameObject LeftEyePrefab;
-    private GameObject RightEyePrefab;
-    private GameObject MouthPrefab;
+    private GameObject LeftEyeSprite;
+    private GameObject RightEyeSprite;
+    private GameObject MouthSprite;
 
     private void Awake()
     {
         arFaceManager = GetComponent<ARFaceManager>();
     }
 
-    private void Start()
-    {
-        InstantiateEmotionPrefabs();
-    }
-
     void Update()
     {
+        // 감지된 얼굴이 없으면
+        if (arFaceManager.trackables.count == 0)
+        {
+            SetPrefabVisibility(false);
+            return;
+        }
+
+        // 처음으로 얼굴이 감지될 때 프리팹 생성
+        if (LeftEyeSprite == null || RightEyeSprite == null || MouthSprite == null)
+        {
+            InstantiateEmotionPrefabs();
+        }
+
         ApplyFaceMaterial();
     }
 
@@ -54,56 +63,42 @@ public class ARFaceImageOverlay : MonoBehaviour
                 faceRenderer.enabled = false;
             }
 
-            Vector3 LeftEyePos = face.leftEye.position;
-            Vector3 RightEyePos = face.rightEye.position;
-            Vector3 MouthPos = GetMouthCenter(face);
+            // 얼굴 추적이 안 되면
+            if (face.trackingState != TrackingState.Tracking)
+            {
+                SetPrefabVisibility(false);
+                return;
+            }
 
-            if(face.leftEye != null && LeftEyePrefab != null)
+            Vector3 LeftEyePos = face.transform.TransformPoint(face.vertices[133]);
+            Vector3 RightEyePos = face.transform.TransformPoint(face.vertices[362]);
+            Vector3 MouthPos = face.transform.TransformPoint(face.vertices[13]);
+
+            // 눈 위치 보정
+            LeftEyePos.x -= 0.02f;
+            RightEyePos.x += 0.02f;
+
+            Quaternion faceRotation = face.transform.rotation;
+
+            if (LeftEyeSprite != null)
             {
-                LeftEyePrefab.transform.position = LeftEyePos;
-                LeftEyePrefab.transform.LookAt(Camera.main.transform);
-                Debug.Log($"Left Eye Pos: {LeftEyePos}");
+                LeftEyeSprite.transform.position = LeftEyePos;
+                // 얼굴 회전에 맞춰 회전
+                LeftEyeSprite.transform.rotation = faceRotation;
             }
-            else
+            if (RightEyeSprite != null)
             {
-                Debug.LogWarning("Left Eye Prefab 또는 face.leftEye가 null!");
+                RightEyeSprite.transform.position = RightEyePos;
+                RightEyeSprite.transform.rotation = faceRotation;
             }
-            if (face.rightEye != null && RightEyePrefab != null)
+            if (MouthSprite != null)
             {
-                RightEyePrefab.transform.position = RightEyePos;
-                RightEyePrefab.transform.LookAt(Camera.main.transform);
-                Debug.Log($"Right Eye Pos: {RightEyePos}");
+                MouthSprite.transform.position = MouthPos;
+                MouthSprite.transform.rotation = faceRotation;
             }
-            else
-            {
-                Debug.LogWarning("Right Eye Prefab 또는 face.rightEye가 null!");
-            }
-            if (MouthPrefab != null)
-            {
-                MouthPrefab.transform.position = MouthPos;
-                MouthPrefab.transform.LookAt(Camera.main.transform);
-                Debug.Log($"Mouth Pos: {MouthPos}");
-            }
-            else
-            {
-                Debug.LogWarning("Mouth Prefab이 null!");
-            }
+
+            SetPrefabVisibility(true);
         }
-    }
-
-    Vector3 GetMouthCenter(ARFace face)
-    {
-        const int upperLipIndex = 13;  // 입술 위쪽 중앙
-        const int lowerLipIndex = 14;  // 입술 아래쪽 중앙
-
-        if (face.vertices.Length > lowerLipIndex)
-        {
-            Vector3 upperLip = face.vertices[upperLipIndex];
-            Vector3 lowerLip = face.vertices[lowerLipIndex];
-            return (upperLip + lowerLip) / 2; // 평균값으로 입술 중앙 계산
-        }
-
-        return Vector3.zero;
     }
 
     void InstantiateEmotionPrefabs()
@@ -131,9 +126,23 @@ public class ARFaceImageOverlay : MonoBehaviour
 
         if(CurPrefabs != null)
         {
-            LeftEyePrefab = Instantiate(CurPrefabs[0]);
-            RightEyePrefab = Instantiate(CurPrefabs[1]);
-            MouthPrefab = Instantiate(CurPrefabs[2]);
+            LeftEyeSprite = Instantiate(CurPrefabs[0], Vector3.zero, Quaternion.identity);
+            RightEyeSprite = Instantiate(CurPrefabs[1], Vector3.zero, Quaternion.identity);
+            MouthSprite = Instantiate(CurPrefabs[2], Vector3.zero, Quaternion.identity);
+
+            LeftEyeSprite.transform.SetParent(transform);
+            RightEyeSprite.transform.SetParent(transform);
+            MouthSprite.transform.SetParent(transform);
         }
+    }
+
+    void SetPrefabVisibility(bool isVisible)
+    {
+        if (LeftEyeSprite != null)
+            LeftEyeSprite.SetActive(isVisible);
+        if (RightEyeSprite != null) 
+            RightEyeSprite.SetActive(isVisible);
+        if (MouthSprite != null) 
+            MouthSprite.SetActive(isVisible);
     }
 }
