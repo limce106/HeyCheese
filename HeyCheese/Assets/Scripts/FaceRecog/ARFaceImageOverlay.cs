@@ -62,16 +62,31 @@ public class ARFaceImageOverlay : MonoBehaviour
             {
                 LeftEyePrefab.transform.position = LeftEyePos;
                 LeftEyePrefab.transform.LookAt(Camera.main.transform);
+                Debug.Log($"Left Eye Pos: {LeftEyePos}");
+            }
+            else
+            {
+                Debug.LogWarning("Left Eye Prefab 또는 face.leftEye가 null!");
             }
             if (face.rightEye != null && RightEyePrefab != null)
             {
                 RightEyePrefab.transform.position = RightEyePos;
                 RightEyePrefab.transform.LookAt(Camera.main.transform);
+                Debug.Log($"Right Eye Pos: {RightEyePos}");
+            }
+            else
+            {
+                Debug.LogWarning("Right Eye Prefab 또는 face.rightEye가 null!");
             }
             if (MouthPrefab != null)
             {
                 MouthPrefab.transform.position = MouthPos;
                 MouthPrefab.transform.LookAt(Camera.main.transform);
+                Debug.Log($"Mouth Pos: {MouthPos}");
+            }
+            else
+            {
+                Debug.LogWarning("Mouth Prefab이 null!");
             }
         }
     }
