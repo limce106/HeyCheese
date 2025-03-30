@@ -47,6 +47,13 @@ public class ARFaceImageOverlay : MonoBehaviour
     {
         foreach (ARFace face in arFaceManager.trackables)
         {
+            // ARFace의 렌더러를 비활성화 (페이스 마스크 숨기기)
+            MeshRenderer faceRenderer = face.GetComponent<MeshRenderer>();
+            if (faceRenderer != null)
+            {
+                faceRenderer.enabled = false;
+            }
+
             Vector3 LeftEyePos = face.leftEye.position;
             Vector3 RightEyePos = face.rightEye.position;
             Vector3 MouthPos = GetMouthCenter(face);
