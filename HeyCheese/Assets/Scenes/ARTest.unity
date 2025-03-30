@@ -657,9 +657,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CurEmotion: 0
   HappyPrefabs:
-  - {fileID: 5499360073614379536, guid: dc866a461d0ecad4bb23adf87e410bde, type: 3}
-  - {fileID: 824432028451320886, guid: 331470f07954b464fa69759f903d116a, type: 3}
-  - {fileID: 6984596076597922337, guid: e23dedb17946dc54caeac98b9f185508, type: 3}
+  - {fileID: 3313265724555343308, guid: 5dcaa716adc2b164faa373f672957339, type: 3}
+  - {fileID: 5435611230894778871, guid: c2f7e0d82b6255e44969339a166ce622, type: 3}
+  - {fileID: 3043425625478594729, guid: 5af0d62a8d3f8cc4883c4da0f26591a5, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
