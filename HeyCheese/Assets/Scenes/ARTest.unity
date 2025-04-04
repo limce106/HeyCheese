@@ -657,9 +657,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CurEmotion: 0
   HappyPrefabs:
+  - {fileID: 7939440304753178862, guid: 76136ecc1c569514bb79f3cca4a1de72, type: 3}
+  - {fileID: 9061926858218068051, guid: baf53f18ca6d7c44b8861aadbc0648de, type: 3}
   - {fileID: 3313265724555343308, guid: 5dcaa716adc2b164faa373f672957339, type: 3}
   - {fileID: 5435611230894778871, guid: c2f7e0d82b6255e44969339a166ce622, type: 3}
   - {fileID: 3043425625478594729, guid: 5af0d62a8d3f8cc4883c4da0f26591a5, type: 3}
+  SadPrefabs:
+  - {fileID: 3419694957541059734, guid: 3d6660cfb135fd946887dfcee85a14dc, type: 3}
+  - {fileID: 2469543771478017341, guid: bf92bbb359482e0468798fab5cf8919c, type: 3}
+  - {fileID: 1214440310017333712, guid: 169704ba153c4f4449b050cb4137c113, type: 3}
+  - {fileID: 6489002741670850965, guid: 017de5d8489334d4fae295956b98dfb0, type: 3}
+  - {fileID: 1566150493999968335, guid: d23a69a40032b6a4180199883041fa26, type: 3}
+  AngryPrefabs:
+  - {fileID: 655238648901199321, guid: 66d6405a369b90b4380b71830f3f66be, type: 3}
+  - {fileID: 300966772606384586, guid: f87beb1c7a5386e46b741d48ff202857, type: 3}
+  - {fileID: 8131235755694833674, guid: 69c0451cf7ccb6848aecc54d5d96154b, type: 3}
+  - {fileID: 4922367221830553185, guid: 795f72fba434c8e4b906236f9ad41fdb, type: 3}
+  - {fileID: 446978820480111115, guid: 94c7e9ca47694a640af9efe558872f19, type: 3}
+  SurprisePrefabs:
+  - {fileID: 2856433577244615731, guid: 6ae285a6c4a867b4bb51c81c81c64158, type: 3}
+  - {fileID: 6197897263162020794, guid: 09e9cbdc4bffef44ab91f44bbccdfe54, type: 3}
+  - {fileID: 6635489027474369628, guid: eaa3b4f16d0eace4b884c23760079e9c, type: 3}
+  - {fileID: 4591067756366274648, guid: 06713c3f47f85f14b97ac8ed84d74cc3, type: 3}
+  - {fileID: 4527524537158921412, guid: a3fb80cbe41d04342893769a52c2f70f, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
