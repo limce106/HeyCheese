@@ -21,9 +21,9 @@ public class ARFaceImageOverlay : MonoBehaviour
     // Ç¥Á¤ °¡ÀÌµå¶óÀÎ Material ¹è¿­
     // ¿ÞÂÊ ´«½ç, ¿À¸¥ÂÊ ´«½ç, ¿ÞÂÊ ´«, ¿À¸¥ÂÊ ´«, ÀÔ ¼ø¼­´ë·Î °ª ¼³Á¤ÇÒ °Í!
     public GameObject[] HappyPrefabs;
-    //public GameObject[] SadPrefabs;
-    //public GameObject[] AngryPrefabs;
-    //public GameObject[] SurprisePrefabs;
+    public GameObject[] SadPrefabs;
+    public GameObject[] AngryPrefabs;
+    public GameObject[] SurprisePrefabs;
 
     private GameObject LeftEyebrowSprite;
     private GameObject RightEyebrowSprite;
@@ -162,13 +162,13 @@ public class ARFaceImageOverlay : MonoBehaviour
                 CurPrefabs = HappyPrefabs;
                 break;
             case EEmotion.Sad:
-                //CurPrefabs = SadPrefabs;
+                CurPrefabs = SadPrefabs;
                 break;
             case EEmotion.Angry:
-                //CurPrefabs = AngryPrefabs;
+                CurPrefabs = AngryPrefabs;
                 break;
             case EEmotion.Surprise:
-                //CurPrefabs = SurprisePrefabs;
+                CurPrefabs = SurprisePrefabs;
                 break;
             default:
                 Debug.LogWarning("Invalid Emotion!");
