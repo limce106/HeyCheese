@@ -70,35 +70,66 @@ public class ARFaceImageOverlay : MonoBehaviour
                 return;
             }
 
-            Vector3 LeftEyePos = face.transform.TransformPoint(face.vertices[133]);
-            Vector3 RightEyePos = face.transform.TransformPoint(face.vertices[362]);
-            Vector3 MouthPos = face.transform.TransformPoint(face.vertices[13]);
+            // 얼굴의 로컬 정점 위치 가져오기
+            Vector3 LeftEyeLocal = face.vertices[133];  // 왼쪽 눈
+            Vector3 RightEyeLocal = face.vertices[362]; // 오른쪽 눈
+            Vector3 MouthLocal = GetMouthCenterLocal(face);     // 입
 
             // 눈 위치 보정
-            LeftEyePos.x -= 0.02f;
-            RightEyePos.x += 0.02f;
+            LeftEyeLocal.x -= 0.015f;
+            RightEyeLocal.x += 0.015f;
+
+            Vector3 LeftEyeWorldPos = face.transform.TransformPoint(LeftEyeLocal);
+            Vector3 RightEyeWorldPos = face.transform.TransformPoint(RightEyeLocal);
+            Vector3 MouthWorldPos = face.transform.TransformPoint(MouthLocal);
 
             Quaternion faceRotation = face.transform.rotation;
 
+            // 얼굴이 바라보는 방향
+            Vector3 faceForward = face.transform.forward;
+            // 얼굴이 바라보는 방향
+            Vector3 faceUp = face.transform.up;
+
+            // 카메라 회전 보정 (카메라가 회전해도 스프라이트가 이상하지 않도록)
+            Quaternion inverseCameraRotation = Quaternion.Inverse(Camera.main.transform.rotation);
+            Quaternion adjustedRotation = inverseCameraRotation * faceRotation;
+
             if (LeftEyeSprite != null)
             {
-                LeftEyeSprite.transform.position = LeftEyePos;
-                // 얼굴 회전에 맞춰 회전
-                LeftEyeSprite.transform.rotation = faceRotation;
+                LeftEyeSprite.transform.position = LeftEyeWorldPos;
+                LeftEyeSprite.transform.rotation = adjustedRotation;
             }
+
             if (RightEyeSprite != null)
             {
-                RightEyeSprite.transform.position = RightEyePos;
-                RightEyeSprite.transform.rotation = faceRotation;
+                RightEyeSprite.transform.position = RightEyeWorldPos;
+                RightEyeSprite.transform.rotation = adjustedRotation;
             }
+
             if (MouthSprite != null)
             {
-                MouthSprite.transform.position = MouthPos;
-                MouthSprite.transform.rotation = faceRotation;
+                MouthSprite.transform.position = MouthWorldPos;
+                MouthSprite.transform.rotation = adjustedRotation;
             }
 
             SetPrefabVisibility(true);
         }
+    }
+
+    Vector3 GetMouthCenterLocal(ARFace face)
+    {
+        const int UpperLipIndex = 13;
+        const int LowerLipIndex = 14;
+
+        if (face.vertices.Length > LowerLipIndex)
+        {
+            Vector3 UpperLip = face.vertices[UpperLipIndex];
+            Vector3 LowerLip = face.vertices[LowerLipIndex];
+            return (UpperLip + LowerLip) / 2;
+        }
+
+        Debug.LogWarning("Can't Find Mouth Center!");
+        return Vector3.zero;
     }
 
     void InstantiateEmotionPrefabs()
