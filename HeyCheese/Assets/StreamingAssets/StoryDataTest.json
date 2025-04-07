@@ -1,0 +1,48 @@
+{
+  "Items": [
+    {
+      "EmotionID": "Happy",
+      "SituationID": "Birthday",
+      "Level": "all",
+      "Type": "Dialogue",
+      "Order": 0,
+      "Script": "생일 축하해!",
+      "ImageID": "",
+      "TextOverlay": "",
+      "Save": ""
+    },
+    {
+      "EmotionID": "Happy",
+      "SituationID": "Birthday",
+      "Level": "all",
+      "Type": "Dialogue",
+      "Order": 1,
+      "Script": "오늘 기분 어때?",
+      "ImageID": "",
+      "TextOverlay": "",
+      "Save": ""
+    },
+    {
+      "EmotionID": "Happy",
+      "SituationID": "Birthday",
+      "Level": "1",
+      "Type": "CameraARGuide",
+      "Order": 2,
+      "Script": "",
+      "ImageID": "",
+      "TextOverlay": "",
+      "Save": ""
+    },
+    {
+      "EmotionID": "Happy",
+      "SituationID": "Birthday",
+      "Level": "1",
+      "Type": "Result",
+      "Order": 3,
+      "Script": "",
+      "ImageID": "",
+      "TextOverlay": "",
+      "Save": "1"
+    }
+  ]
+}
