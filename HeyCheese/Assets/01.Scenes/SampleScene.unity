@@ -199,7 +199,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -485.308, y: -385.25818}
+  m_AnchoredPosition: {x: -24.40799, y: -342.4582}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &180823012
@@ -544,8 +544,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -523.9, y: -265.8}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: -40.888367, y: -200.88837}
+  m_SizeDelta: {x: 144.2233, y: 144.2233}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1356923704
 MonoBehaviour:
@@ -627,7 +627,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rawImage: {fileID: 1356923704}
-  resultText: {fileID: 33414437}
+  emotionText: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
