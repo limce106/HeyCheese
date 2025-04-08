@@ -1,0 +1,17 @@
+EmotionID,SituationID,IconPath
+happiness,Birthday,Icons/Angry/Angry_LeftEye
+happiness,Food,Icons/Angry/Angry_LeftEye
+happiness,Friend,Icons/Angry/Angry_LeftEye
+happiness,Love,Icons/Angry/Angry_LeftEye
+sadness,Hurt,Icons/Angry/Angry_LeftEye
+sadness,Hurt2,Icons/Angry/Angry_LeftEye
+sadness,Hurt3,Icons/Angry/Angry_LeftEye
+sadness,Hurt4,Icons/Angry/Angry_LeftEye
+surprise,S1,Icons/Angry/Angry_LeftEye
+surprise,S2,Icons/Angry/Angry_LeftEye
+surprise,S3,Icons/Angry/Angry_LeftEye
+surprise,S4,Icons/Angry/Angry_LeftEye
+anger,A1,Icons/Angry/Angry_LeftEye
+anger,A2,Icons/Angry/Angry_LeftEye
+anger,A3,Icons/Angry/Angry_LeftEye
+anger,A4,Icons/Angry/Angry_LeftEye
