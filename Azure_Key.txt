@@ -1,8 +1,2 @@
-키1
-REMOVED
-
-키2
-REMOVED
-
-엔드포인트
+구글 API
 REMOVED
