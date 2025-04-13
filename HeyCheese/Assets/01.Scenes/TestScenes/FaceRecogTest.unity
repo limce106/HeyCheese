@@ -199,8 +199,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 121.50107, y: -242.82544}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 128.77621, y: -245.6}
+  m_SizeDelta: {x: 476.6927, y: 48.4871}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &787797067
 GameObject:
@@ -456,6 +456,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1220486702}
   - component: {fileID: 1220486701}
+  - component: {fileID: 1220486703}
   m_Layer: 0
   m_Name: EmotionRecognition
   m_TagString: Untagged
@@ -470,7 +471,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1220486700}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0acb3466deefedc4b8636d0b948b3aeb, type: 3}
   m_Name: 
@@ -492,6 +493,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1220486703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1220486700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae4ce13ced997b94abaf80e14ebaad6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  webcamDisplay: {fileID: 1151190257}
+  emotionText: {fileID: 488567726}
 --- !u!1 &1890461041
 GameObject:
   m_ObjectHideFlags: 0
@@ -746,9 +761,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1220486701}
-        m_TargetAssemblyTypeName: FaceRecognition, Assembly-CSharp
-        m_MethodName: TakePhoto
+      - m_Target: {fileID: 1220486703}
+        m_TargetAssemblyTypeName: EmotionDetector, Assembly-CSharp
+        m_MethodName: OnClick_DetectEmotion
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
