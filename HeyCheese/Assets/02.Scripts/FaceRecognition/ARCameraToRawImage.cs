@@ -14,7 +14,6 @@ public class ARCameraToRawImage : MonoBehaviour
     void Awake()
     {
         cameraManager = GetComponent<ARCameraManager>();
-        cameraManager.requestedFacingDirection = CameraFacingDirection.User;
     }
 
     void OnEnable()
