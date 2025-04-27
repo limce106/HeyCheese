@@ -71,7 +71,7 @@ public class EduMenuLoader : MonoBehaviour
 
             Image iconImage = situationButtons[i].GetComponent<Image>();
             Sprite icon = Resources.Load<Sprite>(data.IconPath);
-            if (icon != null) iconImage.sprite = icon;
+            //if (icon != null) iconImage.sprite = icon;
 
             Button btn = situationButtons[i].GetComponent<Button>();
             string situationID = data.SituationID;
