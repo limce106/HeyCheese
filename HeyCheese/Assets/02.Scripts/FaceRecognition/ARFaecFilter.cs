@@ -56,7 +56,7 @@ public class ARFaecFilter : MonoBehaviour
 
     private void InstantiateFilterPrefabs()
     {
-        string basePath = $"Prefabs/{filterName}/{filterName}";
+        string basePath = $"Arts/5AR/{filterName}/{filterName}";
 
         InstantiatePart($"{basePath}_LeftEye", out leftEyeSprite);
         InstantiatePart($"{basePath}_RightEye", out rightEyeSprite);
