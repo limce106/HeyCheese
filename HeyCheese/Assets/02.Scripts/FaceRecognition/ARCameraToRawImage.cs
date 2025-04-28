@@ -43,20 +43,21 @@ public class ARCameraToRawImage : MonoBehaviour
                 transformation = XRCpuImage.Transformation.MirrorY
             };
 
-            // Texture가 없거나 사이즈가 다르면 새로 생성
             if (cameraTexture == null || cameraTexture.width != cpuImage.width || cameraTexture.height != cpuImage.height)
             {
                 if (cameraTexture != null)
                     Destroy(cameraTexture);
 
                 cameraTexture = new Texture2D(cpuImage.width, cpuImage.height, TextureFormat.RGBA32, false);
-                rawImage.texture = cameraTexture;
-                rawImage.rectTransform.sizeDelta = new Vector2(cpuImage.width, cpuImage.height);
             }
 
-            // CPU 이미지 -> Texture 변환
             cpuImage.Convert(conversionParams, cameraTexture.GetRawTextureData<byte>());
             cameraTexture.Apply();
+
+            // RawImage의 텍스처 업데이트
+            rawImage.texture = cameraTexture;
+            rawImage.rectTransform.localEulerAngles = new Vector3(0, 0, -90);
+            rawImage.rectTransform.sizeDelta = new Vector2(800, 800);
         }
     }
 }
