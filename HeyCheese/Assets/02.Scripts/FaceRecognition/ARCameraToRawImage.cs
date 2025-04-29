@@ -107,10 +107,9 @@ public class ARCameraToRawImage : MonoBehaviour
             // 이미지 회전
             cameraTexture = Rotate90(cameraTexture);
 
-            // RawImage의 텍스처 업데이트
             rawImage.texture = cameraTexture;
-            rawImage.rectTransform.sizeDelta = new Vector2(1000, 750);
-            rawImage.rectTransform.localEulerAngles = new Vector3(0, 0, 180); // 회전 유지
+            rawImage.rectTransform.sizeDelta = new Vector2(1050, 1400);
+            rawImage.rectTransform.localEulerAngles = new Vector3(0, 0, 180);
         }
     }
 }
