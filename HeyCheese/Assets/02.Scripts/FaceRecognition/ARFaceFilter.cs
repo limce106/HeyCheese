@@ -5,14 +5,14 @@ using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
-public class ARFaecFilter : MonoBehaviour
+public class ARFaceFilter : MonoBehaviour
 {
     private ARFaceManager arFaceManager;
 
-    private GameObject leftEyeSprite;
-    private GameObject rightEyeSprite;
-    private GameObject noseSprite;
-    private GameObject foreheadSprite;
+    private GameObject leftEyePrefab;
+    private GameObject rightEyePrefab;
+    private GameObject nosePrefab;
+    private GameObject foreheadPrefab;
 
     private string filterName;
 
@@ -24,25 +24,30 @@ public class ARFaecFilter : MonoBehaviour
 
     void Update()
     {
-        // í•„í„°ê°€ ì„ íƒë˜ì§€ ì•Šì•˜ë‹¤ë©´
-        if(filterName == null)
+        // ÇÊÅÍ°¡ ¼±ÅÃµÇÁö ¾Ê¾Ò´Ù¸é
+        if (filterName == null)
         {
             return;
         }
-        // ê°ì§€ëœ ì–¼êµ´ì´ ì—†ìœ¼ë©´
+        // °¨ÁöµÈ ¾ó±¼ÀÌ ¾øÀ¸¸é
         if (arFaceManager.trackables.count == 0)
         {
             SetPrefabVisibility(false);
             return;
         }
 
-        // ì²˜ìŒìœ¼ë¡œ ì–¼êµ´ì´ ê°ì§€ë  ë•Œ í”„ë¦¬íŒ¹ ìƒì„±
-        if (leftEyeSprite == null || rightEyeSprite == null || noseSprite == null || foreheadSprite == null)
+        // Ã³À½À¸·Î ¾ó±¼ÀÌ °¨ÁöµÉ ¶§ ÇÁ¸®ÆÕ »ı¼º
+        if (leftEyePrefab == null || rightEyePrefab == null || nosePrefab == null || foreheadPrefab == null)
         {
             InstantiateFilterPrefabs();
         }
 
         ApplyFilter();
+    }
+
+    public void SetFilterName(string name)
+    {
+        filterName = name;
     }
 
     public void OnClick_Filter()
@@ -51,17 +56,17 @@ public class ARFaecFilter : MonoBehaviour
         {
             arFaceManager = GetComponent<ARFaceManager>();
         }
-        filterName = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name;
+        SetFilterName(UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name);
     }
 
     private void InstantiateFilterPrefabs()
     {
         string basePath = $"Arts/5AR/{filterName}/{filterName}";
 
-        InstantiatePart($"{basePath}_LeftEye", out leftEyeSprite);
-        InstantiatePart($"{basePath}_RightEye", out rightEyeSprite);
-        InstantiatePart($"{basePath}_Nose", out noseSprite);
-        InstantiatePart($"{basePath}_Forehead", out foreheadSprite);
+        InstantiatePart($"{basePath}_LeftEye", out leftEyePrefab);
+        InstantiatePart($"{basePath}_RightEye", out rightEyePrefab);
+        InstantiatePart($"{basePath}_Nose", out nosePrefab);
+        InstantiatePart($"{basePath}_Forehead", out foreheadPrefab);
     }
 
     private void InstantiatePart(string path, out GameObject part)
@@ -75,15 +80,15 @@ public class ARFaecFilter : MonoBehaviour
         else
         {
             part = null;
-            Debug.LogWarning($"í”„ë¦¬íŒ¹ì„ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤: {path}");
+            Debug.LogWarning($"ÇÁ¸®ÆÕÀ» Ã£À» ¼ö ¾ø½À´Ï´Ù: {path}");
         }
     }
 
     void SetPrefabVisibility(bool isVisible)
     {
-        GameObject[] allPartSprites = { leftEyeSprite, rightEyeSprite, noseSprite, foreheadSprite };
+        GameObject[] allPartPrefab = { leftEyePrefab, rightEyePrefab, nosePrefab, foreheadPrefab };
 
-        foreach(var part in allPartSprites)
+        foreach(var part in allPartPrefab)
         {
             if(part != null)
             {
@@ -92,31 +97,31 @@ public class ARFaecFilter : MonoBehaviour
         }
     }
 
-    void ApplyFilter()
+    private void ApplyFilter()
     {
         foreach (ARFace face in arFaceManager.trackables)
         {
-            // ARFaceì˜ ë Œë”ëŸ¬ë¥¼ ë¹„í™œì„±í™” (í˜ì´ìŠ¤ ë§ˆìŠ¤í¬ ìˆ¨ê¸°ê¸°)
+            // ARFaceÀÇ ·»´õ·¯¸¦ ºñÈ°¼ºÈ­ (ÆäÀÌ½º ¸¶½ºÅ© ¼û±â±â)
             MeshRenderer faceRenderer = face.GetComponent<MeshRenderer>();
             if (faceRenderer != null && faceRenderer.enabled == true)
             {
                 faceRenderer.enabled = false;
             }
 
-            // ì–¼êµ´ ì¶”ì ì´ ì•ˆ ë˜ë©´
+            // ¾ó±¼ ÃßÀûÀÌ ¾È µÇ¸é
             if (face.trackingState != TrackingState.Tracking)
             {
                 SetPrefabVisibility(false);
                 return;
             }
 
-            // ì–¼êµ´ì˜ ë¡œì»¬ ì •ì  ìœ„ì¹˜ ê°€ì ¸ì˜¤ê¸°
+            // ¾ó±¼ÀÇ ·ÎÄÃ Á¤Á¡ À§Ä¡ °¡Á®¿À±â
             Vector3 leftEyeLocal = face.vertices[leftEyeIndex];
             Vector3 rightEyeLocal = face.vertices[rightEyeIndex];
             Vector3 noseLocal = face.vertices[noseIndex];
             Vector3 foreheadLocal = face.vertices[foreheadIndex];
 
-            // ìœ„ì¹˜ ë³´ì •
+            // À§Ä¡ º¸Á¤
             leftEyeLocal.x -= 0.02f;
             rightEyeLocal.x += 0.02f;
 
@@ -127,20 +132,19 @@ public class ARFaecFilter : MonoBehaviour
 
             Quaternion faceRotation = face.transform.rotation;
 
-            // ì–¼êµ´ì´ ë°”ë¼ë³´ëŠ” ë°©í–¥
+            // ¾ó±¼ÀÌ ¹Ù¶óº¸´Â ¹æÇâ
             Vector3 faceForward = face.transform.forward;
-            // ì–¼êµ´ì´ ë°”ë¼ë³´ëŠ” ë°©í–¥
             Vector3 faceUp = face.transform.up;
 
-            // ì¹´ë©”ë¼ íšŒì „ ë³´ì • (ì¹´ë©”ë¼ê°€ íšŒì „í•´ë„ ìŠ¤í”„ë¼ì´íŠ¸ê°€ ì´ìƒí•˜ì§€ ì•Šë„ë¡)
+            // Ä«¸Ş¶ó È¸Àü º¸Á¤ (Ä«¸Ş¶ó°¡ È¸ÀüÇØµµ ½ºÇÁ¶óÀÌÆ®°¡ ÀÌ»óÇÏÁö ¾Êµµ·Ï)
             Quaternion inverseCameraRotation = Quaternion.Inverse(Camera.main.transform.rotation);
             Quaternion adjustedRotation = inverseCameraRotation * faceRotation;
 
-            GameObject[] allPartSprites = { leftEyeSprite, rightEyeSprite, noseSprite, foreheadSprite };
+            GameObject[] allPartPrefab = { leftEyePrefab, rightEyePrefab, nosePrefab, foreheadPrefab };
             Vector3[] allPartWorldPos = {leftEyeWorldPos, rightEyeWorldPos, noseWorldPos, foreheadWorldPos};
 
             int partIndex = 0;
-            foreach (var part in allPartSprites)
+            foreach (var part in allPartPrefab)
             {
                 if (part != null)
                 {
