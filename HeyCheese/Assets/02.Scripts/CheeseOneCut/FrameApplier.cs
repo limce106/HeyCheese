@@ -31,6 +31,11 @@ public class FrameApplier : MonoBehaviour
         if (frameName == null)
             return;
 
+        if(!frameObj.activeSelf)
+        {
+            frameObj.SetActive(true);
+        }
+
         string framePath = $"Arts/6Frame/{frameName}";
         Sprite frame = Resources.Load<Sprite>(framePath);
         frameImg.sprite = frame;
@@ -39,7 +44,7 @@ public class FrameApplier : MonoBehaviour
             frameObj.SetActive(true);
     }
 
-    void RemoveFrame()
+    public void RemoveFrame()
     {
         frameObj.SetActive(false);
     }
