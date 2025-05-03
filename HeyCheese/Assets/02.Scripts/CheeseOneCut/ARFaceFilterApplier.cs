@@ -5,8 +5,9 @@ using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
-public class ARFaceFilter : MonoBehaviour
+public class ARFaceFilterApplier : MonoBehaviour
 {
+    [SerializeField]
     private ARFaceManager arFaceManager;
 
     private GameObject leftEyePrefab;
@@ -53,10 +54,6 @@ public class ARFaceFilter : MonoBehaviour
 
     public void OnClick_Filter()
     {
-        if(arFaceManager == null)
-        {
-            arFaceManager = GetComponent<ARFaceManager>();
-        }
         SetFilterName(UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name);
 
         if (arFaceManager.trackables.count == 0)
