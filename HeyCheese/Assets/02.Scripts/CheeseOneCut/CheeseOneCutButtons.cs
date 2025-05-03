@@ -11,9 +11,11 @@ public class CheeseOneCutButtons : MonoBehaviour
     public Button cancelButton;
     public Button cameraButton;
 
+    public SaveLoadPicture saveLoadPicture;
+
     private void Start()
     {
-        //cameraButton.onClick.AddListener(() => StartCoroutine(CaptureAndSave("story")));
+        cameraButton.onClick.AddListener(() => StartCoroutine(saveLoadPicture.CaptureAndSave()));
     }
 
     public void OnClick_Gallery()
@@ -46,6 +48,4 @@ public class CheeseOneCutButtons : MonoBehaviour
 
         cancelButton.enabled = false;
     }
-
-
 }
