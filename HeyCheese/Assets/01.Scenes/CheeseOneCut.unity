@@ -266,7 +266,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0014038086, y: -1.673706}
+  m_AnchoredPosition: {x: 0.0014648438, y: -1.6738281}
   m_SizeDelta: {x: -0.0028076, y: -277.93408}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &72071914
@@ -308,7 +308,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 72071915}
   m_OnClick:
     m_PersistentCalls:
@@ -1691,6 +1691,50 @@ Transform:
   - {fileID: 758211525}
   m_Father: {fileID: 1784050615}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &661652236
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 661652238}
+  - component: {fileID: 661652237}
+  m_Layer: 0
+  m_Name: Test
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &661652237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 661652236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8a75ed12ff2978449e4336b057faa0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &661652238
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 661652236}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1131.4368, y: 973.59, z: 0.7688884}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705162096
 GameObject:
   m_ObjectHideFlags: 0
@@ -2666,6 +2710,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   framePanel: {fileID: 759799803}
   filterPanel: {fileID: 316549603}
+  hiddenMissionPanel: {fileID: 2020008360}
   cancelButton: {fileID: 72071914}
   cameraButton: {fileID: 350101263}
   arFaceManager: {fileID: 1784050613}
@@ -2934,7 +2979,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: present
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4421,7 +4466,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2020008361
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4744,3 +4789,4 @@ SceneRoots:
   - {fileID: 705162099}
   - {fileID: 1129088415}
   - {fileID: 1940435778}
+  - {fileID: 661652238}

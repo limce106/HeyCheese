@@ -4,10 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 
-public class CheeseOneCutButtons : MonoBehaviour
+public class CheeseOneCutUIManager : MonoBehaviour
 {
     public GameObject framePanel;
     public GameObject filterPanel;
+    public GameObject hiddenMissionPanel;
 
     public Button cancelButton;
     public Button cameraButton;
@@ -30,15 +31,15 @@ public class CheeseOneCutButtons : MonoBehaviour
     public void OnClick_Frame()
     {
         framePanel.SetActive(true);
-        cancelButton.enabled = true;
+        cancelButton.interactable = true;
     }
 
     public void OnClick_Filter()
     {
         filterPanel.SetActive(true);
-        SetFilterButtons();
+        UpdateFilterButtons();
 
-        cancelButton.enabled = true;
+        cancelButton.interactable = true;
     }
 
     public void OnClick_Cancel()
@@ -52,10 +53,11 @@ public class CheeseOneCutButtons : MonoBehaviour
             filterPanel.SetActive(false);
         }
 
-        cancelButton.enabled = false;
+        cancelButton.interactable = false;
     }
 
-    private void SetFilterButtons()
+    // 필터 버튼 이름, 이미지 설정
+    private void UpdateFilterButtons()
     {
         Button[] filterButtons = filterPanel.GetComponentsInChildren<Button>();
         string[] filterUnlockedKeys = FilterManager.instance.GetFilterUnlockedKeys();
@@ -66,18 +68,17 @@ public class CheeseOneCutButtons : MonoBehaviour
             if (filterUnlockedValues[i] == false)
             {
                 // RemoveFilter 버튼 제외하여 인덱스 + 1
-                filterButtons[i + 1].gameObject.SetActive(false);
+                // 사용 불가능한 버튼은 상호작용 불가능
+                filterButtons[i + 1].interactable = false;
             }
-            else
-            {
-                string filterName = filterUnlockedKeys[i];
 
-                Sprite filterSprite = Resources.Load<Sprite>($"Arts/5AR/{filterName}/{filterName}");
-                UnityEngine.UI.Image buttonImage = filterButtons[i + 1].GetComponent<UnityEngine.UI.Image>();
-                buttonImage.sprite = filterSprite;
+            string filterName = filterUnlockedKeys[i];
 
-                filterButtons[i + 1].gameObject.name = filterName;
-            }
+            Sprite filterSprite = Resources.Load<Sprite>($"Arts/5AR/{filterName}/{filterName}");
+            UnityEngine.UI.Image buttonImage = filterButtons[i + 1].GetComponent<UnityEngine.UI.Image>();
+            buttonImage.sprite = filterSprite;
+
+            filterButtons[i + 1].gameObject.name = filterName;
         }
     }
 }
