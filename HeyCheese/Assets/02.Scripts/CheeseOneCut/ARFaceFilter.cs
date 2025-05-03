@@ -32,14 +32,15 @@ public class ARFaceFilter : MonoBehaviour
         // 감지된 얼굴이 없으면
         if (arFaceManager.trackables.count == 0)
         {
-            SetPrefabVisibility(false);
-            return;
+            if(leftEyePrefab.activeSelf || rightEyePrefab.activeSelf || nosePrefab.activeSelf || foreheadPrefab.activeSelf)
+            {
+                SetPrefabVisibility(false);
+                return;
+            }
         }
-
-        // 처음으로 얼굴이 감지될 때 프리팹 생성
-        if (leftEyePrefab == null || rightEyePrefab == null || nosePrefab == null || foreheadPrefab == null)
+        else if(!leftEyePrefab.activeSelf || !rightEyePrefab.activeSelf || !nosePrefab.activeSelf || !foreheadPrefab.activeSelf)
         {
-            InstantiateFilterPrefabs();
+            SetPrefabVisibility(true);
         }
 
         ApplyFilter();
@@ -57,6 +58,13 @@ public class ARFaceFilter : MonoBehaviour
             arFaceManager = GetComponent<ARFaceManager>();
         }
         SetFilterName(UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name);
+
+        if (arFaceManager.trackables.count == 0)
+        {
+            SetPrefabVisibility(false);
+        }
+
+        InstantiateFilterPrefabs();
     }
 
     private void InstantiateFilterPrefabs()
@@ -156,5 +164,11 @@ public class ARFaceFilter : MonoBehaviour
 
             SetPrefabVisibility(true);
         }
+    }
+
+    public void RemoveFilter()
+    {
+        filterName = null;
+        SetPrefabVisibility(false);
     }
 }
