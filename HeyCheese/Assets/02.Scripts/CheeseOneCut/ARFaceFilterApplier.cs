@@ -10,15 +10,15 @@ public class ARFaceFilterApplier : MonoBehaviour
     [SerializeField]
     private ARFaceManager arFaceManager;
 
-    private GameObject leftEyePrefab;
-    private GameObject rightEyePrefab;
+    private GameObject leftCheekPrefab;
+    private GameObject rightCheekPrefab;
     private GameObject nosePrefab;
     private GameObject foreheadPrefab;
 
     private string filterName;
 
-    const int leftEyeIndex = 133;
-    const int rightEyeIndex = 362;
+    const int leftCheekIndex = 436;
+    const int rightCheekIndex = 216;
     const int noseIndex = 2;
     const int foreheadIndex = 10;
 
@@ -33,13 +33,13 @@ public class ARFaceFilterApplier : MonoBehaviour
         // 감지된 얼굴이 없으면
         if (arFaceManager.trackables.count == 0)
         {
-            if(leftEyePrefab.activeSelf || rightEyePrefab.activeSelf || nosePrefab.activeSelf || foreheadPrefab.activeSelf)
+            if(leftCheekPrefab.activeSelf || rightCheekPrefab.activeSelf || nosePrefab.activeSelf || foreheadPrefab.activeSelf)
             {
                 SetPrefabVisibility(false);
                 return;
             }
         }
-        else if(!leftEyePrefab.activeSelf || !rightEyePrefab.activeSelf || !nosePrefab.activeSelf || !foreheadPrefab.activeSelf)
+        else if(!leftCheekPrefab.activeSelf || !rightCheekPrefab.activeSelf || !nosePrefab.activeSelf || !foreheadPrefab.activeSelf)
         {
             SetPrefabVisibility(true);
         }
@@ -68,8 +68,8 @@ public class ARFaceFilterApplier : MonoBehaviour
     {
         string basePath = $"Arts/5AR/{filterName}/{filterName}";
 
-        InstantiatePart($"{basePath}_LeftEye", out leftEyePrefab);
-        InstantiatePart($"{basePath}_RightEye", out rightEyePrefab);
+        InstantiatePart($"{basePath}_LeftEye", out leftCheekPrefab);
+        InstantiatePart($"{basePath}_RightEye", out rightCheekPrefab);
         InstantiatePart($"{basePath}_Nose", out nosePrefab);
         InstantiatePart($"{basePath}_Forehead", out foreheadPrefab);
     }
@@ -91,7 +91,7 @@ public class ARFaceFilterApplier : MonoBehaviour
 
     void SetPrefabVisibility(bool isVisible)
     {
-        GameObject[] allPartPrefab = { leftEyePrefab, rightEyePrefab, nosePrefab, foreheadPrefab };
+        GameObject[] allPartPrefab = { leftCheekPrefab, rightCheekPrefab, nosePrefab, foreheadPrefab };
 
         foreach(var part in allPartPrefab)
         {
@@ -121,8 +121,8 @@ public class ARFaceFilterApplier : MonoBehaviour
             }
 
             // 얼굴의 로컬 정점 위치 가져오기
-            Vector3 leftEyeLocal = face.vertices[leftEyeIndex];
-            Vector3 rightEyeLocal = face.vertices[rightEyeIndex];
+            Vector3 leftEyeLocal = face.vertices[leftCheekIndex];
+            Vector3 rightEyeLocal = face.vertices[rightCheekIndex];
             Vector3 noseLocal = face.vertices[noseIndex];
             Vector3 foreheadLocal = face.vertices[foreheadIndex];
 
@@ -145,7 +145,7 @@ public class ARFaceFilterApplier : MonoBehaviour
             Quaternion inverseCameraRotation = Quaternion.Inverse(Camera.main.transform.rotation);
             Quaternion adjustedRotation = inverseCameraRotation * faceRotation;
 
-            GameObject[] allPartPrefab = { leftEyePrefab, rightEyePrefab, nosePrefab, foreheadPrefab };
+            GameObject[] allPartPrefab = { leftCheekPrefab, rightCheekPrefab, nosePrefab, foreheadPrefab };
             Vector3[] allPartWorldPos = {leftEyeWorldPos, rightEyeWorldPos, noseWorldPos, foreheadWorldPos};
 
             int partIndex = 0;
