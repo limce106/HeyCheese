@@ -26,8 +26,8 @@ public class CheeseOneCutUIManager : MonoBehaviour
 
     public void OnClick_Camera()
     {
+        //StartCoroutine(saveLoadPicture.CaptureAndSave());
         FilterFrameManager.instance.CheckHiddenMission(arFaceManager.trackables.count);
-        StartCoroutine(saveLoadPicture.CaptureAndSave());
     }
 
     public void OnClick_Frame()
@@ -65,14 +65,14 @@ public class CheeseOneCutUIManager : MonoBehaviour
     {
         Button[] filterButtons = filterPanel.GetComponentsInChildren<Button>();
         var filterUnlockedItems = FilterFrameManager.instance.GetFilterUnlockedReadOnly();
-        UpdateButtons(filterButtons, filterUnlockedItems, "Arts/5AR");
+        UpdateButtons(filterButtons, filterUnlockedItems, "5AR");
     }
 
     private void UpdateFrameButtons()
     {
         Button[] frameButtons = framePanel.GetComponentsInChildren<Button>();
         var frameUnlockedItems = FilterFrameManager.instance.GetFrameUnlockedReadOnly();
-        UpdateButtons(frameButtons, frameUnlockedItems, "Arts/6Frame");
+        UpdateButtons(frameButtons, frameUnlockedItems, "6Frame");
     }
 
     private void UpdateButtons(Button[] buttons, ReadOnlyDictionary<string, bool> items, string resourcesPath)
@@ -91,7 +91,7 @@ public class CheeseOneCutUIManager : MonoBehaviour
 
             string itemName = itemKeys[i];
 
-            Sprite itemSprite = Resources.Load<Sprite>($"{resourcesPath}/{itemName}/{itemName}");
+            Sprite itemSprite = Resources.Load<Sprite>($"{resourcesPath}/{itemName}");
             UnityEngine.UI.Image buttonImage = buttons[i + 1].GetComponent<UnityEngine.UI.Image>();
             buttonImage.sprite = itemSprite;
 

@@ -9,39 +9,32 @@ public class ARFaceFilterApplier : MonoBehaviour
 {
     [SerializeField]
     private ARFaceManager arFaceManager;
-
-    private GameObject leftCheekPrefab;
-    private GameObject rightCheekPrefab;
-    private GameObject nosePrefab;
-    private GameObject foreheadPrefab;
-
     private string filterName;
 
-    const int leftCheekIndex = 436;
-    const int rightCheekIndex = 216;
-    const int noseIndex = 2;
-    const int foreheadIndex = 10;
+    public GameObject filterPanel;
 
+    private Dictionary<string, int> faceLandmarkIndices = new Dictionary<string, int>
+    {
+        { "LeftCheek", 436 },
+        { "RightCheek", 216 },
+        { "Nose", 2 },
+        { "Forehead", 10 }
+    };
+
+    private Dictionary<string, GameObject> filterParts = new Dictionary<string, GameObject>();
 
     void Update()
     {
         // 필터가 선택되지 않았다면
-        if (filterName == null)
+        if (string.IsNullOrEmpty(filterName))
         {
             return;
         }
         // 감지된 얼굴이 없으면
         if (arFaceManager.trackables.count == 0)
         {
-            if(leftCheekPrefab.activeSelf || rightCheekPrefab.activeSelf || nosePrefab.activeSelf || foreheadPrefab.activeSelf)
-            {
-                SetPrefabVisibility(false);
-                return;
-            }
-        }
-        else if(!leftCheekPrefab.activeSelf || !rightCheekPrefab.activeSelf || !nosePrefab.activeSelf || !foreheadPrefab.activeSelf)
-        {
-            SetPrefabVisibility(true);
+            SetPrefabVisibility(false);
+            return;
         }
 
         ApplyFilter();
@@ -62,38 +55,42 @@ public class ARFaceFilterApplier : MonoBehaviour
         }
 
         InstantiateFilterPrefabs();
+        filterPanel.SetActive(false);
     }
 
     private void InstantiateFilterPrefabs()
     {
-        string basePath = $"Arts/5AR/{filterName}/{filterName}";
 
-        InstantiatePart($"{basePath}_LeftEye", out leftCheekPrefab);
-        InstantiatePart($"{basePath}_RightEye", out rightCheekPrefab);
-        InstantiatePart($"{basePath}_Nose", out nosePrefab);
-        InstantiatePart($"{basePath}_Forehead", out foreheadPrefab);
+        InstantiatePart("LeftCheek");
+        InstantiatePart("RightCheek");
+        InstantiatePart("Forehead");
+
+        if(filterName == "Ep2")
+        {
+            InstantiatePart("Nose");
+        }
     }
 
-    private void InstantiatePart(string path, out GameObject part)
+    private void InstantiatePart(string partName)
     {
+        string path = $"5AR/{filterName}_{partName}";
         GameObject prefab = Resources.Load<GameObject>(path);
+
         if (prefab != null)
         {
-            part = Instantiate(prefab, Vector3.zero, Quaternion.identity);
+            GameObject part = Instantiate(prefab, Vector3.zero, Quaternion.identity);
             part.transform.SetParent(transform);
+            filterParts[partName] = part;
         }
         else
         {
-            part = null;
             Debug.LogWarning($"프리팹을 찾을 수 없습니다: {path}");
         }
     }
 
     void SetPrefabVisibility(bool isVisible)
     {
-        GameObject[] allPartPrefab = { leftCheekPrefab, rightCheekPrefab, nosePrefab, foreheadPrefab };
-
-        foreach(var part in allPartPrefab)
+        foreach(var part in filterParts.Values)
         {
             if(part != null)
             {
@@ -120,43 +117,24 @@ public class ARFaceFilterApplier : MonoBehaviour
                 return;
             }
 
-            // 얼굴의 로컬 정점 위치 가져오기
-            Vector3 leftEyeLocal = face.vertices[leftCheekIndex];
-            Vector3 rightEyeLocal = face.vertices[rightCheekIndex];
-            Vector3 noseLocal = face.vertices[noseIndex];
-            Vector3 foreheadLocal = face.vertices[foreheadIndex];
-
-            // 위치 보정
-            leftEyeLocal.x -= 0.02f;
-            rightEyeLocal.x += 0.02f;
-
-            Vector3 leftEyeWorldPos = face.transform.TransformPoint(leftEyeLocal);
-            Vector3 rightEyeWorldPos = face.transform.TransformPoint(rightEyeLocal);
-            Vector3 noseWorldPos = face.transform.TransformPoint(noseLocal);
-            Vector3 foreheadWorldPos = face.transform.TransformPoint(foreheadLocal);
-
-            Quaternion faceRotation = face.transform.rotation;
-
-            // 얼굴이 바라보는 방향
-            Vector3 faceForward = face.transform.forward;
-            Vector3 faceUp = face.transform.up;
-
             // 카메라 회전 보정 (카메라가 회전해도 스프라이트가 이상하지 않도록)
+            Quaternion faceRotation = face.transform.rotation;
             Quaternion inverseCameraRotation = Quaternion.Inverse(Camera.main.transform.rotation);
             Quaternion adjustedRotation = inverseCameraRotation * faceRotation;
 
-            GameObject[] allPartPrefab = { leftCheekPrefab, rightCheekPrefab, nosePrefab, foreheadPrefab };
-            Vector3[] allPartWorldPos = {leftEyeWorldPos, rightEyeWorldPos, noseWorldPos, foreheadWorldPos};
-
-            int partIndex = 0;
-            foreach (var part in allPartPrefab)
+            foreach(var part in filterParts)
             {
-                if (part != null)
+                string partName = part.Key;
+                GameObject partPrefab = part.Value;
+
+                if(faceLandmarkIndices.TryGetValue(partName, out int vertexIndex) && partPrefab != null)
                 {
-                    part.transform.position = allPartWorldPos[partIndex];
-                    part.transform.rotation = adjustedRotation;
+                    Vector3 localPos = face.vertices[vertexIndex];
+                    Vector3 worldPos = face.transform.TransformPoint(localPos);
+
+                    partPrefab.transform.position = worldPos;
+                    partPrefab.transform.rotation = adjustedRotation;
                 }
-                partIndex++;
             }
 
             SetPrefabVisibility(true);
