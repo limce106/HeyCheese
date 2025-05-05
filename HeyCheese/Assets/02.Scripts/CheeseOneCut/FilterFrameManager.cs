@@ -26,10 +26,17 @@ public class FilterFrameManager : MonoBehaviour
     private Dictionary<string, bool> frameUnlocked = new Dictionary<string, bool>
     {
         // 추후 key는 애셋명으로 변경할 예정
-        {"Episode1", false},
-        {"Episode2", false },
-        {"Episode3", false },
-        {"Episode4", false },
+        //{"Ep1_Frame", false},
+        //{"Ep2_Frame", false },
+        //{"Ep3_Frame", false },
+        //{"Ep4_Frame", false },
+        //{"BuiltIn1", true },
+        //{"BuiltIn2", true }
+
+        {"Ep1_Frame", true},
+        {"Ep2_Frame", true },
+        {"Ep3_Frame", true },
+        {"Ep4_Frame", true },
         {"BuiltIn1", true },
         {"BuiltIn2", true }
     };
@@ -37,10 +44,16 @@ public class FilterFrameManager : MonoBehaviour
     private Dictionary<string, bool> filterUnlocked = new Dictionary<string, bool>
     {
         // 추후 key는 애셋명으로 변경할 예정
-        {"Episode1", false},
-        {"Episode2", false },
-        {"Episode3", false },
-        {"Episode4", false },
+        //{"Ep1", false},
+        //{"Ep2", false },
+        //{"Ep3", false },
+        //{"Ep4", false },
+        //{"HiddenMission1", false },
+        //{"HiddenMission2", false }
+        {"Ep1", true},
+        {"Ep2", true },
+        {"Ep3", true },
+        {"Ep4", true },
         {"HiddenMission1", false },
         {"HiddenMission2", false }
     };
