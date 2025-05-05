@@ -5,10 +5,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections.ObjectModel;
 
-public class FilterManager : MonoBehaviour
+public class FilterFrameManager : MonoBehaviour
 {
-    public static FilterManager instance;
+    public static FilterFrameManager instance;
     void Awake()
     {
         if(instance == null)
@@ -21,6 +22,17 @@ public class FilterManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    private Dictionary<string, bool> frameUnlocked = new Dictionary<string, bool>
+    {
+        // 추후 key는 애셋명으로 변경할 예정
+        {"Episode1", false},
+        {"Episode2", false },
+        {"Episode3", false },
+        {"Episode4", false },
+        {"BuiltIn1", true },
+        {"BuiltIn2", true }
+    };
 
     private Dictionary<string, bool> filterUnlocked = new Dictionary<string, bool>
     {
@@ -39,6 +51,16 @@ public class FilterManager : MonoBehaviour
         {"HiddenMission1", "외계인 느낌의 멋진 안경 👽✨"},
         {"HiddenMission2", "외계인 느낌의 멋진 안경 👽✨" }
     };
+
+    public ReadOnlyDictionary<string, bool> GetFrameUnlockedReadOnly()
+    {
+        return new ReadOnlyDictionary<string, bool>(frameUnlocked);
+    }
+
+    public ReadOnlyDictionary<string, bool> GetFilterUnlockedReadOnly()
+    {
+        return new ReadOnlyDictionary<string, bool>(filterUnlocked);
+    }
 
     public void CheckHiddenMission(int faceCount)
     {
@@ -91,15 +113,5 @@ public class FilterManager : MonoBehaviour
         yield return new WaitForSeconds(3f);
 
         hiddenMissionPanel.SetActive(false);
-    }
-
-    public string[] GetFilterUnlockedKeys()
-    {
-        return filterUnlocked.Keys.ToArray();
-    }
-
-    public bool[] GetFilterUnlockedValues()
-    {
-        return filterUnlocked.Values.ToArray();
     }
 }
