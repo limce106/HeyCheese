@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
@@ -24,20 +26,22 @@ public class CheeseOneCutUIManager : MonoBehaviour
 
     public void OnClick_Camera()
     {
-        FilterManager.instance.CheckHiddenMission(arFaceManager.trackables.count);
+        FilterFrameManager.instance.CheckHiddenMission(arFaceManager.trackables.count);
         StartCoroutine(saveLoadPicture.CaptureAndSave());
     }
 
     public void OnClick_Frame()
     {
+        UpdateFrameButtons();
         framePanel.SetActive(true);
+
         cancelButton.interactable = true;
     }
 
     public void OnClick_Filter()
     {
-        filterPanel.SetActive(true);
         UpdateFilterButtons();
+        filterPanel.SetActive(true);
 
         cancelButton.interactable = true;
     }
@@ -60,25 +64,38 @@ public class CheeseOneCutUIManager : MonoBehaviour
     private void UpdateFilterButtons()
     {
         Button[] filterButtons = filterPanel.GetComponentsInChildren<Button>();
-        string[] filterUnlockedKeys = FilterManager.instance.GetFilterUnlockedKeys();
-        bool[] filterUnlockedValues = FilterManager.instance.GetFilterUnlockedValues();
+        var filterUnlockedItems = FilterFrameManager.instance.GetFilterUnlockedReadOnly();
+        UpdateButtons(filterButtons, filterUnlockedItems, "Arts/6Frame");
+    }
 
-        for (int i = 0; i < filterUnlockedValues.Length; i++)
+    private void UpdateFrameButtons()
+    {
+        Button[] frameButtons = framePanel.GetComponentsInChildren<Button>();
+        var frameUnlockedItems = FilterFrameManager.instance.GetFrameUnlockedReadOnly();
+        UpdateButtons(frameButtons, frameUnlockedItems, "Arts/6Frame");
+    }
+
+    private void UpdateButtons(Button[] buttons, ReadOnlyDictionary<string, bool> items, string resourcesPath)
+    {
+        string[] itemKeys = items.Keys.ToArray();
+        bool[] itemValues = items.Values.ToArray();
+
+        for (int i = 0; i < itemValues.Length; i++)
         {
-            if (filterUnlockedValues[i] == false)
+            if (itemValues[i] == false)
             {
                 // RemoveFilter 버튼 제외하여 인덱스 + 1
                 // 사용 불가능한 버튼은 상호작용 불가능
-                filterButtons[i + 1].interactable = false;
+                buttons[i + 1].interactable = false;
             }
 
-            string filterName = filterUnlockedKeys[i];
+            string itemName = itemKeys[i];
 
-            Sprite filterSprite = Resources.Load<Sprite>($"Arts/5AR/{filterName}/{filterName}");
-            UnityEngine.UI.Image buttonImage = filterButtons[i + 1].GetComponent<UnityEngine.UI.Image>();
-            buttonImage.sprite = filterSprite;
+            Sprite itemSprite = Resources.Load<Sprite>($"{resourcesPath}/{itemName}/{itemName}");
+            UnityEngine.UI.Image buttonImage = buttons[i + 1].GetComponent<UnityEngine.UI.Image>();
+            buttonImage.sprite = itemSprite;
 
-            filterButtons[i + 1].gameObject.name = filterName;
+            buttons[i + 1].gameObject.name = itemName;
         }
     }
 }
