@@ -65,7 +65,7 @@ public class CheeseOneCutUIManager : MonoBehaviour
     {
         Button[] filterButtons = filterPanel.GetComponentsInChildren<Button>();
         var filterUnlockedItems = FilterFrameManager.instance.GetFilterUnlockedReadOnly();
-        UpdateButtons(filterButtons, filterUnlockedItems, "Arts/6Frame");
+        UpdateButtons(filterButtons, filterUnlockedItems, "Arts/5AR");
     }
 
     private void UpdateFrameButtons()
