@@ -9,6 +9,7 @@ public class FrameApplier : MonoBehaviour
     private GameObject frameObj;
     private UnityEngine.UI.Image frameImg;
     public GameObject framePanel;
+
     private string frameName;
 
     void Awake()
@@ -52,5 +53,6 @@ public class FrameApplier : MonoBehaviour
     public void RemoveFrame()
     {
         frameObj.SetActive(false);
+        framePanel.SetActive(false);
     }
 }
