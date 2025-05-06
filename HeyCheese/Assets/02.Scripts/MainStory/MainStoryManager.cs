@@ -5,8 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-// ï¿½ï¿½ï¿½ä¸®<->ï¿½Ì´Ï°ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-// ï¿½ï¿½ï¿½ä¸® -> ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½Ê¿ï¿½
+// ½ºÅä¸®<->¹Ì´Ï°ÔÀÓ ½Ã ÇØ´ç ³»¿ëÀº À¯Áö, ±â¾ïµÇ¾î¾ß µÇÁö¸¸
+// ½ºÅä¸® -> ¸ñ·Ï ¼ø°£, ³»¿ë ÃÊ±âÈ­ ÇÊ¿ä
 public class MainStoryManager : MonoBehaviour
 {
     public static MainStoryManager Instance;
@@ -59,9 +59,9 @@ public class MainStoryManager : MonoBehaviour
 
 
     // Data Structure
-    public Dictionary<int, MainStory> currentEpisode; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ç¼Òµå¿¡ ï¿½Ø´ï¿½ï¿½Ï´ï¿½ {id:MainStory CSVï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½(step), ..}
+    public Dictionary<int, MainStory> currentEpisode; // Àü´ÞÇÑ ¿¡ÇÇ¼Òµå¿¡ ÇØ´çÇÏ´Â {id:MainStory CSVÀÇ ÇÑ ¿­(step), ..}
     private int currentID = 0;
-    public static string PlayerName = "ï¿½ï¿½ï¿½Î°ï¿½";
+    public static string PlayerName = "ÁÖÀÎ°ø";
 
     
 
@@ -71,11 +71,11 @@ public class MainStoryManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // ï¿½ï¿½ ï¿½Ñ¾î°¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+            DontDestroyOnLoad(gameObject); // ¾À ³Ñ¾î°¡µµ À¯Áö
         }
         else
         {
-            Destroy(gameObject); // ï¿½ßºï¿½ ï¿½ï¿½ï¿½ï¿½
+            Destroy(gameObject); // Áßº¹ ¹æÁö
         }
     }
 
@@ -86,7 +86,7 @@ public class MainStoryManager : MonoBehaviour
     //    selectedSituation = "None";
     //}
 
-    //// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ñ¾î°¬ï¿½ï¿½ ï¿½ï¿½ È£ï¿½ï¿½ ï¿½Ê¿ï¿½
+    //// ¸ÞÀÎ ¾À ³Ñ¾î°¬À» ¶§ È£Ãâ ÇÊ¿ä
     //public void DestroySelf()
     //{
     //    Clear();
@@ -94,7 +94,7 @@ public class MainStoryManager : MonoBehaviour
     //    Instance = null;
     //}
 
-    //// !!ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Æ·ï¿½ ï¿½Û¼ï¿½ï¿½ï¿½ï¿½Ö±ï¿½!!
+    //// !!¸ÞÀÎ ¾À °¬À» ¶§ ¾Æ·¡ ÀÛ¼ºÇØÁÖ±â!!
     ////void Start()
     ////{
     ////    if (StoryManagerTest.Instance != null)
@@ -105,11 +105,11 @@ public class MainStoryManager : MonoBehaviour
 
     void Start()
     {
-        // ï¿½ï¿½ï¿½Ç¼Òµï¿½ ï¿½Þ´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ãµï¿½ 
+        // ¿¡ÇÇ¼Òµå ¸Þ´º¿¡¼­ ¼±ÅÃµÈ 
         string episodeID = PlayerPrefs.GetString("SelectedEpisodeID");
-        print("ï¿½Å´ï¿½ï¿½ï¿½: " + episodeID);
+        print("¸Å´ÏÀú: " + episodeID);
 
-        // ï¿½Ä½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
+        // ÆÄ½ÌÇÑ ³»¿ë ºÒ·¯¿À±â
         CSVParser csvParser = new CSVParser();
         currentEpisode = csvParser.ParseMainStories(episodeID);
         Debug.Log($"[MainStoryManager] Loaded EpisodeID: {episodeID}");
@@ -117,14 +117,14 @@ public class MainStoryManager : MonoBehaviour
         print(currentEpisode.Values);
         currentID = 0;
 
-        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
+        // ½ÃÀÛÇÒ ¶§ ÀúÀåµÈ ÀÌ¸§ ºÒ·¯¿À±â
         LoadPlayerName();
 
         //loadingCanvas.gameObject.SetActive(true);
         ShowCurrentID(currentID);
     }
 
-    //// ï¿½Þ´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ° ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+    //// ¸Þ´º¿¡¼­ ¹öÆ° ´­·¶À» ½Ã
     //public void OnStartStoryButtonClicked(string emotion, string situation, int level)
     //{
     //    selectedEmotion = emotion;
@@ -145,7 +145,7 @@ public class MainStoryManager : MonoBehaviour
     //    string path = Path.Combine(Application.streamingAssetsPath, "StoryDataTest.json");
     //    if (!File.Exists(path))
     //    {
-    //        Debug.LogError("StoryDataTest.json ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½!");
+    //        Debug.LogError("StoryDataTest.json ÆÄÀÏÀ» Ã£À» ¼ö ¾ø½À´Ï´Ù!");
     //        return;
     //    }
 
@@ -157,7 +157,7 @@ public class MainStoryManager : MonoBehaviour
 
     //        if (allData == null)
     //        {
-    //            Debug.LogError("JSON ï¿½Ä½ï¿½ ï¿½ï¿½ï¿½ï¿½! allDataï¿½ï¿½ nullï¿½Ô´Ï´ï¿½.");
+    //            Debug.LogError("JSON ÆÄ½Ì ½ÇÆÐ! allData°¡ nullÀÔ´Ï´Ù.");
     //            return;
     //        }
 
@@ -175,11 +175,11 @@ public class MainStoryManager : MonoBehaviour
     //    }
     //    catch (System.Exception e)
     //    {
-    //        Debug.LogError($"JSON ï¿½Ä½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½: {e.Message}");
+    //        Debug.LogError($"JSON ÆÄ½Ì Áß ¿¹¿Ü ¹ß»ý: {e.Message}");
     //    }
     //}
 
-    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ID)ï¿½ï¿½ ï¿½Â´ï¿½ ï¿½Ìºï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+    // ÇöÀç ½ºÅÜ(ID)¿¡ ¸Â´Â ÀÌº¥Æ® ½ÇÇà
     void ShowCurrentID(int id)
     {
         MainStory step = currentEpisode[id];
@@ -187,16 +187,16 @@ public class MainStoryManager : MonoBehaviour
 
         if (step.NextID == 0)
         {
-            Debug.Log("ï¿½ï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.");
+            Debug.Log("½ºÅä¸® Á¾·á ÁöÁ¡¿¡ µµ´ÞÇß½À´Ï´Ù.");
             EndEpisode();
             return;
         }
 
-        // ï¿½ß¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ç³Ê¶Ù±ï¿½
-        // idï¿½ï¿½ -1(ï¿½ï¿½ï¿½ï¿½o)ï¿½ï¿½ ï¿½ï¿½ï¿½, ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½(csvï¿½ï¿½ ï¿½ï¿½)ï¿½ï¿½ ï¿½ï¿½Åµï¿½ï¿½
+        // Àß¸øµÈ ½ºÅÜ °Ç³Ê¶Ù±â
+        // id°¡ -1(¹®Á¦o)ÀÎ °æ¿ì, ÇØ´ç ½ºÅÜ(csvÀÇ ¿­)À» ½ºÅµÇÔ
         if (id == -1)
         {
-            Debug.LogWarning($"[MainStory] ID ï¿½Ä½ï¿½ ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½): {step}");
+            Debug.LogWarning($"[MainStory] ID ÆÄ½Ì ½ÇÆÐ: ¹®Á¦ ½ºÅÜ(¿­): {step}");
             NextStep();
         }
 
@@ -207,40 +207,54 @@ public class MainStoryManager : MonoBehaviour
                 TurnOffEveryCanvas();
                 loadingCanvas.SetActive(true);
 
-                SetImage(backgroundImg, step.ImageID); // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+                SetImage(backgroundImg, step.ImageID); // ¹è°æ º¯°æ
                 
+                episodeIDText.text = step.EpisodeID; // ¿¡ÇÇ¼ÒµåID º¯°æ
+                chapterTitleText.text = step.ChapterTitle; // ¿¡ÇÇ¼Òµå Á¦¸ñ º¯°æ
                 break;
             case "Video":
-                print("Video ï¿½ï¿½ï¿½");
-                print("Video ï¿½ï¿½ï¿½");
+                print("Video Àç»ý");
                 break;
             case "Dialogue":
                 TurnOffEveryCanvas();
                 dialogueCanvas.SetActive(true);
 
-                SetImage(backgroundImg, step.ImageID); // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-                SetImage(characterImg, step.SpeakerImageID); // Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+                // ´ë»ç¿¡ ÇÃ·¹ÀÌ¾î ÀÌ¸§ Àû¿ë
+                string rawScriptText = step.ScriptID;
+                string namedScriptText = rawScriptText.Replace("{PlayerName}", PlayerName);
+
+                speakerNameText.text = step.SpeakerID; // ÀÌ¸§ º¯°æ
+                dialogueText.text = namedScriptText; // ´ë»ç º¯°æ
+                SetImage(backgroundImg, step.ImageID); // ¹è°æ º¯°æ
+                SetImage(characterImg, step.SpeakerImageID); // Ä³¸¯ÅÍ º¯°æ
+
+                // ÀÌ¸§,´ë»ç ¹è°æ »ö º¯°æ
+                Speaker speaker = SpeakerUtil.ParseSpeakerID(step.SpeakerID); // speakerID ÅØ½ºÆ®¸¦ enum Å¸ÀÔÀ¸·Î º¯È¯
+                (Color nameColor, Color dialogueColor) = dialougeManager.GetColorBySpeaker(speaker); // ÀÌ¸§°ú ´ë»ç¿¡ speakerº° ÄÃ·¯ Àû¿ë
+                nameImg.color = nameColor;
+                dialogueImg.color = dialogueColor;
+                Canvas.ForceUpdateCanvases(); // UI ¾÷µ¥ÀÌÆ® - Á¦°Å ½Ã Á¤»óÀûÀ¸·Î »ö ¹Ý¿µµÇÁö ¾ÊÀ½
                 break;
             case "Choice":
                 TurnOffEveryCanvas();
                 choiceCanvas.SetActive(true);
 
-                choiceQuestionText.text = step.ScriptID; // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-                choice1Text.text = step.Choice1; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-                choice2Text.text = step.Choice2; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-                choice3Text.text = step.Choice3; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+                choiceQuestionText.text = step.ScriptID; // ´ë»ç º¯°æ
+                choice1Text.text = step.Choice1; // ¼±ÅÃÁö º¯°æ
+                choice2Text.text = step.Choice2; // ¼±ÅÃÁö º¯°æ
+                choice3Text.text = step.Choice3; // ¼±ÅÃÁö º¯°æ
 
                 break;
             case "NameInput":
-                // ï¿½ï¿½ï¿½ ï¿½ï¿½Æ° ï¿½ï¿½ï¿½ï¿½
+                // ´ë»ç ¹öÆ° ¸·±â
 
                 inputFieldCanvas.SetActive(true);
                 //playerNameManager.SavePlayerName();
 
-                //PlayerName = PlayerNameManager.PlayerName; // ï¿½ï¿½ï¿½Ç¼Òµï¿½1ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ü°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
+                //PlayerName = PlayerNameManager.PlayerName; // ¿¡ÇÇ¼Òµå1ÀÇ °æ¿ì ÀÌ ´Ü°è ÀÌÈÄ ÇÃ·¹ÀÌ¾îÀÇ ÀÌ¸§ ¾÷µ¥ÀÌÆ®
 
 
-                // OnConfirmYes ï¿½ï¿½, ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ü°ï¿½ï¿½ ï¿½Ìµï¿½
+                // OnConfirmYes ½Ã, ÇÃ·¹ÀÌ¾î ÀÌ¸§ ¾÷µ¥ÀÌÆ® ¹× ´ÙÀ½ ´Ü°è·Î ÀÌµ¿
 
 
 
@@ -259,7 +273,7 @@ public class MainStoryManager : MonoBehaviour
             //    cameraCanvas.gameObject.SetActive(true);
             //    break;
             //case "Result":
-            //    dialogueText.text = "ï¿½ï¿½ï¿½ È­ï¿½ï¿½ï¿½Ô´Ï´ï¿½.";
+            //    dialogueText.text = "°á°ú È­¸éÀÔ´Ï´Ù.";
             //    break;
         }
     }
@@ -270,8 +284,8 @@ public class MainStoryManager : MonoBehaviour
         ShowCurrentID(nextID);
     }
 
-    // Äµï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ Äµï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­ ï¿½Ô¼ï¿½
-    // NameInput ï¿½Ã¿ï¿½ï¿½ï¿½ Äµï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    // Äµ¹ö½º ÀüÈ¯À» À§ÇÑ ¸ðµç Äµ¹ö½º ºñÈ°¼ºÈ­ ÇÔ¼ö
+    // NameInput ½Ã¿¡´Â Äµ¹ö½º ºñÈ°¼ºÈ­ ÇÏÁö ¾ÊÀ½
     void TurnOffEveryCanvas()
     {
         loadingCanvas.SetActive(false);
@@ -284,7 +298,7 @@ public class MainStoryManager : MonoBehaviour
         settingsCanvas.SetActive(false);
     }
 
-    // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½Ì¸ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
+    // ÇÃ·¹ÀÌ¾î ÀÌ¸§ ºÒ·¯¿À±â
     void LoadPlayerName()
     {
         if (PlayerPrefs.HasKey("PlayerName"))
@@ -293,12 +307,15 @@ public class MainStoryManager : MonoBehaviour
         }
         else
         {
-            PlayerName = "ï¿½ï¿½ï¿½Î°ï¿½";
+            PlayerName = "ÁÖÀÎ°ø";
+        }
+    }
+
     void SetImage(UnityEngine.UI.Image targetImg, string imgPath)
     {
-        if (string.IsNullOrEmpty(imgPath)) // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ x ï¿½ï¿½
+        if (string.IsNullOrEmpty(imgPath)) // »çÁø Á¸Àç x ½Ã
         {
-            return; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½x
+            return; // »çÁø º¯°æx
         }
 
         Sprite newSprite = Resources.Load<Sprite>($"Arts/{imgPath}");
@@ -308,7 +325,7 @@ public class MainStoryManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"[ImageChanger] ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½Îµï¿½ ï¿½ï¿½ï¿½ï¿½: {imgPath}, ï¿½âº» ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½");
+            Debug.LogWarning($"[ImageChanger] ÀÌ¹ÌÁö ·Îµå ½ÇÆÐ: {imgPath}, ±âº» ÀÌ¹ÌÁö »ç¿ë");
 
             if (targetImg.name.Contains("background"))
             {
