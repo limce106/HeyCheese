@@ -207,6 +207,7 @@ public class MainStoryManager : MonoBehaviour
                 TurnOffEveryCanvas();
                 loadingCanvas.SetActive(true);
 
+                SetImage(backgroundImg, step.ImageID); // ��� ����
                 
                 break;
             case "Video":
@@ -217,6 +218,8 @@ public class MainStoryManager : MonoBehaviour
                 TurnOffEveryCanvas();
                 dialogueCanvas.SetActive(true);
 
+                SetImage(backgroundImg, step.ImageID); // ��� ����
+                SetImage(characterImg, step.SpeakerImageID); // ĳ���� ����
                 break;
             case "Choice":
                 TurnOffEveryCanvas();
@@ -291,6 +294,35 @@ public class MainStoryManager : MonoBehaviour
         else
         {
             PlayerName = "���ΰ�";
+    void SetImage(UnityEngine.UI.Image targetImg, string imgPath)
+    {
+        if (string.IsNullOrEmpty(imgPath)) // ���� ���� x ��
+        {
+            return; // ���� ����x
+        }
+
+        Sprite newSprite = Resources.Load<Sprite>($"Arts/{imgPath}");
+        if (newSprite != null)
+        {
+            targetImg.sprite = newSprite;
+        }
+        else
+        {
+            Debug.LogWarning($"[ImageChanger] �̹��� �ε� ����: {imgPath}, �⺻ �̹��� ���");
+
+            if (targetImg.name.Contains("background"))
+            {
+                SetDefaultBackground(targetImg);
+            }
+        }
+    }
+
+    void SetDefaultBackground(UnityEngine.UI.Image targetImg)
+    {
+        Sprite defaultSprite = Resources.Load<Sprite>($"Arts/2Back//defaultBackground");
+        if (defaultSprite != null)
+        {
+            targetImg.sprite = defaultSprite;
         }
     }
 
