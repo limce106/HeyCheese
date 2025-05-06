@@ -145,5 +145,6 @@ public class ARFaceFilterApplier : MonoBehaviour
     {
         filterName = null;
         SetPrefabVisibility(false);
+        filterPanel.SetActive(false);
     }
 }
