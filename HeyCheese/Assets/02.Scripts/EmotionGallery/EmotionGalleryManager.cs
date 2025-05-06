@@ -88,7 +88,7 @@ public class EmotionGalleryManager : MonoBehaviour
     {
         string selected = filterDropdown.options[index].text;
 
-        if (selected == "전체")
+        if (selected == "전체보기")
             LoadGallery("all");
         else if (selected == "스토리 사진")
             LoadGallery("story");

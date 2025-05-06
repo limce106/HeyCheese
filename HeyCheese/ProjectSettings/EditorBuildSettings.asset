@@ -6,8 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/01.Scenes/TestScenes/ARTest.unity
-    guid: d3ca939d40a643349872390a94a5ca13
+    path: Assets/01.Scenes/EmotionGallery/DB_InputTest.unity
+    guid: d562f0ae2f361f04194f105ecfd53054
+  - enabled: 1
+    path: Assets/01.Scenes/EmotionGallery/EmotionGallery.unity
+    guid: 2dac83f10ce134f4c9daf8e8a83a9613
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 2f1402586e1131f4a94180c5d74a583c, type: 2}
     UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: 84c67cd34797d8146804029a29ae22a4, type: 2}
