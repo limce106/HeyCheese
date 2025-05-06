@@ -117,6 +117,8 @@ public class MainStoryManager : MonoBehaviour
         print(currentEpisode.Values);
         currentID = 0;
 
+        // ������ �� ����� �̸� �ҷ�����
+        LoadPlayerName();
 
         //loadingCanvas.gameObject.SetActive(true);
         ShowCurrentID(currentID);
@@ -209,6 +211,7 @@ public class MainStoryManager : MonoBehaviour
                 break;
             case "Video":
                 print("Video ���");
+                print("Video ���");
                 break;
             case "Dialogue":
                 TurnOffEveryCanvas();
@@ -279,6 +282,18 @@ public class MainStoryManager : MonoBehaviour
     }
 
     // �÷��̾� �̸� �ҷ�����
+    void LoadPlayerName()
+    {
+        if (PlayerPrefs.HasKey("PlayerName"))
+        {
+            PlayerName = PlayerPrefs.GetString("PlayerName");
+        }
+        else
+        {
+            PlayerName = "���ΰ�";
+        }
+    }
+
     void EndEpisode()
     {
 
