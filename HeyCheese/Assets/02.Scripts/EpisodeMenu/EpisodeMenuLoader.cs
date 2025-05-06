@@ -77,6 +77,7 @@ public class EpisodeMenuLoader : MonoBehaviour
 
         // episodeID를 PlayerPrefs에 저장
         PlayerPrefs.SetString("SelectedEpisodeID", episodeID);
+        PlayerPrefs.Save();
 
         print(PlayerPrefs.GetString("SelectedEpisodeID"));
 
