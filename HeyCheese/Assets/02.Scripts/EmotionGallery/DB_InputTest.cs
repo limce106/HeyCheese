@@ -5,6 +5,7 @@ using System.IO;
 using System.Data;
 using Mono.Data.Sqlite;
 using System.Collections;
+using UnityEngine.Android;
 
 public class DBInputTest : MonoBehaviour
 {
@@ -29,6 +30,12 @@ public class DBInputTest : MonoBehaviour
 
     void Start()
     {
+        // 카메라 권한 요청
+        if (!Permission.HasUserAuthorizedPermission(Permission.Camera))
+        {
+            Permission.RequestUserPermission(Permission.Camera);
+        }
+
         // 웹캠 시작
         webcamTexture = new WebCamTexture();
         webcamDisplay.texture = webcamTexture;
