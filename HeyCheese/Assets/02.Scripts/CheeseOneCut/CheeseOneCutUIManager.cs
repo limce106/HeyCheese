@@ -26,8 +26,8 @@ public class CheeseOneCutUIManager : MonoBehaviour
 
     public void OnClick_Camera()
     {
-        //StartCoroutine(saveLoadPicture.CaptureAndSave());
-        FilterFrameManager.instance.CheckHiddenMission(arFaceManager.trackables.count);
+        int faceCountAtCapture = arFaceManager.trackables.count;
+        StartCoroutine(CaptureAndCheckMission(faceCountAtCapture));
     }
 
     public void OnClick_Frame()
@@ -97,5 +97,13 @@ public class CheeseOneCutUIManager : MonoBehaviour
 
             buttons[i + 1].gameObject.name = itemName;
         }
+    }
+
+    private IEnumerator CaptureAndCheckMission(int faceCount)
+    {
+        // 캡처가 끝난 후 히든미션 패널이 뜨게 한다.
+        // (캡처된 사진에 히든미션 패널이 같이 찍히는 것을 방지하기 위함)
+        yield return(StartCoroutine(saveLoadPicture.CaptureAndSave()));
+        FilterFrameManager.instance.CheckHiddenMission(faceCount);
     }
 }
