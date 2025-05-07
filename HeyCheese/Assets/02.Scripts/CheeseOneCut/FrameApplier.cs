@@ -8,6 +8,8 @@ public class FrameApplier : MonoBehaviour
     [SerializeField]
     private GameObject frameObj;
     private UnityEngine.UI.Image frameImg;
+    public GameObject framePanel;
+
     private string frameName;
 
     void Awake()
@@ -31,16 +33,26 @@ public class FrameApplier : MonoBehaviour
         if (frameName == null)
             return;
 
-        string framePath = $"Arts/6Frame/{frameName}";
+        if(!frameObj.activeSelf)
+        {
+            frameObj.SetActive(true);
+        }
+
+        string framePath = $"6Frame/{frameName}";
         Sprite frame = Resources.Load<Sprite>(framePath);
         frameImg.sprite = frame;
 
         if (frameObj.activeSelf == false)
+        {
             frameObj.SetActive(true);
+        }
+
+        framePanel.SetActive(false);
     }
 
-    void RemoveFrame()
+    public void RemoveFrame()
     {
         frameObj.SetActive(false);
+        framePanel.SetActive(false);
     }
 }
