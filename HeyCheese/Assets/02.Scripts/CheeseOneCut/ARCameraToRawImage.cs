@@ -108,7 +108,7 @@ public class ARCameraToRawImage : MonoBehaviour
             cameraTexture = Rotate90(cameraTexture);
 
             rawImage.texture = cameraTexture;
-            rawImage.rectTransform.sizeDelta = new Vector2(1050, 1400);
+            rawImage.rectTransform.sizeDelta = new Vector2(Screen.width, Screen.height);
             rawImage.rectTransform.localEulerAngles = new Vector3(0, 0, 180);
         }
     }
