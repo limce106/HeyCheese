@@ -8315,7 +8315,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 970218346}
         m_TargetAssemblyTypeName: PlayerNameManager, Assembly-CSharp
-        m_MethodName: OnNameInputComplete
+        m_MethodName: OnConfirmNo
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -11831,7 +11831,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 970218346}
         m_TargetAssemblyTypeName: PlayerNameManager, Assembly-CSharp
-        m_MethodName: OnNameInputComplete
+        m_MethodName: OnConfirmYes
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
