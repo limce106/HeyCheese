@@ -11,7 +11,7 @@ public class EmotionGalleryManager : MonoBehaviour
     public Text titleText;
     public Dropdown filterDropdown;
     public GameObject detailPanel;
-    public UnityEngine.UI.Image previewImage;
+    public Image previewImage;
     public Text capturedAtText;
     public Text episodeTitleText;
     public Text selectedMoodText;
@@ -58,7 +58,7 @@ public class EmotionGalleryManager : MonoBehaviour
                     currentThumbnails.Add(item);
 
                     // 썸네일에 이미지 로드
-                    UnityEngine.UI.Image img = item.transform.Find("ThumbnailImage").GetComponent<UnityEngine.UI.Image>();
+                    Image img = item.transform.Find("ThumbnailImage").GetComponent<Image>();
                     if (File.Exists(path))
                     {
                         byte[] imgData = File.ReadAllBytes(path);
