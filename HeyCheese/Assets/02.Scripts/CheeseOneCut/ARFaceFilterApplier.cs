@@ -12,6 +12,7 @@ public class ARFaceFilterApplier : MonoBehaviour
     private string filterName;
 
     public GameObject filterPanel;
+    public GameObject bottomButtons;
 
     private Dictionary<string, int> faceLandmarkIndices = new Dictionary<string, int>
     {
@@ -56,6 +57,7 @@ public class ARFaceFilterApplier : MonoBehaviour
 
         InstantiateFilterPrefabs();
         filterPanel.SetActive(false);
+        bottomButtons.SetActive(true);
     }
 
     private void InstantiateFilterPrefabs()
@@ -146,5 +148,6 @@ public class ARFaceFilterApplier : MonoBehaviour
         filterName = null;
         SetPrefabVisibility(false);
         filterPanel.SetActive(false);
+        bottomButtons.SetActive(true);
     }
 }
