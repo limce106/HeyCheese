@@ -14,6 +14,8 @@ public class CheeseOneCutUIManager : MonoBehaviour
 
     public Button cancelButton;
     public Button cameraButton;
+    // 하단 버튼
+    public GameObject bottomButtons;
 
     [SerializeField]
     private ARFaceManager arFaceManager;
@@ -34,6 +36,7 @@ public class CheeseOneCutUIManager : MonoBehaviour
     {
         UpdateFrameButtons();
         framePanel.SetActive(true);
+        bottomButtons.SetActive(false);
 
         cancelButton.interactable = true;
     }
@@ -42,6 +45,7 @@ public class CheeseOneCutUIManager : MonoBehaviour
     {
         UpdateFilterButtons();
         filterPanel.SetActive(true);
+        bottomButtons.SetActive(false);
 
         cancelButton.interactable = true;
     }
@@ -57,6 +61,7 @@ public class CheeseOneCutUIManager : MonoBehaviour
             filterPanel.SetActive(false);
         }
 
+        bottomButtons.SetActive(true);
         cancelButton.interactable = false;
     }
 

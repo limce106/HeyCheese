@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using Unity.Collections;
-using Unity.Collections.LowLevel.Unsafe;
 
 [RequireComponent(typeof(ARCameraManager))]
 public class ARCameraToRawImage : MonoBehaviour
@@ -13,7 +12,6 @@ public class ARCameraToRawImage : MonoBehaviour
     private ARCameraManager cameraManager;
     private Texture2D cameraTexture;
     private NativeArray<byte> rawPixelBuffer;
-    private NativeArray<Color32> colorPixelBuffer;
     private int bufferSize;
 
     void Awake()
@@ -34,35 +32,41 @@ public class ARCameraToRawImage : MonoBehaviour
 
         if (rawPixelBuffer.IsCreated)
             rawPixelBuffer.Dispose();
-        if (colorPixelBuffer.IsCreated)
-            colorPixelBuffer.Dispose();
     }
 
     private Texture2D Rotate90(Texture2D originalTexture)
     {
         int width = originalTexture.width;
         int height = originalTexture.height;
+
+        // 회전된 텍스처의 크기는 원본 텍스처의 너비와 높이를 바꾼 값
         Texture2D rotatedTexture = new Texture2D(height, width, originalTexture.format, false);
 
-        NativeArray<Color32> originalPixels = originalTexture.GetRawTextureData<Color32>();
-        NativeArray<Color32> rotatedPixels = rotatedTexture.GetRawTextureData<Color32>();
+        // 원본 텍스처의 색상 데이터를 가져온다.
+        Color32[] originalPixels = originalTexture.GetPixels32();
 
-        int originalStride = width;
-        int rotatedStride = height;
+        // 회전된 텍스처의 색상 배열을 준비합니다
+        Color32[] rotatedPixels = new Color32[originalPixels.Length];
 
         for (int y = 0; y < height; ++y)
         {
             for (int x = 0; x < width; ++x)
             {
-                rotatedPixels[x * rotatedStride + (rotatedStride - 1 - y)] = originalPixels[y * originalStride + x];
+                // (x, y)를 (rotatedX, rotatedY)로 변환하여 색상 데이터를 복사
+                int rotatedX = y;
+                int rotatedY = width - 1 - x;
+
+                rotatedPixels[rotatedY * height + rotatedX] = originalPixels[y * width + x];
             }
         }
 
+        // 회전된 색상 데이터를 새로운 텍스처에 적용
+        rotatedTexture.SetPixels32(rotatedPixels);
         rotatedTexture.Apply();
-        originalPixels.Dispose();
-        rotatedPixels.Dispose();
+
         return rotatedTexture;
     }
+
 
     private void OnCameraFrameReceived(ARCameraFrameEventArgs args)
     {
@@ -88,11 +92,13 @@ public class ARCameraToRawImage : MonoBehaviour
 
                 cameraTexture = new Texture2D(cpuImage.width, cpuImage.height, TextureFormat.RGBA32, false);
                 bufferSize = currentBufferSize;
+
                 if (rawPixelBuffer.IsCreated)
                     rawPixelBuffer.Dispose();
                 rawPixelBuffer = new NativeArray<byte>(bufferSize, Allocator.Persistent);
             }
-            else if (bufferSize != currentBufferSize)
+
+            if (bufferSize != currentBufferSize)
             {
                 bufferSize = currentBufferSize;
                 if (rawPixelBuffer.IsCreated)
@@ -102,6 +108,7 @@ public class ARCameraToRawImage : MonoBehaviour
 
             cpuImage.Convert(conversionParams, rawPixelBuffer);
             cameraTexture.LoadRawTextureData(rawPixelBuffer);
+
             cameraTexture.Apply();
 
             // 이미지 회전
@@ -109,7 +116,6 @@ public class ARCameraToRawImage : MonoBehaviour
 
             rawImage.texture = cameraTexture;
             rawImage.rectTransform.sizeDelta = new Vector2(Screen.width, Screen.height);
-            rawImage.rectTransform.localEulerAngles = new Vector3(0, 0, 180);
         }
     }
 }
