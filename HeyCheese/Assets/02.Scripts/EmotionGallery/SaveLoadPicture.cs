@@ -25,7 +25,7 @@ public class SaveLoadPicture : MonoBehaviour
         OpenDB("emotion_gallery.db");
         CreateTables();
     }
-
+      
     void OpenDB(string dbName)
     {
         string path = Path.Combine(Application.persistentDataPath, dbName);
@@ -91,10 +91,10 @@ public class SaveLoadPicture : MonoBehaviour
     void InsertFreePhoto(string filepath, string capturedAt)
     {
         string query = $@"
-        INSERT OR REPLACE INTO emotion_photo (
+        INSERT OR REPLACE INTO emotion_gallery (
             photo_path, captured_at, photo_type
         ) VALUES (
-            '{filepath}', '{capturedAt}', 'CheeseOneCut'
+            '{filepath}', '{capturedAt}', 'free'
         );";
 
         ExecuteNonQuery(query);
@@ -112,4 +112,6 @@ public class SaveLoadPicture : MonoBehaviour
     {
         dbConnection?.Close();
     }
+
+
 }

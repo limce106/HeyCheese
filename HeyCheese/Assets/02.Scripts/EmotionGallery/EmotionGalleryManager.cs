@@ -61,10 +61,15 @@ public class EmotionGalleryManager : MonoBehaviour
                     UnityEngine.UI.Image img = item.transform.Find("ThumbnailImage").GetComponent<UnityEngine.UI.Image>();
                     if (File.Exists(path))
                     {
+                        Debug.Log("이미지 파일 존재함: " + path);
                         byte[] imgData = File.ReadAllBytes(path);
                         Texture2D tex = new Texture2D(2, 2);
                         tex.LoadImage(imgData);
                         img.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.one * 0.5f);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("이미지 파일 없음: " + path);
                     }
 
                     // 버튼에 클릭 이벤트 추가
