@@ -21,7 +21,8 @@ public class SaveLoadPicture : MonoBehaviour
 
     void Start()
     {
-        OpenDB("emotion_photo_test.db");
+        //OpenDB("emotion_photo_test.db");
+        OpenDB("emotion_gallery.db");
         CreateTables();
     }
 
@@ -36,16 +37,16 @@ public class SaveLoadPicture : MonoBehaviour
     void CreateTables()
     {
         string query = @"
-        CREATE TABLE IF NOT EXISTS emotion_photo (
-            photo_path TEXT PRIMARY KEY,
-            captured_at TEXT NOT NULL,
-            photo_type TEXT NOT NULL,
-            emotion_type TEXT,
-            emotion_accuracy REAL,
-            episode_id INTEGER,
-            episode_title TEXT,
-            selected_mood TEXT
-        );";
+        CREATE TABLE IF NOT EXISTS emotion_gallery (
+            photo_path TEXT PRIMARY KEY,       -- 사진 파일 경로
+            captured_at TEXT NOT NULL,          -- 촬영 일시
+            photo_type TEXT NOT NULL,           -- 사진 유형 (story/free)
+            emotion_type TEXT,                  -- 인식된 감정 (스토리 사진만 해당)
+            episode_id INTEGER,                 -- 에피소드 ID (스토리 사진만 해당)
+            episode_title TEXT,                 -- 에피소드 제목 (스토리 사진만 해당)
+            selected_mood TEXT                  -- 기록한 감정 내용 (스토리 사진만 해당)
+        );
+        ";
         ExecuteNonQuery(query);
     }
 
