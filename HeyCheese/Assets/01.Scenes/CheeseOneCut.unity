@@ -2311,14 +2311,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2602,7 +2602,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1129088413}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e42d0e40c3c93724cad9f440b3890122, type: 3}
   m_Name: 
@@ -2651,7 +2651,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1129088413}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1abc81979a4fc14a889991cd984590d, type: 3}
   m_Name: 
@@ -4110,9 +4110,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e42d0e40c3c93724cad9f440b3890122, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  arFaceManager: {fileID: 0}
-  filterPanel: {fileID: 0}
-  bottomButtons: {fileID: 0}
+  arFaceManager: {fileID: 1784050613}
+  filterPanel: {fileID: 316549603}
+  bottomButtons: {fileID: 1101717110}
 --- !u!1 &1807358805
 GameObject:
   m_ObjectHideFlags: 0
