@@ -11,8 +11,8 @@ public class ARCameraToRawImage : MonoBehaviour
 
     private ARCameraManager cameraManager;
     private Texture2D cameraTexture;
+    private Texture2D rotatedTexture;
     private NativeArray<byte> rawPixelBuffer;
-    private int bufferSize;
 
     void Awake()
     {
@@ -32,41 +32,13 @@ public class ARCameraToRawImage : MonoBehaviour
 
         if (rawPixelBuffer.IsCreated)
             rawPixelBuffer.Dispose();
+
+        if (cameraTexture != null)
+            Destroy(cameraTexture);
+
+        if (rotatedTexture != null)
+            Destroy(rotatedTexture);
     }
-
-    private Texture2D Rotate90(Texture2D originalTexture)
-    {
-        int width = originalTexture.width;
-        int height = originalTexture.height;
-
-        // 회전된 텍스처의 크기는 원본 텍스처의 너비와 높이를 바꾼 값
-        Texture2D rotatedTexture = new Texture2D(height, width, originalTexture.format, false);
-
-        // 원본 텍스처의 색상 데이터를 가져온다.
-        Color32[] originalPixels = originalTexture.GetPixels32();
-
-        // 회전된 텍스처의 색상 배열을 준비합니다
-        Color32[] rotatedPixels = new Color32[originalPixels.Length];
-
-        for (int y = 0; y < height; ++y)
-        {
-            for (int x = 0; x < width; ++x)
-            {
-                // (x, y)를 (rotatedX, rotatedY)로 변환하여 색상 데이터를 복사
-                int rotatedX = y;
-                int rotatedY = width - 1 - x;
-
-                rotatedPixels[rotatedY * height + rotatedX] = originalPixels[y * width + x];
-            }
-        }
-
-        // 회전된 색상 데이터를 새로운 텍스처에 적용
-        rotatedTexture.SetPixels32(rotatedPixels);
-        rotatedTexture.Apply();
-
-        return rotatedTexture;
-    }
-
 
     private void OnCameraFrameReceived(ARCameraFrameEventArgs args)
     {
@@ -75,47 +47,67 @@ public class ARCameraToRawImage : MonoBehaviour
 
         using (cpuImage)
         {
+            int width = cpuImage.width;
+            int height = cpuImage.height;
+            int bufferSize = width * height * 4;
+
+            if (!rawPixelBuffer.IsCreated || rawPixelBuffer.Length != bufferSize)
+            {
+                if (rawPixelBuffer.IsCreated)
+                    rawPixelBuffer.Dispose();
+
+                rawPixelBuffer = new NativeArray<byte>(bufferSize, Allocator.Persistent);
+            }
+
+            if (cameraTexture == null || cameraTexture.width != width || cameraTexture.height != height)
+            {
+                if (cameraTexture != null)
+                    Destroy(cameraTexture);
+                if (rotatedTexture != null)
+                    Destroy(rotatedTexture);
+
+                cameraTexture = new Texture2D(width, height, TextureFormat.RGBA32, false);
+                rotatedTexture = new Texture2D(height, width, TextureFormat.RGBA32, false);
+            }
+
             var conversionParams = new XRCpuImage.ConversionParams
             {
-                inputRect = new RectInt(0, 0, cpuImage.width, cpuImage.height),
-                outputDimensions = new Vector2Int(cpuImage.width, cpuImage.height),
+                inputRect = new RectInt(0, 0, width, height),
+                outputDimensions = new Vector2Int(width, height),
                 outputFormat = TextureFormat.RGBA32,
                 transformation = XRCpuImage.Transformation.MirrorY
             };
 
-            int currentBufferSize = cpuImage.width * cpuImage.height * 4;
-
-            if (cameraTexture == null || cameraTexture.width != cpuImage.width || cameraTexture.height != cpuImage.height)
-            {
-                if (cameraTexture != null)
-                    Destroy(cameraTexture);
-
-                cameraTexture = new Texture2D(cpuImage.width, cpuImage.height, TextureFormat.RGBA32, false);
-                bufferSize = currentBufferSize;
-
-                if (rawPixelBuffer.IsCreated)
-                    rawPixelBuffer.Dispose();
-                rawPixelBuffer = new NativeArray<byte>(bufferSize, Allocator.Persistent);
-            }
-
-            if (bufferSize != currentBufferSize)
-            {
-                bufferSize = currentBufferSize;
-                if (rawPixelBuffer.IsCreated)
-                    rawPixelBuffer.Dispose();
-                rawPixelBuffer = new NativeArray<byte>(bufferSize, Allocator.Persistent);
-            }
-
             cpuImage.Convert(conversionParams, rawPixelBuffer);
             cameraTexture.LoadRawTextureData(rawPixelBuffer);
-
             cameraTexture.Apply();
 
-            // 이미지 회전
-            cameraTexture = Rotate90(cameraTexture);
+            Rotate90(cameraTexture, rotatedTexture);
 
-            rawImage.texture = cameraTexture;
+            rawImage.texture = rotatedTexture;
             rawImage.rectTransform.sizeDelta = new Vector2(Screen.width, Screen.height);
         }
+    }
+
+    private void Rotate90(Texture2D source, Texture2D dest)
+    {
+        Color32[] srcPixels = source.GetPixels32();
+        Color32[] destPixels = new Color32[srcPixels.Length];
+
+        int srcWidth = source.width;
+        int srcHeight = source.height;
+
+        for (int y = 0; y < srcHeight; ++y)
+        {
+            for (int x = 0; x < srcWidth; ++x)
+            {
+                int rotatedX = y;
+                int rotatedY = srcWidth - 1 - x;
+                destPixels[rotatedY * srcHeight + rotatedX] = srcPixels[y * srcWidth + x];
+            }
+        }
+
+        dest.SetPixels32(destPixels);
+        dest.Apply();
     }
 }
