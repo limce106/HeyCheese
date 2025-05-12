@@ -318,7 +318,7 @@ public class MainStoryManager : MonoBehaviour
 
     #region Player Name
     // 플레이어 이름 불러오기
-    void LoadPlayerName()
+    public void LoadPlayerName()
     {
         if (PlayerPrefs.HasKey("PlayerName"))
         {
@@ -337,17 +337,16 @@ public class MainStoryManager : MonoBehaviour
     // Get: 타겟이미지(배경 이미지 오브젝트/캐릭터 이미지 오브젝트), MainStory 기반 imageID
     void SetImage(UnityEngine.UI.Image targetImg, string imgPath)
     {
-        print(imgPath);
         if (string.IsNullOrEmpty(imgPath)) // 사진 존재 x 시
         {
-            print("사진 존재 x");
+            //print("사진 존재 x");
             return; // 사진 변경x
         }
         if (imgPath == "NONE")
         {
             targetImg.sprite = null; // 사진 제거
             targetImg.color = new Color(1, 1, 1, 0);
-            print("사진 제거");
+            //print("사진 제거");
             return;
         }
 
@@ -357,7 +356,7 @@ public class MainStoryManager : MonoBehaviour
         {
             targetImg.color = new Color(1, 1, 1, 1);
             targetImg.sprite = newSprite;
-            print("사진 변경");
+            //print("사진 변경");
         }
         else
         {
