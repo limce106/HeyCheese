@@ -25,6 +25,7 @@ public class EmotionDetector : MonoBehaviour
     public Text emotionText;
     private WebCamTexture webCamTexture;
 
+    private bool isUsingWebcam = false;
     private bool isFrontFacing = false;
     private bool hasCaptured = false;
 
@@ -37,12 +38,22 @@ public class EmotionDetector : MonoBehaviour
         }
 #endif
 
+#if UNITY_EDITOR || UNITY_STANDALONE
+        isUsingWebcam = true;
+
         webcamDisplay.rectTransform.localEulerAngles = Vector3.zero;
         webcamDisplay.rectTransform.localScale = Vector3.one;
 
         StartWebcam();
+#else
+        isUsingWebcam = false;
+        // ARCore 카메라는 자동 실행됨 (ARCameraBackground, ARSession이 처리)
+        // 웹캠 사용 X
+#endif
     }
 
+    // 컴퓨터 웹캠 감지
+    // 컴퓨터 테스트 시 웹캠 사용
     void StartWebcam()
     {
         WebCamDevice[] devices = WebCamTexture.devices;
@@ -62,7 +73,7 @@ public class EmotionDetector : MonoBehaviour
             }
         }
 
-        webCamTexture = new WebCamTexture(selectedDeviceName, 1000, 1000);
+        webCamTexture = new WebCamTexture(selectedDeviceName, 600, 800);
         webcamDisplay.texture = webCamTexture;
         webcamDisplay.rectTransform.localEulerAngles = Vector3.zero;
         webCamTexture.Play();
@@ -70,25 +81,37 @@ public class EmotionDetector : MonoBehaviour
 
     void Update()
     {
-        if (webCamTexture != null && webCamTexture.didUpdateThisFrame)
+        if (isUsingWebcam) // 웹캠 사용 시
         {
-            // 웹캠에서 새로운 프레임이 들어왔을 때 RawImage에 텍스처 할당
-            webcamDisplay.texture = webCamTexture;
+            if (webCamTexture != null && webCamTexture.didUpdateThisFrame)
+            {
+                // 웹캠에서 새로운 프레임이 들어왔을 때 RawImage에 텍스처 할당
+                webcamDisplay.texture = webCamTexture;
 
-            // 회전 보정 제거: RawImage 회전은 더 이상 하지 않음
-            // (회전 각도 적용 안함)
-            int rotation = webCamTexture.videoRotationAngle;
-            webcamDisplay.rectTransform.localEulerAngles = new Vector3(0, 0, -rotation);
+                // 회전 보정 제거: RawImage 회전은 더 이상 하지 않음
+                // (회전 각도 적용 안함)
+                int rotation = webCamTexture.videoRotationAngle;
+                webcamDisplay.rectTransform.localEulerAngles = new Vector3(0, 0, -rotation);
+            }
         }
     }
 
+    // 카메라 버튼 클릭 시
     public void OnClick_DetectEmotion()
     {
         Debug.Log("감정 분석 시작");
-        StartCoroutine(CaptureAndDetect());
+        if (isUsingWebcam)
+        {
+            StartCoroutine(CaptureAndDetect_Webcam());
+        }
+        else
+        {
+            StartCoroutine(CaptureAndDetect_ARCamera());
+        }
     }
 
-    IEnumerator CaptureAndDetect()
+    // PC/Editor용 웹캠 사용 시 표정 분석
+    IEnumerator CaptureAndDetect_Webcam()
     {
         while (!webCamTexture.didUpdateThisFrame)
             yield return null;
@@ -119,6 +142,42 @@ public class EmotionDetector : MonoBehaviour
         string base64Image = EncodeImageToBase64(finalPhoto);
         StartCoroutine(CallVisionAPI(base64Image));
     }
+
+    // Android 기기 카메라 사용 시 표정 분석
+    IEnumerator CaptureAndDetect_ARCamera()
+    {
+        yield return new WaitForEndOfFrame(); // AR 카메라 렌더 후 캡처
+
+        // RawImage의 RectTransform을 기준으로 스크린 좌표 계산
+        RectTransform rt = webcamDisplay.rectTransform;
+        Vector3[] corners = new Vector3[4];
+        rt.GetWorldCorners(corners); // [0]: bottom left, [1] top left, [2] top right, [3] bottom right
+
+        // 화면 좌표로 변환 (BottomLeft 기준)
+        float x = corners[0].x;
+        float y = corners[0].y;
+        Debug.Log("corners[0].x = " + x + "corners[0].y = " + y);
+        float width = corners[2].x - corners[0].x;
+        float height = corners[2].y - corners[0].y;
+        Debug.Log("width = " + width + "height = " + height);
+        Debug.Log("screen height = " + Screen.height);
+
+        // y축은 아래가 0, 위에가 height인 스크린 좌표 기준이라 뒤집어줘야 함
+        y = Screen.height - y - height;
+        Debug.Log("Reversed y = " + y);
+
+        // 캡처
+        Texture2D photo = new Texture2D((int)width, (int)height, TextureFormat.RGB24, false);
+        photo.ReadPixels(new Rect(x, y, width, height), 0, 0);
+        photo.Apply();
+
+        webcamDisplay.texture = photo;
+        webcamDisplay.rectTransform.localEulerAngles = Vector3.zero;
+
+        string base64Image = EncodeImageToBase64(photo);
+        StartCoroutine(CallVisionAPI(base64Image));
+    }
+
 
     Texture2D RotateAndMirrorTexture(Texture2D original, int angle, bool mirrorHorizontal)
     {
@@ -191,7 +250,7 @@ public class EmotionDetector : MonoBehaviour
                 Debug.LogError("Error: " + request.error);
                 emotionText.text = "API 요청 실패";
             }
-            else
+            else // API 요청 성공
             {
                 string jsonResponse = request.downloadHandler.text;
                 FaceResponse faceResponse = JsonUtility.FromJson<FaceResponse>(jsonResponse);
