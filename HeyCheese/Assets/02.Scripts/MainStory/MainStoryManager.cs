@@ -39,6 +39,7 @@ public class MainStoryManager : MonoBehaviour
     public UnityEngine.UI.Image characterImg;
     public TMP_Text speakerNameText;
     public TMP_Text dialogueText;
+    public GameObject nameImgObj;
     public UnityEngine.UI.Image nameImg;
     public UnityEngine.UI.Image dialogueImg;
     public Slider bondSlider;
@@ -229,13 +230,13 @@ public class MainStoryManager : MonoBehaviour
                 string rawScriptText = step.ScriptID;
                 string namedScriptText = rawScriptText.Replace("{PlayerName}", PlayerName);
 
-                if(step.SpeakerID == "시스템")
+                if(SpeakerUtil.ParseSpeakerID(step.SpeakerID) == Speaker.System)
                 {
-                    nameImg.color = new Color(1, 1, 1, 0);
+                    nameImgObj.SetActive(false);
                 }
                 else
                 {
-                    nameImg.color = new Color(1, 1, 1, 1);
+                    nameImgObj.SetActive(true);
                 }
                 speakerNameText.text = step.SpeakerID; // 이름 변경
                 dialogueText.text = namedScriptText; // 대사 변경
