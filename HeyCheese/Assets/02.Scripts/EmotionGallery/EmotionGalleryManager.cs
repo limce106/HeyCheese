@@ -25,11 +25,12 @@ public class EmotionGalleryManager : MonoBehaviour
     {
         dbPath = "URI=file:" + Path.Combine(Application.persistentDataPath, "emotion_gallery.db");
         filterDropdown.onValueChanged.AddListener(OnFilterChanged);
-        detailPanel.SetActive(false);
+        if (detailPanel != null)
+            detailPanel.SetActive(false);
         LoadGallery("all");
     }
 
-    void LoadGallery(string filter)
+    public void LoadGallery(string filter)
     {
         ClearThumbnails();
 
@@ -57,11 +58,10 @@ public class EmotionGalleryManager : MonoBehaviour
                     GameObject item = Instantiate(thumbnailPrefab, contentParent);
                     currentThumbnails.Add(item);
 
-                    // 썸네일에 이미지 로드
+                    // 썸네일 이미지 로드
                     UnityEngine.UI.Image img = item.transform.Find("ThumbnailImage").GetComponent<UnityEngine.UI.Image>();
                     if (File.Exists(path))
                     {
-                        Debug.Log("이미지 파일 존재함: " + path);
                         byte[] imgData = File.ReadAllBytes(path);
                         Texture2D tex = new Texture2D(2, 2);
                         tex.LoadImage(imgData);
@@ -72,7 +72,7 @@ public class EmotionGalleryManager : MonoBehaviour
                         Debug.LogWarning("이미지 파일 없음: " + path);
                     }
 
-                    // 버튼에 클릭 이벤트 추가
+                    // 디테일 표시 이벤트 연결
                     Button btn = item.GetComponent<Button>();
                     btn.onClick.AddListener(() => ShowDetail(path, capturedAt, photoType, episodeTitle, selectedMood));
                 }
@@ -103,9 +103,10 @@ public class EmotionGalleryManager : MonoBehaviour
 
     void ShowDetail(string path, string capturedAt, string photoType, string episodeTitle, string selectedMood)
     {
+        if (detailPanel == null) return;
+
         detailPanel.SetActive(true);
 
-        // 사진 표시
         if (File.Exists(path))
         {
             byte[] imgData = File.ReadAllBytes(path);
@@ -114,19 +115,15 @@ public class EmotionGalleryManager : MonoBehaviour
             previewImage.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.one * 0.5f);
         }
 
-        // 촬영일시 포맷 (yyyy-MM-dd HH:mm)
-        System.DateTime dt;
-        if (System.DateTime.TryParse(capturedAt, out dt))
+        if (System.DateTime.TryParse(capturedAt, out var dt))
             capturedAtText.text = dt.ToString("yyyy-MM-dd HH:mm");
         else
             capturedAtText.text = capturedAt;
 
-        // 상세 정보 표시
         if (photoType == "story")
         {
             episodeTitleText.gameObject.SetActive(true);
             selectedMoodText.gameObject.SetActive(true);
-
             episodeTitleText.text = "에피소드: " + (string.IsNullOrEmpty(episodeTitle) ? "-" : episodeTitle);
             selectedMoodText.text = "기록한 감정: " + (string.IsNullOrEmpty(selectedMood) ? "-" : selectedMood);
         }
@@ -139,6 +136,8 @@ public class EmotionGalleryManager : MonoBehaviour
 
     public void CloseDetail()
     {
-        detailPanel.SetActive(false);
+        if (detailPanel != null)
+            detailPanel.SetActive(false);
     }
 }
+

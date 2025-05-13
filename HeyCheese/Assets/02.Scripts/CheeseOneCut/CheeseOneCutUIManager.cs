@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.SceneManagement;
 
 public class CheeseOneCutUIManager : MonoBehaviour
 {
@@ -15,13 +16,15 @@ public class CheeseOneCutUIManager : MonoBehaviour
     public Button cancelButton;
     public Button cameraButton;
 
+    public EmotionGalleryDBWriter emotionGalleryDBWriter;
+
     [SerializeField]
     private ARFaceManager arFaceManager;
     public SaveLoadPicture saveLoadPicture;
 
     public void OnClick_Gallery()
     {
-        // 갤러리로 이동
+        SceneManager.LoadScene("EmotionGallery");
     }
 
     public void OnClick_Camera()
@@ -103,7 +106,11 @@ public class CheeseOneCutUIManager : MonoBehaviour
     {
         // 캡처가 끝난 후 히든미션 패널이 뜨게 한다.
         // (캡처된 사진에 히든미션 패널이 같이 찍히는 것을 방지하기 위함)
-        yield return(StartCoroutine(saveLoadPicture.CaptureAndSave()));
+        yield return StartCoroutine(saveLoadPicture.CaptureAndSave((filepath, capturedAt) =>
+        {
+            emotionGalleryDBWriter.InsertFreePhoto(filepath, capturedAt);
+        }));
+
         FilterFrameManager.instance.CheckHiddenMission(faceCount);
     }
 }
