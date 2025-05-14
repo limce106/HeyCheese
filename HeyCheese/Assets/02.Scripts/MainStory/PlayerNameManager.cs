@@ -47,7 +47,11 @@ public class PlayerNameManager : MonoBehaviour
         PlayerPrefs.Save();
         Debug.Log($"플레이어 이름 저장됨: {PlayerName}");
 
-        //confirmationPanel.SetActive(false);
+        confirmationPanel.SetActive(false);
+
+        // MainStoryManager의 NextStep() 호출
+        MainStoryManager.Instance.LoadPlayerName();
+        MainStoryManager.Instance.NextStep();
 
     }
     // 이름 입력 취소 시
