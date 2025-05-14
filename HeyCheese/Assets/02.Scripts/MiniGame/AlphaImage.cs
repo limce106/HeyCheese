@@ -12,6 +12,6 @@ public class AlphaImage : MonoBehaviour
 
     void Start()
     {
-        this.GetComponent<UnityEngine.UI.Image>().alphaHitTestMinimumThreshold = AlphaThreshold;
+        this.GetComponent<Image>().alphaHitTestMinimumThreshold = AlphaThreshold;
     }
 }
