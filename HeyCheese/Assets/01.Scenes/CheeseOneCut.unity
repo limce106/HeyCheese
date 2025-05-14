@@ -2795,6 +2795,7 @@ MonoBehaviour:
   hiddenMissionPanel: {fileID: 2020008360}
   cancelButton: {fileID: 72071914}
   cameraButton: {fileID: 350101263}
+  emotionGalleryDBWriter: {fileID: 2079607682}
   bottomButtons: {fileID: 1101717110}
   arFaceManager: {fileID: 1784050613}
   saveLoadPicture: {fileID: 1940435777}
@@ -4689,6 +4690,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2020008360}
   m_CullTransparentMesh: 1
+--- !u!1 &2079607681
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2079607683}
+  - component: {fileID: 2079607682}
+  m_Layer: 0
+  m_Name: EmotionGalleryDBWriter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2079607682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2079607681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96e8ac44cfa181642a2f24566723cb8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &2079607683
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2079607681}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 272.24124, y: 2088.6519, z: -2.48428}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2129605458
 GameObject:
   m_ObjectHideFlags: 0
@@ -4954,3 +4999,4 @@ SceneRoots:
   - {fileID: 1129088415}
   - {fileID: 1940435778}
   - {fileID: 661652238}
+  - {fileID: 2079607683}

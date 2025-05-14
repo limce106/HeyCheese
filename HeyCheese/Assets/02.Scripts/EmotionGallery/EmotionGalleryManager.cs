@@ -7,7 +7,7 @@ using System.Data;
 
 public class EmotionGalleryManager : MonoBehaviour
 {
-    [Header("UI ¿¬°á")]
+    [Header("UI ì—°ê²°")]
     public Text titleText;
     public Dropdown filterDropdown;
     public GameObject detailPanel;
@@ -25,11 +25,12 @@ public class EmotionGalleryManager : MonoBehaviour
     {
         dbPath = "URI=file:" + Path.Combine(Application.persistentDataPath, "emotion_gallery.db");
         filterDropdown.onValueChanged.AddListener(OnFilterChanged);
-        detailPanel.SetActive(false);
+        if (detailPanel != null)
+            detailPanel.SetActive(false);
         LoadGallery("all");
     }
 
-    void LoadGallery(string filter)
+    public void LoadGallery(string filter)
     {
         ClearThumbnails();
 
@@ -57,8 +58,9 @@ public class EmotionGalleryManager : MonoBehaviour
                     GameObject item = Instantiate(thumbnailPrefab, contentParent);
                     currentThumbnails.Add(item);
 
-                    // ½æ³×ÀÏ¿¡ ÀÌ¹ÌÁö ·Îµå
+                    // ì¸ë„¤ì¼ì— ì´ë¯¸ì§€ ë¡œë“œ
                     Image img = item.transform.Find("ThumbnailImage").GetComponent<Image>();
+
                     if (File.Exists(path))
                     {
                         byte[] imgData = File.ReadAllBytes(path);
@@ -66,8 +68,12 @@ public class EmotionGalleryManager : MonoBehaviour
                         tex.LoadImage(imgData);
                         img.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.one * 0.5f);
                     }
+                    else
+                    {
+                        Debug.LogWarning("ì´ë¯¸ì§€ íŒŒì¼ ì—†ìŒ: " + path);
+                    }
 
-                    // ¹öÆ°¿¡ Å¬¸¯ ÀÌº¥Æ® Ãß°¡
+                    // ë””í…Œì¼ í‘œì‹œ ì´ë²¤íŠ¸ ì—°ê²°
                     Button btn = item.GetComponent<Button>();
                     btn.onClick.AddListener(() => ShowDetail(path, capturedAt, photoType, episodeTitle, selectedMood));
                 }
@@ -88,19 +94,20 @@ public class EmotionGalleryManager : MonoBehaviour
     {
         string selected = filterDropdown.options[index].text;
 
-        if (selected == "ÀüÃ¼º¸±â")
+        if (selected == "ì „ì²´ë³´ê¸°")
             LoadGallery("all");
-        else if (selected == "½ºÅä¸® »çÁø")
+        else if (selected == "ìŠ¤í† ë¦¬ ì‚¬ì§„")
             LoadGallery("story");
-        else if (selected == "Ä¡ÁîÇÑÄÆ")
+        else if (selected == "ì¹˜ì¦ˆí•œì»·")
             LoadGallery("free");
     }
 
     void ShowDetail(string path, string capturedAt, string photoType, string episodeTitle, string selectedMood)
     {
+        if (detailPanel == null) return;
+
         detailPanel.SetActive(true);
 
-        // »çÁø Ç¥½Ã
         if (File.Exists(path))
         {
             byte[] imgData = File.ReadAllBytes(path);
@@ -109,21 +116,17 @@ public class EmotionGalleryManager : MonoBehaviour
             previewImage.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.one * 0.5f);
         }
 
-        // ÃÔ¿µÀÏ½Ã Æ÷¸Ë (yyyy-MM-dd HH:mm)
-        System.DateTime dt;
-        if (System.DateTime.TryParse(capturedAt, out dt))
+        if (System.DateTime.TryParse(capturedAt, out var dt))
             capturedAtText.text = dt.ToString("yyyy-MM-dd HH:mm");
         else
             capturedAtText.text = capturedAt;
 
-        // »ó¼¼ Á¤º¸ Ç¥½Ã
         if (photoType == "story")
         {
             episodeTitleText.gameObject.SetActive(true);
             selectedMoodText.gameObject.SetActive(true);
-
-            episodeTitleText.text = "¿¡ÇÇ¼Òµå: " + (string.IsNullOrEmpty(episodeTitle) ? "-" : episodeTitle);
-            selectedMoodText.text = "±â·ÏÇÑ °¨Á¤: " + (string.IsNullOrEmpty(selectedMood) ? "-" : selectedMood);
+            episodeTitleText.text = "ì—í”¼ì†Œë“œ: " + (string.IsNullOrEmpty(episodeTitle) ? "-" : episodeTitle);
+            selectedMoodText.text = "ê¸°ë¡í•œ ê°ì •: " + (string.IsNullOrEmpty(selectedMood) ? "-" : selectedMood);
         }
         else
         {
@@ -134,6 +137,8 @@ public class EmotionGalleryManager : MonoBehaviour
 
     public void CloseDetail()
     {
-        detailPanel.SetActive(false);
+        if (detailPanel != null)
+            detailPanel.SetActive(false);
     }
 }
+

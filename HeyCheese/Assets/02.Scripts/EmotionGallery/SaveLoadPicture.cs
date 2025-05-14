@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-using System.Data;
-using Mono.Data.Sqlite;
 using System;
 using UnityEngine.UI;
 
@@ -12,44 +10,10 @@ public class SaveLoadPicture : MonoBehaviour
     [Header("UI")]
     public RectTransform panelToCapture;
 
-    // 사진 경로
-    private string latestCapturedPath;
-    // 찍은 날짜
-    private string latestCapturedAt;
-
-    private IDbConnection dbConnection;
-
-    void Start()
-    {
-        OpenDB("emotion_photo_test.db");
-        CreateTables();
-    }
-
-    void OpenDB(string dbName)
-    {
-        string path = Path.Combine(Application.persistentDataPath, dbName);
-        dbConnection = new SqliteConnection("URI=file:" + path);
-        dbConnection.Open();
-        Debug.Log("DB 연결: " + path);
-    }
-
-    void CreateTables()
-    {
-        string query = @"
-        CREATE TABLE IF NOT EXISTS emotion_photo (
-            photo_path TEXT PRIMARY KEY,
-            captured_at TEXT NOT NULL,
-            photo_type TEXT NOT NULL,
-            emotion_type TEXT,
-            emotion_accuracy REAL,
-            episode_id INTEGER,
-            episode_title TEXT,
-            selected_mood TEXT
-        );";
-        ExecuteNonQuery(query);
-    }
-
-    public IEnumerator CaptureAndSave()
+    /// <summary>
+    /// 사진을 캡처하고 저장한 후, 외부에서 전달한 콜백으로 파일 경로와 시간 정보를 넘긴다.
+    /// </summary>
+    public IEnumerator CaptureAndSave(Action<string, string> onSavedCallback = null)
     {
         yield return new WaitForEndOfFrame();
 
@@ -61,10 +25,10 @@ public class SaveLoadPicture : MonoBehaviour
         float y = corners[0].y;
         float width = corners[2].x - corners[0].x;
         float height = corners[2].y - corners[0].y;
-        
+
         // 화면 좌표를 픽셀 좌표로 변환
         x = Mathf.Clamp(x, 0, Screen.width);
-        y = Mathf.Clamp(y,0, Screen.height);
+        y = Mathf.Clamp(y, 0, Screen.height);
         width = Mathf.Clamp(width, 0, Screen.width - x);
         height = Mathf.Clamp(height, 0, Screen.height - y);
 
@@ -77,38 +41,12 @@ public class SaveLoadPicture : MonoBehaviour
 
         string filename = "emotion_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".png";
         string filepath = Path.Combine(Application.persistentDataPath, filename);
-
         File.WriteAllBytes(filepath, screenImage.EncodeToPNG());
         Destroy(screenImage);
 
-        latestCapturedPath = filepath;
-        latestCapturedAt = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+        string capturedAt = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
 
-        InsertFreePhoto(filepath, latestCapturedAt);
-    }
-
-    void InsertFreePhoto(string filepath, string capturedAt)
-    {
-        string query = $@"
-        INSERT OR REPLACE INTO emotion_photo (
-            photo_path, captured_at, photo_type
-        ) VALUES (
-            '{filepath}', '{capturedAt}', 'CheeseOneCut'
-        );";
-
-        ExecuteNonQuery(query);
-        Debug.Log("치즈 한 컷 저장 완료");
-    }
-
-    void ExecuteNonQuery(string query)
-    {
-        using var cmd = dbConnection.CreateCommand();
-        cmd.CommandText = query;
-        cmd.ExecuteNonQuery();
-    }
-
-    void OnDestroy()
-    {
-        dbConnection?.Close();
+        // 외부에 전달
+        onSavedCallback?.Invoke(filepath, capturedAt);
     }
 }
