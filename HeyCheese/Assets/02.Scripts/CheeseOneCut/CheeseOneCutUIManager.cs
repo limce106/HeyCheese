@@ -95,7 +95,7 @@ public class CheeseOneCutUIManager : MonoBehaviour
             string itemName = itemKeys[i];
 
             Sprite itemSprite = Resources.Load<Sprite>($"{resourcesPath}/{itemName}");
-            UnityEngine.UI.Image buttonImage = buttons[i + 1].GetComponent<UnityEngine.UI.Image>();
+            Image buttonImage = buttons[i + 1].GetComponent<Image>();
             buttonImage.sprite = itemSprite;
 
             buttons[i + 1].gameObject.name = itemName;

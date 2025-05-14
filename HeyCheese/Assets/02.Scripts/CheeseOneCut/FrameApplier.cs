@@ -7,14 +7,14 @@ public class FrameApplier : MonoBehaviour
 {
     [SerializeField]
     private GameObject frameObj;
-    private UnityEngine.UI.Image frameImg;
+    private Image frameImg;
     public GameObject framePanel;
 
     private string frameName;
 
     void Awake()
     {
-        frameImg = frameObj.GetComponent<UnityEngine.UI.Image>();
+        frameImg = frameObj.GetComponent<Image>();
     }
 
     public void SetFrameName(string name)

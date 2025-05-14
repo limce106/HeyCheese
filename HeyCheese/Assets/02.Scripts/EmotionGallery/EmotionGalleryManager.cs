@@ -7,11 +7,11 @@ using System.Data;
 
 public class EmotionGalleryManager : MonoBehaviour
 {
-    [Header("UI ¿¬°á")]
+    [Header("UI ì—°ê²°")]
     public Text titleText;
     public Dropdown filterDropdown;
     public GameObject detailPanel;
-    public UnityEngine.UI.Image previewImage;
+    public Image previewImage;
     public Text capturedAtText;
     public Text episodeTitleText;
     public Text selectedMoodText;
@@ -58,8 +58,9 @@ public class EmotionGalleryManager : MonoBehaviour
                     GameObject item = Instantiate(thumbnailPrefab, contentParent);
                     currentThumbnails.Add(item);
 
-                    // ½æ³×ÀÏ ÀÌ¹ÌÁö ·Îµå
-                    UnityEngine.UI.Image img = item.transform.Find("ThumbnailImage").GetComponent<UnityEngine.UI.Image>();
+                    // ì¸ë„¤ì¼ì— ì´ë¯¸ì§€ ë¡œë“œ
+                    Image img = item.transform.Find("ThumbnailImage").GetComponent<Image>();
+
                     if (File.Exists(path))
                     {
                         byte[] imgData = File.ReadAllBytes(path);
@@ -69,10 +70,10 @@ public class EmotionGalleryManager : MonoBehaviour
                     }
                     else
                     {
-                        Debug.LogWarning("ÀÌ¹ÌÁö ÆÄÀÏ ¾øÀ½: " + path);
+                        Debug.LogWarning("ì´ë¯¸ì§€ íŒŒì¼ ì—†ìŒ: " + path);
                     }
 
-                    // µğÅ×ÀÏ Ç¥½Ã ÀÌº¥Æ® ¿¬°á
+                    // ë””í…Œì¼ í‘œì‹œ ì´ë²¤íŠ¸ ì—°ê²°
                     Button btn = item.GetComponent<Button>();
                     btn.onClick.AddListener(() => ShowDetail(path, capturedAt, photoType, episodeTitle, selectedMood));
                 }
@@ -93,11 +94,11 @@ public class EmotionGalleryManager : MonoBehaviour
     {
         string selected = filterDropdown.options[index].text;
 
-        if (selected == "ÀüÃ¼º¸±â")
+        if (selected == "ì „ì²´ë³´ê¸°")
             LoadGallery("all");
-        else if (selected == "½ºÅä¸® »çÁø")
+        else if (selected == "ìŠ¤í† ë¦¬ ì‚¬ì§„")
             LoadGallery("story");
-        else if (selected == "Ä¡ÁîÇÑÄÆ")
+        else if (selected == "ì¹˜ì¦ˆí•œì»·")
             LoadGallery("free");
     }
 
@@ -124,8 +125,8 @@ public class EmotionGalleryManager : MonoBehaviour
         {
             episodeTitleText.gameObject.SetActive(true);
             selectedMoodText.gameObject.SetActive(true);
-            episodeTitleText.text = "¿¡ÇÇ¼Òµå: " + (string.IsNullOrEmpty(episodeTitle) ? "-" : episodeTitle);
-            selectedMoodText.text = "±â·ÏÇÑ °¨Á¤: " + (string.IsNullOrEmpty(selectedMood) ? "-" : selectedMood);
+            episodeTitleText.text = "ì—í”¼ì†Œë“œ: " + (string.IsNullOrEmpty(episodeTitle) ? "-" : episodeTitle);
+            selectedMoodText.text = "ê¸°ë¡í•œ ê°ì •: " + (string.IsNullOrEmpty(selectedMood) ? "-" : selectedMood);
         }
         else
         {
