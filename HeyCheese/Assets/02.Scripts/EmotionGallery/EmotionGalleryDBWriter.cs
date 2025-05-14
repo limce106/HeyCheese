@@ -1,0 +1,69 @@
+using System;
+using System.IO;
+using Mono.Data.Sqlite;
+using UnityEngine;
+
+public class EmotionGalleryDBWriter : MonoBehaviour
+{
+    private string dbPath;
+
+    void Start()
+    {
+        dbPath = "URI=file:" + Path.Combine(Application.persistentDataPath, "emotion_gallery.db");
+        EnsureTableExists(); // 테이블 없으면 생성
+    }
+
+    // emotion_gallery 테이블 생성 (이미 있으면 무시됨)
+    private void EnsureTableExists()
+    {
+        using var conn = new SqliteConnection(dbPath);
+        conn.Open();
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = @"
+            CREATE TABLE IF NOT EXISTS emotion_gallery (
+                photo_path TEXT PRIMARY KEY,
+                captured_at TEXT NOT NULL,
+                photo_type TEXT NOT NULL,
+                emotion_type TEXT,
+                episode_id INTEGER,
+                episode_title TEXT,
+                selected_mood TEXT
+            );";
+        cmd.ExecuteNonQuery();
+        Debug.Log("[DB] emotion_gallery 테이블 확인 및 생성 완료");
+    }
+
+    // 자유 사진 DB 저장
+    public void InsertFreePhoto(string filepath, string capturedAt)
+    {
+        using var conn = new SqliteConnection(dbPath);
+        conn.Open();
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = $@"
+            INSERT OR REPLACE INTO emotion_gallery (
+                photo_path, captured_at, photo_type
+            ) VALUES (
+                '{filepath}', '{capturedAt}', 'free'
+            );";
+        cmd.ExecuteNonQuery();
+        Debug.Log("[DB] 자유 사진 저장 완료: " + filepath);
+    }
+
+    // 스토리 사진 DB 저장
+    public void InsertStoryPhoto(string filepath, string capturedAt, string expression, int episodeId, string episodeTitle, string mood)
+    {
+        using var conn = new SqliteConnection(dbPath);
+        conn.Open();
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = $@"
+            INSERT OR REPLACE INTO emotion_gallery (
+                photo_path, captured_at, photo_type,
+                emotion_type, episode_id, episode_title, selected_mood
+            ) VALUES (
+                '{filepath}', '{capturedAt}', 'story',
+                '{expression}', {episodeId}, '{episodeTitle}', '{mood}'
+            );";
+        cmd.ExecuteNonQuery();
+        Debug.Log("[DB] 스토리 사진 저장 완료: " + filepath);
+    }
+}
