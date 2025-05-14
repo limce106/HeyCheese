@@ -85,7 +85,10 @@ public class ARCameraToRawImage : MonoBehaviour
             Rotate90(cameraTexture, rotatedTexture);
 
             rawImage.texture = rotatedTexture;
-            rawImage.rectTransform.sizeDelta = new Vector2(Screen.width, Screen.height);
+
+            int rawImageWidth = Screen.width;
+            int rawImageHeight = (int)(Screen.width * 0.75);
+            rawImage.rectTransform.sizeDelta = new Vector2(rawImageWidth, rawImageHeight);
         }
     }
 
