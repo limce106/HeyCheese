@@ -226,7 +226,7 @@ public class EmotionDetector : MonoBehaviour
             {
                 new Request
                 {
-                    image = new Image { content = base64Image },
+                    image = new VisionImage { content = base64Image },
                     features = new List<Feature> { new Feature() }
                 }
             }
@@ -316,12 +316,12 @@ public class VisionRequest
 [System.Serializable]
 public class Request
 {
-    public Image image;
+    public VisionImage image;
     public List<Feature> features;
 }
 
 [System.Serializable]
-public class Image
+public class VisionImage
 {
     public string content;
 }
