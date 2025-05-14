@@ -9,6 +9,7 @@ public class FrameApplier : MonoBehaviour
     private GameObject frameObj;
     private Image frameImg;
     public GameObject framePanel;
+    public GameObject bottomButtons;
 
     private string frameName;
 
@@ -48,11 +49,13 @@ public class FrameApplier : MonoBehaviour
         }
 
         framePanel.SetActive(false);
+        bottomButtons.SetActive(true);
     }
 
     public void RemoveFrame()
     {
         frameObj.SetActive(false);
         framePanel.SetActive(false);
+        bottomButtons.SetActive(true);
     }
 }
