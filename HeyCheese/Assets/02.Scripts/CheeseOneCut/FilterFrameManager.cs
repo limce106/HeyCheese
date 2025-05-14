@@ -48,14 +48,14 @@ public class FilterFrameManager : MonoBehaviour
         //{"Ep2", false },
         //{"Ep3", false },
         //{"Ep4", false },
-        //{"HiddenMission1", false },
-        //{"HiddenMission2", false }
+        //{"Mission1", false },
+        //{"Mission2", false }
         {"Ep1", true},
         {"Ep2", true },
         {"Ep3", true },
         {"Ep4", true },
-        {"HiddenMission1", false },
-        {"HiddenMission2", false }
+        {"Mission1", true },
+        {"Mission2", true }
     };
 
     private Dictionary<string, string> hiddenMissionFilterName = new Dictionary<string, string>

@@ -23,7 +23,7 @@ public class FrameApplier : MonoBehaviour
         frameName = name;
     }
 
-    public void OnClick_Filter()
+    public void OnClick_Frame()
     {
         SetFrameName(UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name);
         ApplyFrame();
