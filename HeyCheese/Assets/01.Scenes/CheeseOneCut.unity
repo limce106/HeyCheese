@@ -135,6 +135,8 @@ GameObject:
   - component: {fileID: 54998137}
   - component: {fileID: 54998136}
   - component: {fileID: 54998135}
+  - component: {fileID: 54998140}
+  - component: {fileID: 54998139}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -191,9 +193,9 @@ Canvas:
   m_GameObject: {fileID: 54998134}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_Camera: {fileID: 758211530}
-  m_PlaneDistance: 0.3
+  m_PlaneDistance: 1
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -224,7 +226,6 @@ RectTransform:
   - {fileID: 759799804}
   - {fileID: 2020008361}
   - {fileID: 1477098646}
-  - {fileID: 264006857}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -232,6 +233,38 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &54998139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 54998134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e42d0e40c3c93724cad9f440b3890122, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  arFaceManager: {fileID: 1784050613}
+  arCamera: {fileID: 758211530}
+  canvasTransform: {fileID: 54998138}
+  filterPanel: {fileID: 316549603}
+  bottomButtons: {fileID: 1101717110}
+--- !u!114 &54998140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 54998134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8550a8bd39285e84e9cf4d389d695415, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  frameObj: {fileID: 1905444270}
+  framePanel: {fileID: 759799803}
+  bottomButtons: {fileID: 1101717110}
 --- !u!1 &72071912
 GameObject:
   m_ObjectHideFlags: 0
@@ -579,7 +612,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 264006858}
+      - m_Target: {fileID: 54998139}
         m_TargetAssemblyTypeName: ARFaceFilterApplier, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 1
@@ -711,7 +744,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 264006859}
+      - m_Target: {fileID: 54998140}
         m_TargetAssemblyTypeName: FrameApplier, Assembly-CSharp
         m_MethodName: OnClick_Frame
         m_Mode: 1
@@ -761,74 +794,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 165951791}
   m_CullTransparentMesh: 1
---- !u!1 &264006856
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 264006857}
-  - component: {fileID: 264006858}
-  - component: {fileID: 264006859}
-  m_Layer: 5
-  m_Name: Filter Frame Applier
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &264006857
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 264006856}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 54998138}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &264006858
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 264006856}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e42d0e40c3c93724cad9f440b3890122, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  arFaceManager: {fileID: 1784050613}
-  arCamera: {fileID: 0}
-  filterPanel: {fileID: 316549603}
-  bottomButtons: {fileID: 1101717110}
---- !u!114 &264006859
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 264006856}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8550a8bd39285e84e9cf4d389d695415, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  frameObj: {fileID: 1905444270}
-  framePanel: {fileID: 759799803}
-  bottomButtons: {fileID: 1101717110}
 --- !u!1 &264838755
 GameObject:
   m_ObjectHideFlags: 0
@@ -911,7 +876,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 264006859}
+      - m_Target: {fileID: 54998140}
         m_TargetAssemblyTypeName: FrameApplier, Assembly-CSharp
         m_MethodName: OnClick_Frame
         m_Mode: 1
@@ -1043,7 +1008,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 264006858}
+      - m_Target: {fileID: 54998139}
         m_TargetAssemblyTypeName: ARFaceFilterApplier, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 1
@@ -1414,7 +1379,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 264006859}
+      - m_Target: {fileID: 54998140}
         m_TargetAssemblyTypeName: FrameApplier, Assembly-CSharp
         m_MethodName: OnClick_Frame
         m_Mode: 1
@@ -1678,7 +1643,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 264006858}
+      - m_Target: {fileID: 54998139}
         m_TargetAssemblyTypeName: ARFaceFilterApplier, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 1
@@ -2606,7 +2571,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 264006858}
+      - m_Target: {fileID: 54998139}
         m_TargetAssemblyTypeName: ARFaceFilterApplier, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 1
@@ -3163,7 +3128,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 264006859}
+      - m_Target: {fileID: 54998140}
         m_TargetAssemblyTypeName: FrameApplier, Assembly-CSharp
         m_MethodName: OnClick_Frame
         m_Mode: 1
@@ -3442,7 +3407,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 264006859}
+      - m_Target: {fileID: 54998140}
         m_TargetAssemblyTypeName: FrameApplier, Assembly-CSharp
         m_MethodName: OnClick_Frame
         m_Mode: 1
@@ -3574,7 +3539,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 264006858}
+      - m_Target: {fileID: 54998139}
         m_TargetAssemblyTypeName: ARFaceFilterApplier, Assembly-CSharp
         m_MethodName: RemoveFilter
         m_Mode: 1
@@ -3838,7 +3803,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 264006859}
+      - m_Target: {fileID: 54998140}
         m_TargetAssemblyTypeName: FrameApplier, Assembly-CSharp
         m_MethodName: OnClick_Frame
         m_Mode: 1
@@ -4367,7 +4332,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 264006858}
+      - m_Target: {fileID: 54998139}
         m_TargetAssemblyTypeName: ARFaceFilterApplier, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 1
@@ -4499,7 +4464,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 264006859}
+      - m_Target: {fileID: 54998140}
         m_TargetAssemblyTypeName: FrameApplier, Assembly-CSharp
         m_MethodName: RemoveFrame
         m_Mode: 1
@@ -4707,7 +4672,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 264006858}
+      - m_Target: {fileID: 54998139}
         m_TargetAssemblyTypeName: ARFaceFilterApplier, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 1
