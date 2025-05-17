@@ -1,28 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
+using UnityEngine.Timeline;
 using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
+using static FaceRecognition;
 
 public class ARFaceFilterApplier : MonoBehaviour
 {
-    [SerializeField]
-    private ARFaceManager arFaceManager;
+    public ARFaceManager arFaceManager;
+    public Camera arCamera;
     private string filterName;
 
+    public Transform canvasTransform;
     public GameObject filterPanel;
     public GameObject bottomButtons;
 
     private Dictionary<string, int> faceLandmarkIndices = new Dictionary<string, int>
     {
-        { "LeftCheek", 436 },
-        { "RightCheek", 216 },
-        { "Nose", 2 },
+        { "LeftCheek", 205 },
+        { "RightCheek", 425 },
+        { "Nose", 3 },
         { "Forehead", 10 }
     };
 
-    private Dictionary<string, GameObject> filterParts = new Dictionary<string, GameObject>();
+    private Dictionary<ARFace, Dictionary<string, GameObject>> faceFilters = new();
 
     void Update()
     {
@@ -31,14 +35,75 @@ public class ARFaceFilterApplier : MonoBehaviour
         {
             return;
         }
-        // 감지된 얼굴이 없으면
-        if (arFaceManager.trackables.count == 0)
-        {
-            SetPrefabVisibility(false);
-            return;
-        }
 
         ApplyFilter();
+    }
+
+    private void OnEnable()
+    {
+        arFaceManager.facesChanged += OnFacesChanged;
+    }
+
+    private void OnDisable()
+    {
+        arFaceManager.facesChanged -= OnFacesChanged;
+    }
+
+
+    private void OnFacesChanged(ARFacesChangedEventArgs args)
+    {
+        foreach (var addedFace in args.added)
+        {
+            foreach (var meshRenderer in addedFace.GetComponentsInChildren<MeshRenderer>())
+            {
+                meshRenderer.enabled = false;
+            }
+
+            foreach (var skinned in addedFace.GetComponentsInChildren<SkinnedMeshRenderer>())
+            {
+                skinned.enabled = false;
+            }
+
+            if (!string.IsNullOrEmpty(filterName))
+            {
+                InstantiateFaceFilter(addedFace);
+            }
+        }
+
+        foreach (var removedFace in args.removed)
+        {
+            RemoveFaceFilter(removedFace);
+        }
+    }
+
+    private void InstantiateFaceFilter(ARFace face)
+    {
+        if (faceFilters.ContainsKey(face))
+            return;
+
+        Dictionary<string, GameObject> parts = new();
+        AddPart(face, parts, "LeftCheek");
+        AddPart(face, parts, "RightCheek");
+        AddPart(face, parts, "Forehead");
+
+        if (filterName == "Ep2")
+        {
+            AddPart(face, parts, "Nose");
+        }
+        faceFilters[face] = parts;
+    }
+
+    private void RemoveFaceFilter(ARFace face)
+    {
+        if (faceFilters.TryGetValue(face, out var parts))
+        {
+            foreach (var part in parts.Values)
+            {
+                if (part != null)
+                    Destroy(part);
+            }
+            faceFilters.Remove(face);
+        }
     }
 
     public void SetFilterName(string name)
@@ -48,41 +113,38 @@ public class ARFaceFilterApplier : MonoBehaviour
 
     public void OnClick_Filter()
     {
+        if(string.IsNullOrEmpty(filterName))
+        {
+            RemoveFilter();
+        }
+
         SetFilterName(UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name);
-
-        if (arFaceManager.trackables.count == 0)
+        if (filterPanel.activeSelf)
         {
-            SetPrefabVisibility(false);
+            filterPanel.SetActive(false);
+        }
+        if (!bottomButtons.activeSelf)
+        {
+            bottomButtons.SetActive(true);
         }
 
-        InstantiateFilterPrefabs();
-        filterPanel.SetActive(false);
-        bottomButtons.SetActive(true);
-    }
-
-    private void InstantiateFilterPrefabs()
-    {
-
-        InstantiatePart("LeftCheek");
-        InstantiatePart("RightCheek");
-        InstantiatePart("Forehead");
-
-        if(filterName == "Ep2")
+        foreach (var face in arFaceManager.trackables)
         {
-            InstantiatePart("Nose");
+            InstantiateFaceFilter(face);
         }
     }
 
-    private void InstantiatePart(string partName)
+    void AddPart(ARFace face, Dictionary<string, GameObject> parts, string partName)
     {
         string path = $"5AR/{filterName}_{partName}";
         GameObject prefab = Resources.Load<GameObject>(path);
 
         if (prefab != null)
         {
-            GameObject part = Instantiate(prefab, Vector3.zero, Quaternion.identity);
-            part.transform.SetParent(transform);
-            filterParts[partName] = part;
+            GameObject part = Instantiate(prefab);
+            part.transform.SetParent(canvasTransform, false);
+            part.transform.SetAsLastSibling();
+            parts[partName] = part;
         }
         else
         {
@@ -90,64 +152,79 @@ public class ARFaceFilterApplier : MonoBehaviour
         }
     }
 
-    void SetPrefabVisibility(bool isVisible)
-    {
-        foreach(var part in filterParts.Values)
-        {
-            if(part != null)
-            {
-                part.SetActive(isVisible);
-            }
-        }
-    }
-
     private void ApplyFilter()
     {
-        foreach (ARFace face in arFaceManager.trackables)
+        foreach (var kvp in faceFilters)
         {
+            ARFace face = kvp.Key;
+            Dictionary<string, GameObject> parts = kvp.Value;
+
             // ARFace의 렌더러를 비활성화 (페이스 마스크 숨기기)
-            MeshRenderer faceRenderer = face.GetComponent<MeshRenderer>();
-            if (faceRenderer != null && faceRenderer.enabled == true)
+            foreach (var meshRenderer in face.GetComponentsInChildren<MeshRenderer>())
             {
-                faceRenderer.enabled = false;
+                meshRenderer.enabled = false;
             }
 
-            // 얼굴 추적이 안 되면
+            foreach (var skinned in face.GetComponentsInChildren<SkinnedMeshRenderer>())
+            {
+                skinned.enabled = false;
+            }
+
             if (face.trackingState != TrackingState.Tracking)
             {
-                SetPrefabVisibility(false);
-                return;
+                foreach (var part in parts.Values)
+                {
+                    part.SetActive(false);
+                }
+                continue;
             }
 
             // 카메라 회전 보정 (카메라가 회전해도 스프라이트가 이상하지 않도록)
             Quaternion faceRotation = face.transform.rotation;
-            Quaternion inverseCameraRotation = Quaternion.Inverse(Camera.main.transform.rotation);
+            Quaternion inverseCameraRotation = Quaternion.Inverse(arCamera.transform.rotation);
             Quaternion adjustedRotation = inverseCameraRotation * faceRotation;
 
-            foreach(var part in filterParts)
+            foreach (var pair in parts)
             {
-                string partName = part.Key;
-                GameObject partPrefab = part.Value;
+                string partName = pair.Key;
+                GameObject part = pair.Value;
 
-                if(faceLandmarkIndices.TryGetValue(partName, out int vertexIndex) && partPrefab != null)
+                if (faceLandmarkIndices.TryGetValue(partName, out int vertexIndex))
                 {
+                    RectTransform partRect = part.GetComponent<RectTransform>();
+
                     Vector3 localPos = face.vertices[vertexIndex];
                     Vector3 worldPos = face.transform.TransformPoint(localPos);
+                    Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
 
-                    partPrefab.transform.position = worldPos;
-                    partPrefab.transform.rotation = adjustedRotation;
+                    RectTransform canvasRect = canvasTransform.GetComponent<RectTransform>();
+                    bool isInside = RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screenPos, arCamera, out Vector2 localPoint);
+
+                    if (isInside)
+                    {
+                        partRect.anchoredPosition = localPoint;
+                        //part.transform.localRotation = adjustedRotation;
+                        part.SetActive(true);
+                    }
                 }
             }
-
-            SetPrefabVisibility(true);
         }
     }
 
-    public void RemoveFilter()
+    public void OnClick_RemoveFilter()
     {
         filterName = null;
-        SetPrefabVisibility(false);
         filterPanel.SetActive(false);
         bottomButtons.SetActive(true);
+
+        RemoveFilter();
+    }
+
+    void RemoveFilter()
+    {
+        foreach (var face in faceFilters.Keys)
+        {
+            RemoveFaceFilter(face);
+        }
     }
 }
