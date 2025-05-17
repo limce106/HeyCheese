@@ -37,8 +37,8 @@ public class FilterFrameManager : MonoBehaviour
         {"Ep2_Frame", true },
         {"Ep3_Frame", true },
         {"Ep4_Frame", true },
-        {"BuiltIn1", true },
-        {"BuiltIn2", true }
+        {"CheeseTheme_Frame", true },
+        {"BugiTheme_Frame", true }
     };
 
     private Dictionary<string, bool> filterUnlocked = new Dictionary<string, bool>
@@ -61,8 +61,8 @@ public class FilterFrameManager : MonoBehaviour
     private Dictionary<string, string> hiddenMissionFilterName = new Dictionary<string, string>
     {
         // 추후 key: 애셋명, value: 필터에 맞는 설명으로 변경할 예정
-        {"HiddenMission1", "외계인 느낌의 멋진 안경 👽✨"},
-        {"HiddenMission2", "외계인 느낌의 멋진 안경 👽✨" }
+        {"Mission1", "외계인 느낌의 멋진 안경 👽✨"},
+        {"Mission2", "외계인 느낌의 멋진 안경 👽✨" }
     };
 
     public ReadOnlyDictionary<string, bool> GetFrameUnlockedReadOnly()
