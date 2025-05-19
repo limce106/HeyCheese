@@ -4,18 +4,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
+// UI에 이벤트 표시 역할
 // 스토리<->미니게임 시 해당 내용은 유지, 기억되어야 되지만
 // 스토리 -> 목록 순간, 내용 초기화 필요
 public class MainStoryManager : MonoBehaviour
 {
     #region Singleton
-    public static MainStoryManager Instance;
-    public PlayerNameManager playerNameManager;
+    //public static MainStoryManager MainStoryManager;
+    //public PlayerNameManager playerNameManager;
     public DialogueManager dialougeManager;
     //public Speaker speaker;
     #endregion
-
 
     #region UI References
     [Header("Panels")]
@@ -65,25 +66,16 @@ public class MainStoryManager : MonoBehaviour
 
     #region Data
     // Data Structure
-    public Dictionary<int, MainStory> currentEpisode; // 전달한 에피소드에 해당하는 {id:MainStory CSV의 한 열(step), ..}
-    private int currentID = 0;
-    public static string PlayerName = "주인공";
+    public Dictionary<int, MainStory> CurrentEpisode; // 전달한 에피소드에 해당하는 {id:MainStory CSV의 한 열(step), ..}
+    public int CurrentID {
+        get => MainStoryGameManager.MainStoryGM.currentID;
+        set => MainStoryGameManager.MainStoryGM.currentID = value;
+    }
+    public string PlayerName;
+    public float bondScore = 0; // 유대감 점수
     #endregion
 
     #region Unity Lifecycle
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject); // 씬 넘어가도 유지
-        }
-        else
-        {
-            Destroy(gameObject); // 중복 방지
-        }
-    }
-
     //public void Clear()
     //{
     //    selectedLevel = 0;
@@ -108,89 +100,38 @@ public class MainStoryManager : MonoBehaviour
     ////    }
     ////}
 
-    void Start()
+    //void Start()
+    //{
+    //    // 에피소드 메뉴에서 선택된 
+    //    string episodeID = PlayerPrefs.GetString("SelectedEpisodeID");
+    //    print("매니저: " + episodeID);
+
+    //    // 시작할 때 저장된 이름 불러오기
+    //    //LoadPlayerName();
+
+    //    //loadingCanvas.gameObject.SetActive(true);
+    //    ShowCurrentID(CurrentID);
+    //}
+
+
+    // 코루틴으로 MainStoryGameManager.cs에서 csv 파싱 완료될 때까지 기다리기
+    IEnumerator Start() 
     {
-        // 에피소드 메뉴에서 선택된 
-        string episodeID = PlayerPrefs.GetString("SelectedEpisodeID");
-        print("매니저: " + episodeID);
+        yield return new WaitUntil(() => MainStoryGameManager.MainStoryGM?.currentEpisode != null);
 
-        // 파싱한 내용 불러오기
-        CSVParser csvParser = new CSVParser();
-        currentEpisode = csvParser.ParseMainStories(episodeID);
-        Debug.Log($"[MainStoryManager] Loaded EpisodeID: {episodeID}");
-        print(currentEpisode.Keys);
-        print(currentEpisode.Values);
-        currentID = 0;
+        CurrentEpisode = MainStoryGameManager.MainStoryGM.currentEpisode;
+        PlayerName = MainStoryGameManager.MainStoryGM.playerName;
 
-        // 시작할 때 저장된 이름 불러오기
-        LoadPlayerName();
-
-        //loadingCanvas.gameObject.SetActive(true);
-        ShowCurrentID(currentID);
+        ShowCurrentID(CurrentID);
     }
     #endregion
 
     #region Story Logic
-    //// 메뉴에서 버튼 눌렀을 시
-    //public void OnStartStoryButtonClicked(string emotion, string situation, int level)
-    //{
-    //    selectedEmotion = emotion;
-    //    selectedSituation = situation;
-    //    selectedLevel = level;
-
-    //    LoadStoryData();
-    //    currentIndex = 0;
-    //    menuCanvas.gameObject.SetActive(false);
-    //    dialogueCanvas.gameObject.SetActive(true);
-    //    ShowCurrentStep();
-    //}
-
-    //void LoadStoryData()
-    //{
-    //    currentStory.Clear();
-
-    //    string path = Path.Combine(Application.streamingAssetsPath, "StoryDataTest.json");
-    //    if (!File.Exists(path))
-    //    {
-    //        Debug.LogError("StoryDataTest.json 파일을 찾을 수 없습니다!");
-    //        return;
-    //    }
-
-    //    string jsonString = File.ReadAllText(path);
-
-    //    try
-    //    {
-    //        var allData = JsonHelperTest.FromJson<StoryDataTest>(jsonString);
-
-    //        if (allData == null)
-    //        {
-    //            Debug.LogError("JSON 파싱 실패! allData가 null입니다.");
-    //            return;
-    //        }
-
-    //        foreach (var item in allData)
-    //        {
-    //            if (item.EmotionID == selectedEmotion &&
-    //                item.SituationID.StartsWith(selectedSituation) &&
-    //                (item.Level == selectedLevel.ToString() || item.Level == "all"))
-    //            {
-    //                currentStory.Add(item);
-    //            }
-    //        }
-
-    //        currentStory.Sort((a, b) => a.Order.CompareTo(b.Order));
-    //    }
-    //    catch (System.Exception e)
-    //    {
-    //        Debug.LogError($"JSON 파싱 중 예외 발생: {e.Message}");
-    //    }
-    //}
-
     // 현재 스텝(ID)에 맞는 이벤트 실행
     void ShowCurrentID(int id)
     {
-        MainStory step = currentEpisode[id];
-        currentID = id;
+        MainStory step = CurrentEpisode[id];
+        CurrentID = id;
 
         if (step.NextID == 0)
         {
@@ -270,24 +211,21 @@ public class MainStoryManager : MonoBehaviour
                 break;
             case "MiniGame":
                 // 미니게임 씬으로 이동
+                SceneManager.LoadScene(step.MiniGame);
 
                 break;
             case "EmotionCamera":
+                TurnOffEveryCanvas();
+                emotionCameraCanvas.SetActive(true);
 
                 break;
             case "StoryCamera":
+                TurnOffEveryCanvas();
+                storyCameraCanvas.SetActive(true);
 
                 break;
             case "Gift":
                 break;
-            //case "CameraOnly":
-            //case "CameraARGuide":
-            //    dialogueCanvas.gameObject.SetActive(false);
-            //    cameraCanvas.gameObject.SetActive(true);
-            //    break;
-            //case "Result":
-            //    dialogueText.text = "결과 화면입니다.";
-            //    break;
         }
     }
 
@@ -295,7 +233,12 @@ public class MainStoryManager : MonoBehaviour
     {
         nextDialogueBtn.interactable = true;
 
-        int nextID = currentEpisode[currentID].NextID;
+        int nextID = CurrentEpisode[CurrentID].NextID;
+        ShowCurrentID(nextID);
+    }
+    public void NextDialogue(int nextID)
+    {
+        nextDialogueBtn.interactable = true;
         ShowCurrentID(nextID);
     }
     #endregion
@@ -316,20 +259,20 @@ public class MainStoryManager : MonoBehaviour
     }
     #endregion
 
-    #region Player Name
-    // 플레이어 이름 불러오기
-    public void LoadPlayerName()
-    {
-        if (PlayerPrefs.HasKey("PlayerName"))
-        {
-            PlayerName = PlayerPrefs.GetString("PlayerName");
-        }
-        else
-        {
-            PlayerName = "주인공";
-        }
-    }
-    #endregion
+    //#region Player Name
+    //// 플레이어 이름 불러오기
+    //public void LoadPlayerName()
+    //{
+    //    if (PlayerPrefs.HasKey("PlayerName"))
+    //    {
+    //        PlayerName = PlayerPrefs.GetString("PlayerName");
+    //    }
+    //    else
+    //    {
+    //        PlayerName = "주인공";
+    //    }
+    //}
+    //#endregion
 
     #region Image Utility
     // 배경, 캐릭터 Image 변경
@@ -380,6 +323,27 @@ public class MainStoryManager : MonoBehaviour
         }
     }
     #endregion
+
+    // 유대감 점수 업데이트
+    public void UpdateDialogueAndBond(Emotion dominantEmotion)
+    {
+
+        // 
+    }
+    // 아니면 id를 1씩 증가시켜서 NextDialogue(currentID + 1 + a)로 바꾼다거나
+    // a는 0행복 1슬픔 2놀람 3화남 인거고
+    // 그리고 다이얼로그 저거 함수로 바꿔서
+    // AddBond()
+    // Dialogue()
+    // 뭐 이런 식으로 유대감 증가시키고 다이얼로그 표시되게 하는 것도 괜찮은 듯
+
+    public void UpdateAffection(float bondChange)
+    {
+        bondScore += bondChange;
+        // 유대감 점수 출력 (디버그용)
+        Debug.Log($"현재 유대감 점수: {bondScore}");
+    }
+
 
     void EndEpisode()
     {
