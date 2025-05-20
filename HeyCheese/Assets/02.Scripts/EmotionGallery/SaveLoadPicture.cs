@@ -7,36 +7,30 @@ using UnityEngine.UI;
 
 public class SaveLoadPicture : MonoBehaviour
 {
-    [Header("UI")]
-    public RectTransform panelToCapture;
-
     /// <summary>
-    /// »çÁøÀ» Ä¸Ã³ÇÏ°í ÀúÀåÇÑ ÈÄ, ¿ÜºÎ¿¡¼­ Àü´ŞÇÑ Äİ¹éÀ¸·Î ÆÄÀÏ °æ·Î¿Í ½Ã°£ Á¤º¸¸¦ ³Ñ±ä´Ù.
+    /// ì‚¬ì§„ì„ ìº¡ì²˜í•˜ê³  ì €ì¥í•œ í›„, ì™¸ë¶€ì—ì„œ ì „ë‹¬í•œ ì½œë°±ìœ¼ë¡œ íŒŒì¼ ê²½ë¡œì™€ ì‹œê°„ ì •ë³´ë¥¼ ë„˜ê¸´ë‹¤.
     /// </summary>
     public IEnumerator CaptureAndSave(Action<string, string> onSavedCallback = null)
     {
         yield return new WaitForEndOfFrame();
 
-        // Ä¸Ã³ÇÒ UI ÆĞ³ÎÀÇ È­¸é ÁÂÇ¥ °è»ê
-        Vector3[] corners = new Vector3[4];
-        panelToCapture.GetWorldCorners(corners);
+        // AR ì¹´ë©”ë¼ í™”ë©´ì´ ìˆëŠ” ì˜ì—­ë§Œ ìº¡ì²˜
+        float targetAspect = 3f / 4f;
+        float screenWidth = Screen.width;
+        float screenHeight = Screen.height;
+        float targetHeight = screenWidth / targetAspect;
+        float yOffset = (screenHeight - targetHeight) / 2f;
 
-        float x = corners[0].x;
-        float y = corners[0].y;
-        float width = corners[2].x - corners[0].x;
-        float height = corners[2].y - corners[0].y;
+        float x = 0f;
+        float y = yOffset;
+        float width = screenWidth;
+        float height = targetHeight;
 
-        // È­¸é ÁÂÇ¥¸¦ ÇÈ¼¿ ÁÂÇ¥·Î º¯È¯
-        x = Mathf.Clamp(x, 0, Screen.width);
-        y = Mathf.Clamp(y, 0, Screen.height);
-        width = Mathf.Clamp(width, 0, Screen.width - x);
-        height = Mathf.Clamp(height, 0, Screen.height - y);
-
-        // y ÁÂÇ¥´Â ¾Æ·¡¿¡¼­ À§·Î °è»êµÇ¹Ç·Î º¸Á¤ ÇÊ¿ä
-        y = Screen.height - y - height;
+        // y ì¢Œí‘œ ë³´ì • (ìŠ¤í¬ë¦° ì¢Œí‘œê³„ëŠ” ì¢Œí•˜(0,0) ê¸°ì¤€)
+        float readY = screenHeight - y - height;
 
         Texture2D screenImage = new Texture2D((int)width, (int)height, TextureFormat.RGB24, false);
-        screenImage.ReadPixels(new Rect(x, y, width, height), 0, 0);
+        screenImage.ReadPixels(new Rect(x, readY, width, height), 0, 0);
         screenImage.Apply();
 
         string filename = "emotion_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".png";
@@ -46,7 +40,7 @@ public class SaveLoadPicture : MonoBehaviour
 
         string capturedAt = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
 
-        // ¿ÜºÎ¿¡ Àü´Ş
+        // ì™¸ë¶€ì— ì „ë‹¬
         onSavedCallback?.Invoke(filepath, capturedAt);
     }
 }

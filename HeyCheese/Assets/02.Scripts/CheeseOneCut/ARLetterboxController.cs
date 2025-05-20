@@ -13,11 +13,10 @@ public class ARLetterboxController : MonoBehaviour
         float screenWidth = Screen.width;
         float screenHeight = Screen.height;
 
+        // 꽉 채운 화면 너비를 기준으로 높이 계산
         float targetHeight = screenWidth / targetAspect;
         float totalLetterboxHeight = screenHeight - targetHeight;
         float letterboxHeight = totalLetterboxHeight / 2f;
-
-        Debug.Log("Letterbox Height (px): " + letterboxHeight);
 
         topLetterbox.rectTransform.sizeDelta = new Vector2(screenWidth, letterboxHeight);
         bottomLetterbox.rectTransform.sizeDelta = new Vector2(screenWidth, letterboxHeight);
@@ -25,5 +24,4 @@ public class ARLetterboxController : MonoBehaviour
         topLetterbox.rectTransform.anchoredPosition = new Vector2(0, screenHeight / 2f - letterboxHeight / 2f);
         bottomLetterbox.rectTransform.anchoredPosition = new Vector2(0, -(screenHeight / 2f - letterboxHeight / 2f));
     }
-
 }
