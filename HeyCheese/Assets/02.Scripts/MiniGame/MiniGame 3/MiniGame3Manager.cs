@@ -29,13 +29,11 @@ public class MiniGame3Manager : MonoBehaviour
         Time.timeScale = 0f; // 게임 정지
         goalSlider.minValue = 0;
         goalSlider.maxValue = duration;
-    }
 
-    void Start()
-    {
         GuidePanel.SetActive(true);
         ClearPanel.SetActive(false);
     }
+
 
     // " 3, 2, 1, 시작! " 카운트 다운 표시
 

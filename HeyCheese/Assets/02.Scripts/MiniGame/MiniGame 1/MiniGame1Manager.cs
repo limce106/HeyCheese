@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -42,8 +42,7 @@ public class MiniGame1Manager : MonoBehaviour
 
     [SerializeField] private GameObject ClearPanel;
 
-
-    private void Start()
+    private void Awake()
     {
         isRestart = false;
 
@@ -52,11 +51,6 @@ public class MiniGame1Manager : MonoBehaviour
         InitTimeSlider();
 
         SetGuideActive(true);
-    }
-
-    void Update()
-    {
-        
     }
 
 
