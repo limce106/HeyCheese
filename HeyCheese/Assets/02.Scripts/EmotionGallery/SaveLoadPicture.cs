@@ -18,15 +18,28 @@ public class SaveLoadPicture : MonoBehaviour
         float targetAspect = 3f / 4f;
         float screenWidth = Screen.width;
         float screenHeight = Screen.height;
-        float targetHeight = screenWidth / targetAspect;
-        float yOffset = (screenHeight - targetHeight) / 2f;
+        float screenAspect = screenWidth / screenHeight;
 
-        float x = 0f;
-        float y = yOffset;
-        float width = screenWidth;
-        float height = targetHeight;
+        float x = 0f, y = 0f, width = 0f, height = 0f;
 
-        // y 좌표 보정 (스크린 좌표계는 좌하(0,0) 기준)
+        if (screenAspect > targetAspect)
+        {
+            // 화면이 더 가로로 길면 좌우를 자른다.
+            height = screenHeight;
+            width = height * targetAspect;
+            x = (screenWidth - width) / 2f;
+            y = 0f;
+        }
+        else
+        {
+            // 화면이 더 세로로 길면 위아래를 자른다.
+            width = screenWidth;
+            height = width / targetAspect;
+            x = 0f;
+            y = (screenHeight - height) / 2f;
+        }
+
+        // (0,0)은 좌하단이므로 Y 보정
         float readY = screenHeight - y - height;
 
         Texture2D screenImage = new Texture2D((int)width, (int)height, TextureFormat.RGB24, false);
