@@ -14,7 +14,6 @@ public class ARFaceFilterApplier : MonoBehaviour
     public Camera arCamera;
     private string filterName;
 
-    public Transform canvasTransform;
     public GameObject filterPanel;
     public GameObject bottomButtons;
 
@@ -22,7 +21,7 @@ public class ARFaceFilterApplier : MonoBehaviour
     {
         { "LeftCheek", 205 },
         { "RightCheek", 425 },
-        { "Nose", 3 },
+        { "Nose", 2 },
         { "Forehead", 10 }
     };
 
@@ -30,6 +29,11 @@ public class ARFaceFilterApplier : MonoBehaviour
 
     void Update()
     {
+        foreach(ARFace face in arFaceManager.trackables)
+        {
+            DisableFaceRenderer(face);
+        }
+
         // 필터가 선택되지 않았다면
         if (string.IsNullOrEmpty(filterName))
         {
@@ -54,16 +58,6 @@ public class ARFaceFilterApplier : MonoBehaviour
     {
         foreach (var addedFace in args.added)
         {
-            foreach (var meshRenderer in addedFace.GetComponentsInChildren<MeshRenderer>())
-            {
-                meshRenderer.enabled = false;
-            }
-
-            foreach (var skinned in addedFace.GetComponentsInChildren<SkinnedMeshRenderer>())
-            {
-                skinned.enabled = false;
-            }
-
             if (!string.IsNullOrEmpty(filterName))
             {
                 InstantiateFaceFilter(addedFace);
@@ -113,12 +107,21 @@ public class ARFaceFilterApplier : MonoBehaviour
 
     public void OnClick_Filter()
     {
-        if(string.IsNullOrEmpty(filterName))
-        {
-            RemoveFilter();
-        }
+        StartCoroutine(ChangeFilter());
+    }
 
-        SetFilterName(UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name);
+    private IEnumerator ChangeFilter()
+    {
+        string selectedFilter = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name;
+
+        if (filterName == selectedFilter)
+            yield break;
+
+        RemoveFilter();
+        yield return null;
+
+        SetFilterName(selectedFilter);
+
         if (filterPanel.activeSelf)
         {
             filterPanel.SetActive(false);
@@ -142,8 +145,7 @@ public class ARFaceFilterApplier : MonoBehaviour
         if (prefab != null)
         {
             GameObject part = Instantiate(prefab);
-            part.transform.SetParent(canvasTransform, false);
-            part.transform.SetAsLastSibling();
+            part.transform.SetParent(transform);
             parts[partName] = part;
         }
         else
@@ -158,17 +160,6 @@ public class ARFaceFilterApplier : MonoBehaviour
         {
             ARFace face = kvp.Key;
             Dictionary<string, GameObject> parts = kvp.Value;
-
-            // ARFace의 렌더러를 비활성화 (페이스 마스크 숨기기)
-            foreach (var meshRenderer in face.GetComponentsInChildren<MeshRenderer>())
-            {
-                meshRenderer.enabled = false;
-            }
-
-            foreach (var skinned in face.GetComponentsInChildren<SkinnedMeshRenderer>())
-            {
-                skinned.enabled = false;
-            }
 
             if (face.trackingState != TrackingState.Tracking)
             {
@@ -191,23 +182,22 @@ public class ARFaceFilterApplier : MonoBehaviour
 
                 if (faceLandmarkIndices.TryGetValue(partName, out int vertexIndex))
                 {
-                    RectTransform partRect = part.GetComponent<RectTransform>();
-
                     Vector3 localPos = face.vertices[vertexIndex];
                     Vector3 worldPos = face.transform.TransformPoint(localPos);
-                    Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
 
-                    RectTransform canvasRect = canvasTransform.GetComponent<RectTransform>();
-                    bool isInside = RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screenPos, arCamera, out Vector2 localPoint);
-
-                    if (isInside)
-                    {
-                        partRect.anchoredPosition = localPoint;
-                        //part.transform.localRotation = adjustedRotation;
-                        part.SetActive(true);
-                    }
+                    part.transform.position = worldPos;
+                    part.transform.rotation = adjustedRotation;
                 }
             }
+        }
+    }
+
+    void DisableFaceRenderer(ARFace face)
+    {
+        var meshRenderer = face.GetComponent<MeshRenderer>();
+        if(meshRenderer != null && meshRenderer.enabled )
+        {
+            meshRenderer.enabled = false;
         }
     }
 
@@ -222,7 +212,8 @@ public class ARFaceFilterApplier : MonoBehaviour
 
     void RemoveFilter()
     {
-        foreach (var face in faceFilters.Keys)
+        var faces = new List<ARFace>(faceFilters.Keys);
+        foreach (var face in faces)
         {
             RemoveFaceFilter(face);
         }
