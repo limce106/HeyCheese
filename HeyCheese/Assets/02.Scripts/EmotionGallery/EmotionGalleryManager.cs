@@ -19,11 +19,12 @@ public class EmotionGalleryManager : MonoBehaviour
     public GameObject thumbnailPrefab;
 
     private string dbPath;
+    private string currentSelectedPath;
     private List<GameObject> currentThumbnails = new List<GameObject>();
 
     void Start()
     {
-        dbPath = "URI=file:" + Path.Combine(Application.persistentDataPath, "emotion_gallery.db");
+        dbPath = "URI=file:" + Path.Combine(Application.persistentDataPath, "HeyCheese.db");
         filterDropdown.onValueChanged.AddListener(OnFilterChanged);
         if (detailPanel != null)
             detailPanel.SetActive(false);
@@ -106,6 +107,8 @@ public class EmotionGalleryManager : MonoBehaviour
     {
         if (detailPanel == null) return;
 
+        currentSelectedPath = path;
+
         detailPanel.SetActive(true);
 
         if (File.Exists(path))
@@ -140,5 +143,35 @@ public class EmotionGalleryManager : MonoBehaviour
         if (detailPanel != null)
             detailPanel.SetActive(false);
     }
+
+    // 사진 삭제
+    public void DeletePhoto()
+    {
+        if (string.IsNullOrEmpty(currentSelectedPath)) return;
+
+        // 파일 먼저 삭제
+        if (File.Exists(currentSelectedPath))
+        {
+            File.Delete(currentSelectedPath);
+            Debug.Log("사진 삭제 완료: " + currentSelectedPath);
+        }
+
+        // SQLite DB에서 레코드 삭제
+        using (var conn = new SqliteConnection(dbPath))
+        {
+            conn.Open();
+            string query = "DELETE FROM emotion_gallery WHERE photo_path = @path";
+            using (var cmd = new SqliteCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@path", currentSelectedPath);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        // 화면 갱신
+        LoadGallery("all");
+        detailPanel.SetActive(false);
+    }
+
 }
 
