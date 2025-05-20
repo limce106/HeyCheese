@@ -11,13 +11,13 @@ public class MiniGame2_2Manager : MonoBehaviour
         PickUpFoodWaste,
         SortDishes
     }
-    // ÇÒ ÀÏ »óÅÂ µñ¼Å³Ê¸®
+    // í•  ì¼ ìƒíƒœ ë”•ì…”ë„ˆë¦¬
     private Dictionary<int, bool> toDoListDictionary = new Dictionary<int, bool>();
 
-    [SerializeField] private List<int> currentToDoThingCountsList;  // ÇöÀç ÇÒÀÏ º° Ä¡¿î °³¼ö ¸®½ºÆ®
-    [SerializeField] private List<int> toDoThingFinishCriteriaList; // ÇÒÀÏ º° Ä¡¿î °³¼ö ¿Ï·á ±âÁØ ¸®½ºÆ®
+    [SerializeField] private List<int> currentToDoThingCountsList;  // í˜„ì¬ í• ì¼ ë³„ ì¹˜ìš´ ê°œìˆ˜ ë¦¬ìŠ¤íŠ¸
+    [SerializeField] private List<int> toDoThingFinishCriteriaList; // í• ì¼ ë³„ ì¹˜ìš´ ê°œìˆ˜ ì™„ë£Œ ê¸°ì¤€ ë¦¬ìŠ¤íŠ¸
 
-    [Header("ÆĞ³Îµé")]
+    [Header("íŒ¨ë„ë“¤")]
     [SerializeField] private GameObject GuidePanel;
     [SerializeField] private GameObject ClearPanel;
 
@@ -25,12 +25,9 @@ public class MiniGame2_2Manager : MonoBehaviour
 
     private void Awake()
     {
-        // toDoListDictionary ÃÊ±âÈ­ µü ÇÑ¹ø¸¸
+        // toDoListDictionary ì´ˆê¸°í™” ë”± í•œë²ˆë§Œ
         InitToDoListDictionary();
-    }
 
-    void Start()
-    {
         GuidePanel.SetActive(true);
         ClearPanel.SetActive(false);
     }
@@ -40,7 +37,7 @@ public class MiniGame2_2Manager : MonoBehaviour
         GuidePanel.SetActive(false);
     }
 
-    // toDoListDictionary ÃÊ±âÈ­
+    // toDoListDictionary ì´ˆê¸°í™”
     private void InitToDoListDictionary()
     {
         toDoListDictionary.Add((int)ToDoList.PickUpTissue, false);
@@ -56,8 +53,8 @@ public class MiniGame2_2Manager : MonoBehaviour
         currentToDoThingCountsList[(int)toDoList] += 1;
         CheckFinishToDoThing(toDoList);
 
-        // ÄÚ·çÆ¾ À§Ä¡°¡ ¿©±â°¡ ¸Â³ª..? ¸Ş¼ÒµåÀÇ ¿ªÇÒÀÌ ¾Ö¸ÅÇØÁø ±âºĞ
-        // ¾î¶»°Ô ´õ ÄÚµå¸¦ ±¦Âú°Ô À¯Áö º¸¼ö ÇÒ ¼ö ÀÖÀ»Áö »ı°¢ÇØº¸±â..
+        // ì½”ë£¨í‹´ ìœ„ì¹˜ê°€ ì—¬ê¸°ê°€ ë§ë‚˜..? ë©”ì†Œë“œì˜ ì—­í• ì´ ì• ë§¤í•´ì§„ ê¸°ë¶„
+        // ì–´ë–»ê²Œ ë” ì½”ë“œë¥¼ ê´œì°®ê²Œ ìœ ì§€ ë³´ìˆ˜ í•  ìˆ˜ ìˆì„ì§€ ìƒê°í•´ë³´ê¸°..
         StartCoroutine(CheckToDoListState());   
     }
 
@@ -86,21 +83,21 @@ public class MiniGame2_2Manager : MonoBehaviour
         }
 
         if (toDoListDictionary[(int)toDoList])
-            Debug.Log($"{toDoList} : ÇÒÀÏ ¿Ï·á!");
+            Debug.Log($"{toDoList} : í• ì¼ ì™„ë£Œ!");
     }
 
 
     private IEnumerator CheckToDoListState()
     {
-        // toDoListDictionary ÀÇ ¸ğµç value°¡ trueÀÌ¸é
+        // toDoListDictionary ì˜ ëª¨ë“  valueê°€ trueì´ë©´
         bool allTrue = toDoListDictionary.Values.All(value => value);
 
         if (allTrue)
         {
             yield return new WaitForSeconds(1.5f);
 
-            // ½ÄÅ¹ ´Ù Ä¡¿ì±â ¼º°ø!
-            // Å¬¸®¾î ÆĞ³Î È°¼ºÈ­
+            // ì‹íƒ ë‹¤ ì¹˜ìš°ê¸° ì„±ê³µ!
+            // í´ë¦¬ì–´ íŒ¨ë„ í™œì„±í™”
 
             ClearPanel.SetActive(true);
         }
