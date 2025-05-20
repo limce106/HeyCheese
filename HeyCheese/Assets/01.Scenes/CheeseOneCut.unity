@@ -136,7 +136,6 @@ GameObject:
   - component: {fileID: 54998136}
   - component: {fileID: 54998135}
   - component: {fileID: 54998140}
-  - component: {fileID: 54998139}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -193,7 +192,7 @@ Canvas:
   m_GameObject: {fileID: 54998134}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 758211530}
   m_PlaneDistance: 1
   m_PixelPerfect: 0
@@ -219,6 +218,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1717198304}
+  - {fileID: 1664999563}
   - {fileID: 845585728}
   - {fileID: 72071913}
   - {fileID: 1101717111}
@@ -233,23 +234,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &54998139
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 54998134}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e42d0e40c3c93724cad9f440b3890122, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  arFaceManager: {fileID: 1784050613}
-  arCamera: {fileID: 758211530}
-  canvasTransform: {fileID: 54998138}
-  filterPanel: {fileID: 316549603}
-  bottomButtons: {fileID: 1101717110}
 --- !u!114 &54998140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -612,7 +596,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 54998139}
+      - m_Target: {fileID: 1129088424}
         m_TargetAssemblyTypeName: ARFaceFilterApplier, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 1
@@ -697,7 +681,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 892.91656, y: -155.73}
+  m_AnchoredPosition: {x: 892.9166, y: -155.73}
   m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &165951793
@@ -1008,7 +992,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 54998139}
+      - m_Target: {fileID: 1129088424}
         m_TargetAssemblyTypeName: ARFaceFilterApplier, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 1
@@ -1643,7 +1627,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 54998139}
+      - m_Target: {fileID: 1129088424}
         m_TargetAssemblyTypeName: ARFaceFilterApplier, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 1
@@ -1852,6 +1836,7 @@ GameObject:
   - component: {fileID: 758211527}
   - component: {fileID: 758211526}
   - component: {fileID: 758211531}
+  - component: {fileID: 758211532}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1983,7 +1968,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 758211524}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 816b289ef451e094f9ae174fb4cf8db0, type: 3}
   m_Name: 
@@ -2074,12 +2059,24 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 758211524}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1abc81979a4fc14a889991cd984590d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rawImage: {fileID: 1286405053}
+--- !u!114 &758211532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 758211524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4689ca0a25c98f4ea42e57a487fd98a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &759799803
 GameObject:
   m_ObjectHideFlags: 0
@@ -2524,7 +2521,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 842.3499, y: -155.72803}
+  m_AnchoredPosition: {x: 842.35, y: -155.72803}
   m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1103325869
@@ -2571,7 +2568,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 54998139}
+      - m_Target: {fileID: 1129088424}
         m_TargetAssemblyTypeName: ARFaceFilterApplier, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 1
@@ -2633,6 +2630,8 @@ GameObject:
   - component: {fileID: 1129088420}
   - component: {fileID: 1129088421}
   - component: {fileID: 1129088422}
+  - component: {fileID: 1129088423}
+  - component: {fileID: 1129088424}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -2705,6 +2704,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96e8ac44cfa181642a2f24566723cb8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1129088423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1129088413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba06191fd2feb61418125a8346491970, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topLetterbox: {fileID: 1664999564}
+  bottomLetterbox: {fileID: 1717198305}
+--- !u!114 &1129088424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1129088413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e42d0e40c3c93724cad9f440b3890122, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  arFaceManager: {fileID: 1784050613}
+  arCamera: {fileID: 758211530}
+  filterPanel: {fileID: 316549603}
+  bottomButtons: {fileID: 1101717110}
 --- !u!1 &1151011470
 GameObject:
   m_ObjectHideFlags: 0
@@ -3256,7 +3285,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1286405052
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3274,7 +3303,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0.000018464001, y: 0}
-  m_SizeDelta: {x: 1076, y: 0}
+  m_SizeDelta: {x: 1076, y: 1434.6666}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1286405053
 MonoBehaviour:
@@ -3539,9 +3568,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 54998139}
+      - m_Target: {fileID: 1129088424}
         m_TargetAssemblyTypeName: ARFaceFilterApplier, Assembly-CSharp
-        m_MethodName: RemoveFilter
+        m_MethodName: OnClick_RemoveFilter
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4046,6 +4075,156 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1624424338}
   m_CullTransparentMesh: 1
+--- !u!1 &1664999562
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1664999563}
+  - component: {fileID: 1664999565}
+  - component: {fileID: 1664999564}
+  m_Layer: 5
+  m_Name: 'TopLetterbox '
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1664999563
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664999562}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 54998138}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 830.87573}
+  m_SizeDelta: {x: 0.4, y: 120.94849}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1664999564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664999562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1664999565
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664999562}
+  m_CullTransparentMesh: 1
+--- !u!1 &1717198303
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1717198304}
+  - component: {fileID: 1717198306}
+  - component: {fileID: 1717198305}
+  m_Layer: 5
+  m_Name: 'BottomLetterbox '
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1717198304
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1717198303}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 54998138}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -825.19995}
+  m_SizeDelta: {x: 0.4, y: 119.94849}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1717198305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1717198303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1717198306
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1717198303}
+  m_CullTransparentMesh: 1
 --- !u!1 &1784050612
 GameObject:
   m_ObjectHideFlags: 0
@@ -4332,7 +4511,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 54998139}
+      - m_Target: {fileID: 1129088424}
         m_TargetAssemblyTypeName: ARFaceFilterApplier, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 1
@@ -4684,7 +4863,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 54998139}
+      - m_Target: {fileID: 1129088424}
         m_TargetAssemblyTypeName: ARFaceFilterApplier, Assembly-CSharp
         m_MethodName: OnClick_Filter
         m_Mode: 1
