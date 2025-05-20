@@ -9,16 +9,17 @@ public class EmotionGalleryDBWriter : MonoBehaviour
 
     void Start()
     {
-        dbPath = "URI=file:" + Path.Combine(Application.persistentDataPath, "emotion_gallery.db");
+        dbPath = "URI=file:" + Path.Combine(Application.persistentDataPath, "HeyCheese.db");
         EnsureTableExists(); // 테이블 없으면 생성
     }
 
-    // emotion_gallery 테이블 생성 (이미 있으면 무시됨)
     private void EnsureTableExists()
     {
         using var conn = new SqliteConnection(dbPath);
         conn.Open();
         using var cmd = conn.CreateCommand();
+
+        // emotion_gallery 테이블 생성 (존재하면 무시)
         cmd.CommandText = @"
             CREATE TABLE IF NOT EXISTS emotion_gallery (
                 photo_path TEXT PRIMARY KEY,
@@ -33,7 +34,7 @@ public class EmotionGalleryDBWriter : MonoBehaviour
         Debug.Log("[DB] emotion_gallery 테이블 확인 및 생성 완료");
     }
 
-    // 자유 사진 DB 저장
+    // 치즈한컷 DB 저장
     public void InsertFreePhoto(string filepath, string capturedAt)
     {
         using var conn = new SqliteConnection(dbPath);
@@ -46,7 +47,7 @@ public class EmotionGalleryDBWriter : MonoBehaviour
                 '{filepath}', '{capturedAt}', 'free'
             );";
         cmd.ExecuteNonQuery();
-        Debug.Log("[DB] 자유 사진 저장 완료: " + filepath);
+        Debug.Log("[DB] 치즈한컷 저장 완료: " + filepath);
     }
 
     // 스토리 사진 DB 저장
