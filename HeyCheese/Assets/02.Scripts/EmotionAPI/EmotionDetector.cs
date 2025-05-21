@@ -260,6 +260,11 @@ public class EmotionDetector : MonoBehaviour
                     FaceAnnotation face = faceResponse.responses[0].faceAnnotations[0];
                     string dominantEmotion = GetDominantEmotion(face);
                     emotionText.text = $"감지된 표정: {dominantEmotion}";
+                    // 감지된 표정에 따라 유대감 점수 반영
+                    //MainStoryManager.Instance.UpdateDialogueAndBond(dominantEmotion);
+
+                    //emotionText.text = $"감지된 표정: {dominantEmotion}";
+                    //MainStoryManager.Instance.NextStep();
                 }
                 else
                 {
