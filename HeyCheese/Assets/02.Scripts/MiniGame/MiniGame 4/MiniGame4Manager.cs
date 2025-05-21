@@ -14,6 +14,8 @@ public class MiniGame4Manager : MonoBehaviour
     public float fillDuration = 15f; // 15초에 다 채워짐
     public float decayRate = 0.1f;   // 초당 감소 비율
 
+    public bool isRestart = false;
+
     private bool isTouching;
     private bool isCleared = false;
 
@@ -22,6 +24,8 @@ public class MiniGame4Manager : MonoBehaviour
     [SerializeField] private GameObject ClearPanel;
 
     private bool isStart;
+
+    [SerializeField] private GameObject RestartPanel;
 
     private void Awake()
     {
@@ -38,6 +42,7 @@ public class MiniGame4Manager : MonoBehaviour
 
         GuidePanel.SetActive(true);
         ClearPanel.SetActive(false);
+        SetRestartActive(false);
     }
 
     void Update()
@@ -133,5 +138,15 @@ public class MiniGame4Manager : MonoBehaviour
             //else
             //    animators[i].SetBool("IsDancing", false);
         }
+    }
+
+    private void SetRestartActive(bool isShow)
+    {
+        if (!isRestart)
+            return;
+
+        RestartPanel.SetActive(isShow);
+        Time.timeScale = 0f;
+        isStart = false;
     }
 }
