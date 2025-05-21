@@ -27,8 +27,11 @@ public class EpisodeMenuLoader : MonoBehaviour
 
     private void Start()
     {
-        foreach(var entry in storyMenus)
+        print(storyMenus.Keys);
+
+        foreach (var entry in storyMenus)
         {
+            print("버튼 생성");
             string episodeID = entry.Key;
             StoryMenu info = entry.Value; // 값이 StoryMenu 객체라 그 객체를 가져옴
 
@@ -54,7 +57,7 @@ public class EpisodeMenuLoader : MonoBehaviour
                 {
                     episodeImage.sprite = null; // 사진 제거
                     episodeImage.color = new Color(1, 1, 1, 0);
-                    return;
+                    continue;
                 }
 
                 Sprite newSprite = Resources.Load<Sprite>($"Arts/8Icon/{info.ImagePath}");
