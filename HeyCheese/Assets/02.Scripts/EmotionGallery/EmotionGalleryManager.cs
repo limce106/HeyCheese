@@ -4,6 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 using Mono.Data.Sqlite;
 using System.Data;
+using UnityEngine.SceneManagement;
 
 public class EmotionGalleryManager : MonoBehaviour
 {
@@ -102,6 +103,14 @@ public class EmotionGalleryManager : MonoBehaviour
         else if (selected == "치즈한컷")
             LoadGallery("free");
     }
+
+    public void OnClick_BackButton()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+
+    // ----------------------------------- 아래는 디테일 패널 관련 메서드 -----------------------------------
 
     void ShowDetail(string path, string capturedAt, string photoType, string episodeTitle, string selectedMood)
     {

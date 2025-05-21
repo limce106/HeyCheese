@@ -2676,9 +2676,9 @@ MonoBehaviour:
   cancelButton: {fileID: 72071914}
   cameraButton: {fileID: 350101263}
   bottomButtons: {fileID: 1101717110}
-  emotionGalleryDBWriter: {fileID: 0}
+  emotionGalleryDBWriter: {fileID: 1129088422}
   arFaceManager: {fileID: 1784050613}
-  saveLoadPicture: {fileID: 0}
+  saveLoadPicture: {fileID: 1129088421}
 --- !u!114 &1129088421
 MonoBehaviour:
   m_ObjectHideFlags: 0

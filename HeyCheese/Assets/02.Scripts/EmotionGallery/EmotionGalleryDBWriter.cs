@@ -10,7 +10,7 @@ public class EmotionGalleryDBWriter : MonoBehaviour
     void Start()
     {
         dbPath = "URI=file:" + Path.Combine(Application.persistentDataPath, "HeyCheese.db");
-        EnsureTableExists(); // Å×ÀÌºí ¾øÀ¸¸é »ı¼º
+        EnsureTableExists(); // í…Œì´ë¸” ì—†ìœ¼ë©´ ìƒì„±
     }
 
     private void EnsureTableExists()
@@ -19,7 +19,7 @@ public class EmotionGalleryDBWriter : MonoBehaviour
         conn.Open();
         using var cmd = conn.CreateCommand();
 
-        // emotion_gallery Å×ÀÌºí »ı¼º (Á¸ÀçÇÏ¸é ¹«½Ã)
+        // emotion_gallery í…Œì´ë¸” ìƒì„± (ì¡´ì¬í•˜ë©´ ë¬´ì‹œ)
         cmd.CommandText = @"
             CREATE TABLE IF NOT EXISTS emotion_gallery (
                 photo_path TEXT PRIMARY KEY,
@@ -31,10 +31,10 @@ public class EmotionGalleryDBWriter : MonoBehaviour
                 selected_mood TEXT
             );";
         cmd.ExecuteNonQuery();
-        Debug.Log("[DB] emotion_gallery Å×ÀÌºí È®ÀÎ ¹× »ı¼º ¿Ï·á");
+        Debug.Log("[DB] emotion_gallery í…Œì´ë¸” í™•ì¸ ë° ìƒì„± ì™„ë£Œ");
     }
 
-    // Ä¡ÁîÇÑÄÆ DB ÀúÀå
+    // ì¹˜ì¦ˆí•œì»· DB ì €ì¥
     public void InsertFreePhoto(string filepath, string capturedAt)
     {
         using var conn = new SqliteConnection(dbPath);
@@ -47,10 +47,10 @@ public class EmotionGalleryDBWriter : MonoBehaviour
                 '{filepath}', '{capturedAt}', 'free'
             );";
         cmd.ExecuteNonQuery();
-        Debug.Log("[DB] Ä¡ÁîÇÑÄÆ ÀúÀå ¿Ï·á: " + filepath);
+        Debug.Log("[DB] ì¹˜ì¦ˆí•œì»· ì €ì¥ ì™„ë£Œ: " + filepath);
     }
 
-    // ½ºÅä¸® »çÁø DB ÀúÀå
+    // ìŠ¤í† ë¦¬ ì‚¬ì§„ DB ì €ì¥
     public void InsertStoryPhoto(string filepath, string capturedAt, string expression, int episodeId, string episodeTitle, string mood)
     {
         using var conn = new SqliteConnection(dbPath);
@@ -65,6 +65,6 @@ public class EmotionGalleryDBWriter : MonoBehaviour
                 '{expression}', {episodeId}, '{episodeTitle}', '{mood}'
             );";
         cmd.ExecuteNonQuery();
-        Debug.Log("[DB] ½ºÅä¸® »çÁø ÀúÀå ¿Ï·á: " + filepath);
+        Debug.Log("[DB] ìŠ¤í† ë¦¬ ì‚¬ì§„ ì €ì¥ ì™„ë£Œ: " + filepath);
     }
 }
