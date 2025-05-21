@@ -38,8 +38,7 @@ public class EpisodeMenuLoader : MonoBehaviour
             // 버튼의 내용물 가져오기
             Button newBtn = newBtnObj.GetComponent<Button>();
             TMP_Text[] texts = newBtnObj.GetComponentsInChildren<TMP_Text>();
-
-            //Image episodeImage = newBtnObj.GetComponentInChildren<Image>();
+            Image episodeImage = newBtnObj.transform.Find("EpisodeImage")?.GetComponent<Image>();
 
             // 버튼 내용물 채우기
             if (texts.Length >= 2)
@@ -48,16 +47,26 @@ public class EpisodeMenuLoader : MonoBehaviour
                 texts[1].text = info.ChapterTitle;
             }
 
-            //if(episodeImage != null && !string.IsNullOrEmpty(info.ImagePath))
-            //{
-            //    Sprite sprite = Resources.Load<Sprite>(info.ImagePath);
+            // 버튼 이미지 설정
+            if (!string.IsNullOrEmpty(info.ImagePath))
+            {
+                if (info.ImagePath == "NONE")
+                {
+                    episodeImage.sprite = null; // 사진 제거
+                    episodeImage.color = new Color(1, 1, 1, 0);
+                    return;
+                }
 
-            //    if (sprite != null)
-            //        //episodeImage.sprite = sprite; // 왜 오류 뜨지?
-            //        continue;
-            //    else
-            //        Debug.LogWarning(info.EpisodeID + " 메뉴 이미지 로드 실패: " + info.ImagePath);
-            //}
+                Sprite newSprite = Resources.Load<Sprite>($"Arts/8Icon/{info.ImagePath}");
+
+                if (newSprite != null)
+                {
+                    episodeImage.color = new Color(1, 1, 1, 1);
+                    episodeImage.sprite = newSprite;
+                }
+                else
+                    Debug.LogWarning(info.EpisodeID + " 메뉴 이미지 로드 실패: " + info.ImagePath);
+            }
 
             newBtn.onClick.AddListener(() => OnEpisodeSelected(episodeID));
         }
