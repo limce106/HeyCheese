@@ -850,7 +850,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &526221688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1295,7 +1295,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 724727651}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1900359534}
+        m_TargetAssemblyTypeName: MiniGameManager, Assembly-CSharp
+        m_MethodName: BackToMainStory
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8695430891703257767, guid: 33568a8e0a1a81247807fe2673582e34, type: 3}
+        m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
+        m_MethodName: ChangeScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: MainStory
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &724727651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1441,10 +1465,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 526221690}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 395}
-  m_SizeDelta: {x: 700, y: 100}
+  m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &851325985
 MonoBehaviour:
@@ -3229,10 +3253,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "[\uC784\uC2DC] \uC2A4\uD1A0\uB9AC\uB85C"
+  m_text: "\uC2A4\uD1A0\uB9AC\uB85C \uB3CC\uC544\uAC00\uAE30"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 24836adf7ad32244dbc179efc28a6a26, type: 2}
-  m_sharedMaterial: {fileID: -6211306273715906506, guid: 24836adf7ad32244dbc179efc28a6a26, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: abe872efdbeebd548b779eea8f6c6254, type: 2}
+  m_sharedMaterial: {fileID: 2746063927850954934, guid: abe872efdbeebd548b779eea8f6c6254, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3937,6 +3961,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9baeaff12e44eee468970fbe7e9b217a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GuidePanel: {fileID: 1451602941}
+  ClearPanel: {fileID: 526221687}
   characterObjects:
   - {fileID: 253121959}
   - {fileID: 1762882163}
@@ -3952,8 +3978,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: e21d13bff77d8454bbba8055112b05e0, type: 3}
   apprearanceProbability: 40
   isAdultComing: 0
-  GuidePanel: {fileID: 1451602941}
-  ClearPanel: {fileID: 526221687}
   isRestart: 0
   RestartPanel: {fileID: 1075294028}
   SFXSoundPlayer: {fileID: 250472814}
