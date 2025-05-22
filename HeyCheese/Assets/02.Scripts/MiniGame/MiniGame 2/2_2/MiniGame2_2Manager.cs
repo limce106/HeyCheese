@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using TMPro;
 
 public class MiniGame2_2Manager : MonoBehaviour
 {
@@ -21,15 +22,23 @@ public class MiniGame2_2Manager : MonoBehaviour
     [SerializeField] private GameObject GuidePanel;
     [SerializeField] private GameObject ClearPanel;
 
+    [Header("해야 할 일 TMP")]
+    [SerializeField] private List<TextMeshProUGUI> ToDoListTMPs;
 
+    private List<string> toDoListTitle = new List<string> { "휴지 줍기", "떨어진 음식 줍기", "그릇 정리하기" };
+
+    [Header("청소 후 반짝이 효과")]
+    [SerializeField] private GameObject GlitterEffect;
 
     private void Awake()
     {
         // toDoListDictionary 초기화 딱 한번만
         InitToDoListDictionary();
+        InitToDoListTMPs();
 
         GuidePanel.SetActive(true);
         ClearPanel.SetActive(false);
+        GlitterEffect.SetActive(false);
     }
 
     public void StartCleanTheTable()
@@ -48,6 +57,31 @@ public class MiniGame2_2Manager : MonoBehaviour
         toDoThingFinishCriteriaList = new List<int> { 5, 2, 6 };
     }
 
+    // 해야 할 일 TMP 초기화
+    private void InitToDoListTMPs()
+    {
+        int index = 0;
+        foreach (TextMeshProUGUI toDoTMP in ToDoListTMPs)
+        {
+            toDoTMP.text = toDoListTitle[index] +
+            $" ({currentToDoThingCountsList[0]}/{toDoThingFinishCriteriaList[0]})";
+            ++index;
+        }
+    }
+
+    public void UpdateToDoListTMPS(ToDoList toDoList)
+    {
+        ToDoListTMPs[(int)toDoList].text = toDoListTitle[(int)toDoList] +
+            $" ({currentToDoThingCountsList[(int)toDoList]}/{toDoThingFinishCriteriaList[(int)toDoList]})";
+
+        if (toDoListDictionary[(int)toDoList])
+        {
+            ToDoListTMPs[(int)toDoList].text = "<s>" + ToDoListTMPs[(int)toDoList].text + "</s>";
+        }
+    }
+
+
+
     public void IncrementCurrentToDoThingCount(ToDoList toDoList)
     {
         currentToDoThingCountsList[(int)toDoList] += 1;
@@ -60,27 +94,9 @@ public class MiniGame2_2Manager : MonoBehaviour
 
     public void CheckFinishToDoThing(ToDoList toDoList)
     {
-
-        switch (toDoList)
-        {
-            case ToDoList.PickUpTissue:
-                toDoListDictionary[(int)toDoList] =
-                currentToDoThingCountsList[(int)toDoList] == toDoThingFinishCriteriaList[(int)toDoList] ?
-                    true : false;
-                break;
-
-            case ToDoList.PickUpFoodWaste:
-                toDoListDictionary[(int)toDoList] =
-                currentToDoThingCountsList[(int)toDoList] == toDoThingFinishCriteriaList[(int)toDoList] ?
-                    true : false;
-                break;
-
-            case ToDoList.SortDishes:
-                toDoListDictionary[(int)toDoList] =
-                currentToDoThingCountsList[(int)toDoList] == toDoThingFinishCriteriaList[(int)toDoList] ?
-                    true : false;
-                break;
-        }
+        toDoListDictionary[(int)toDoList] =
+                        currentToDoThingCountsList[(int)toDoList] == toDoThingFinishCriteriaList[(int)toDoList] ?
+                            true : false;
 
         if (toDoListDictionary[(int)toDoList])
             Debug.Log($"{toDoList} : 할일 완료!");
@@ -94,6 +110,9 @@ public class MiniGame2_2Manager : MonoBehaviour
 
         if (allTrue)
         {
+            // 반짝이 효과 활성화
+            GlitterEffect.SetActive(true);
+
             yield return new WaitForSeconds(1.5f);
 
             // 식탁 다 치우기 성공!
