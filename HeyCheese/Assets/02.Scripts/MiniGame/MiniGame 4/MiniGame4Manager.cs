@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MiniGame4Manager : MonoBehaviour
+public class MiniGame4Manager : MiniGameManager
 {
     public GameObject[] characterObjects; // 캐릭터 3개 등록
     //private Animator[] animators;
@@ -27,10 +27,6 @@ public class MiniGame4Manager : MonoBehaviour
     [SerializeField] private int apprearanceProbability = 40;
     public bool isAdultComing = false;
 
-    [Header("패널들")]
-    [SerializeField] private GameObject GuidePanel;
-    [SerializeField] private GameObject ClearPanel;
-
     private bool isTouching;
     private bool isCleared = false;
 
@@ -52,8 +48,10 @@ public class MiniGame4Manager : MonoBehaviour
         Sound_CloseDoor = 2;
 
 
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
+
         Time.timeScale = 0f;
 
         isStart = false;
@@ -66,8 +64,6 @@ public class MiniGame4Manager : MonoBehaviour
             characterObjects[i].SetActive(false); // 시작 시 비활성화
         }
 
-        GuidePanel.SetActive(true);
-        ClearPanel.SetActive(false);
         SetRestartActive(false);
         SetAdultImage(false);
     }
@@ -105,7 +101,7 @@ public class MiniGame4Manager : MonoBehaviour
         StopAllCoroutines();
     }
 
-    public void StartGame()
+    public override void StartGame()
     {
         if (isRestart)
         {

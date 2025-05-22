@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using TMPro;
 
-public class MiniGame2_2Manager : MonoBehaviour
+public class MiniGame2_2Manager : MiniGameManager
 {
     public enum ToDoList
     {
@@ -18,10 +18,6 @@ public class MiniGame2_2Manager : MonoBehaviour
     [SerializeField] private List<int> currentToDoThingCountsList;  // 현재 할일 별 치운 개수 리스트
     [SerializeField] private List<int> toDoThingFinishCriteriaList; // 할일 별 치운 개수 완료 기준 리스트
 
-    [Header("패널들")]
-    [SerializeField] private GameObject GuidePanel;
-    [SerializeField] private GameObject ClearPanel;
-
     [Header("해야 할 일 TMP")]
     [SerializeField] private List<TextMeshProUGUI> ToDoListTMPs;
 
@@ -30,18 +26,18 @@ public class MiniGame2_2Manager : MonoBehaviour
     [Header("청소 후 반짝이 효과")]
     [SerializeField] private GameObject GlitterEffect;
 
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
+
         // toDoListDictionary 초기화 딱 한번만
         InitToDoListDictionary();
         InitToDoListTMPs();
 
-        GuidePanel.SetActive(true);
-        ClearPanel.SetActive(false);
         GlitterEffect.SetActive(false);
     }
 
-    public void StartCleanTheTable()
+    public override void StartGame()
     {
         GuidePanel.SetActive(false);
     }

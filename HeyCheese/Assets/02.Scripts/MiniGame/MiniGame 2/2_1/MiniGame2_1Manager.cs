@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class MiniGame2_1Manager : MonoBehaviour
+public class MiniGame2_1Manager : MiniGameManager
 {
     public enum FoodName
     {
@@ -26,25 +26,19 @@ public class MiniGame2_1Manager : MonoBehaviour
     // 떡볶이, 피짜, 치킨 순으로 이미지 리스트 넣기
     [SerializeField] private List<GameObject> foodInPlateImages;
 
-    [Header("패널들")]
-    [SerializeField] private GameObject GuidePanel;
-    [SerializeField] private GameObject ClearPanel;
-
     [Header("치즈와 부기")]
     [SerializeField] private List<CharacterReaction> characterReactionsList;
 
     private int foodInPlateNum = 0;
 
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
         // 음식 담은 상태 딕셔너리 초기화 한번만
         InitFoodStateDictionary();
-
-        GuidePanel.SetActive(true);
-        ClearPanel.SetActive(false);
     }
 
-    public void StartPutFoodInPlate()
+    public override void StartGame()
     {
         GuidePanel.SetActive(false);
     }
