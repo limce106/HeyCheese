@@ -140,7 +140,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &64309693
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -764,7 +764,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 436266770}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 916327525}
+        m_TargetAssemblyTypeName: MiniGameManager, Assembly-CSharp
+        m_MethodName: BackToMainStory
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8695430891703257767, guid: 33568a8e0a1a81247807fe2673582e34, type: 3}
+        m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
+        m_MethodName: ChangeScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: MainStory
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &436266770
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1094,10 +1118,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 64309695}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 395}
-  m_SizeDelta: {x: 660, y: 100}
+  m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &714152707
 MonoBehaviour:
@@ -1463,12 +1487,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1c151fcc0999394ba45c6a40f9937bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GuidePanel: {fileID: 410617668}
+  ClearPanel: {fileID: 64309692}
   foodInPlateImages:
   - {fileID: 700999604}
   - {fileID: 1650890649}
   - {fileID: 2022372939}
-  GuidePanel: {fileID: 410617668}
-  ClearPanel: {fileID: 64309692}
   characterReactionsList:
   - {fileID: 1535601560}
   - {fileID: 840006426}
@@ -3343,7 +3367,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 916327525}
         m_TargetAssemblyTypeName: MiniGame2_1Manager, Assembly-CSharp
-        m_MethodName: StartPutFoodInPlate
+        m_MethodName: StartGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3689,8 +3713,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uC798 \uBA39\uACA0\uC2B5\uB2C8\uB2E4!"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 24836adf7ad32244dbc179efc28a6a26, type: 2}
-  m_sharedMaterial: {fileID: -6211306273715906506, guid: 24836adf7ad32244dbc179efc28a6a26, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: abe872efdbeebd548b779eea8f6c6254, type: 2}
+  m_sharedMaterial: {fileID: 2746063927850954934, guid: abe872efdbeebd548b779eea8f6c6254, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
