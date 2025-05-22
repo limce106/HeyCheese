@@ -4,8 +4,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MiniGame1Manager : MonoBehaviour
+public class MiniGame1Manager : MiniGameManager
 {
+    [SerializeField] private TextMeshProUGUI GuideLevelText;
+    [SerializeField] private GameObject RestartPanel;
+    [SerializeField] private TextMeshProUGUI RestartLevelText;
+
     enum CharacterIconName
     {
         Cheese,
@@ -32,18 +36,10 @@ public class MiniGame1Manager : MonoBehaviour
 
     [SerializeField] private List<Image> characterIconsList;
 
-    [Header("패널들")]
-
-    [SerializeField] private GameObject GuidePanel;
-    [SerializeField] private TextMeshProUGUI GuideLevelText;
-
-    [SerializeField] private GameObject RestartPanel;
-    [SerializeField] private TextMeshProUGUI RestartLevelText;
-
-    [SerializeField] private GameObject ClearPanel;
-
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
+
         isRestart = false;
 
         currentStageLevel = 0;
@@ -53,8 +49,7 @@ public class MiniGame1Manager : MonoBehaviour
         SetGuideActive(true);
     }
 
-
-    public void StartHideAndSeek()
+    public override void StartGame()
     {
         isPlaying = true;
 
