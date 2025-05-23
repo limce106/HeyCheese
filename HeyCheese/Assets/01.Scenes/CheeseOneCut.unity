@@ -2663,6 +2663,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2355cbe6656f6074fb3ac8da14acc676, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canvasRect: {fileID: 54998138}
+  topLetterbox: {fileID: 1664999564}
+  bottomLetterbox: {fileID: 1717198305}
+  leftLetterbox: {fileID: 1565501863}
+  rightLetterbox: {fileID: 433788322}
 --- !u!114 &1129088422
 MonoBehaviour:
   m_ObjectHideFlags: 0
