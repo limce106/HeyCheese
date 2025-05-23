@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -61,8 +61,8 @@ public class FilterFrameManager : MonoBehaviour
     private Dictionary<string, string> hiddenMissionFilterName = new Dictionary<string, string>
     {
         // 추후 key: 애셋명, value: 필터에 맞는 설명으로 변경할 예정
-        {"Mission1", "외계인 느낌의 멋진 안경 👽✨"},
-        {"Mission2", "외계인 느낌의 멋진 안경 👽✨" }
+        {"Mission1", "외계 고양이 치즈 필터 👽😺"},
+        {"Mission2", "부끄럼쟁이 부기 필터 🐢💛" }
     };
 
     public ReadOnlyDictionary<string, bool> GetFrameUnlockedReadOnly()
