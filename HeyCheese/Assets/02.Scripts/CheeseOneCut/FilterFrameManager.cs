@@ -25,37 +25,22 @@ public class FilterFrameManager : MonoBehaviour
 
     private Dictionary<string, bool> frameUnlocked = new Dictionary<string, bool>
     {
-        // 추후 key는 애셋명으로 변경할 예정
-        //{"Ep1_Frame", false},
-        //{"Ep2_Frame", false },
-        //{"Ep3_Frame", false },
-        //{"Ep4_Frame", false },
-        //{"BuiltIn1", true },
-        //{"BuiltIn2", true }
-
-        {"Ep1_Frame", true},
-        {"Ep2_Frame", true },
-        {"Ep3_Frame", true },
-        {"Ep4_Frame", true },
+        {"Ep1_Frame", false},
+        {"Ep2_Frame", false },
+        {"Ep3_Frame", false },
+        {"Ep4_Frame", false },
         {"CheeseTheme_Frame", true },
         {"BugiTheme_Frame", true }
     };
 
     private Dictionary<string, bool> filterUnlocked = new Dictionary<string, bool>
     {
-        // 추후 key는 애셋명으로 변경할 예정
-        //{"Ep1", false},
-        //{"Ep2", false },
-        //{"Ep3", false },
-        //{"Ep4", false },
-        //{"Mission1", false },
-        //{"Mission2", false }
-        {"Ep1", true},
-        {"Ep2", true },
-        {"Ep3", true },
-        {"Ep4", true },
-        {"Mission1", true },
-        {"Mission2", true }
+        {"Ep1", false},
+        {"Ep2", false },
+        {"Ep3", false },
+        {"Ep4", false },
+        {"Mission1", false },
+        {"Mission2", false }
     };
 
     private Dictionary<string, string> hiddenMissionFilterName = new Dictionary<string, string>
@@ -79,16 +64,16 @@ public class FilterFrameManager : MonoBehaviour
     {
         if(faceCount == 2)
         {
-            Unlock("HiddenMission1");
+            Unlockfilter("HiddenMission1");
         }
         else if (faceCount == 3)
         {
-            Unlock("HiddenMission2");
+            Unlockfilter("HiddenMission2");
         }
     }
 
     // 필터 해금
-    public void Unlock(string key)
+    public void Unlockfilter(string key)
     {
         if(filterUnlocked.ContainsKey(key))
         {
@@ -98,6 +83,14 @@ public class FilterFrameManager : MonoBehaviour
             {
                 StartCoroutine(OnHiddenMissionPopup(hiddenMissionFilterName[key]));
             }
+        }
+    }
+
+    public void Unlockframe(string key)
+    {
+        if (frameUnlocked.ContainsKey(key))
+        {
+            frameUnlocked[key] = true;
         }
     }
 
