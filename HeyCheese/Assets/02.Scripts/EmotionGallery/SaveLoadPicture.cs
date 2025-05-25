@@ -7,6 +7,11 @@ using UnityEngine.UI;
 
 public class SaveLoadPicture : MonoBehaviour
 {
+    public Image topLetterbox;
+    public Image bottomLetterbox;
+    public Image leftLetterbox;
+    public Image rightLetterbox;
+
     /// <summary>
     /// 사진을 캡처하고 저장한 후, 외부에서 전달한 콜백으로 파일 경로와 시간 정보를 넘긴다.
     /// </summary>
@@ -15,35 +20,57 @@ public class SaveLoadPicture : MonoBehaviour
         yield return new WaitForEndOfFrame();
 
         // AR 카메라 화면이 있는 영역만 캡처
-        float targetAspect = 3f / 4f;
+
         float screenWidth = Screen.width;
         float screenHeight = Screen.height;
         float screenAspect = screenWidth / screenHeight;
+        float targetAspect = 3f / 4f; // 4:3 (세로가 긴 비율)
 
-        float x = 0f, y = 0f, width = 0f, height = 0f;
+        float x = 0f, y = 0f, width = screenWidth, height = screenHeight;
 
         if (screenAspect > targetAspect)
         {
-            // 화면이 더 가로로 길면 좌우를 자른다.
+            // 가로가 더 긴 경우 좌우 잘라냄
+            Vector3[] leftCorners = new Vector3[4];
+            Vector3[] rightCorners = new Vector3[4];
+            leftLetterbox.rectTransform.GetWorldCorners(leftCorners);
+            rightLetterbox.rectTransform.GetWorldCorners(rightCorners);
+
+            float leftX = leftCorners[2].x;   // 오른쪽 모서리
+            float rightX = rightCorners[0].x; // 왼쪽 모서리
+
+            x = leftX;
+            width = rightX - leftX;
+            y = 0;
             height = screenHeight;
-            width = height * targetAspect;
-            x = (screenWidth - width) / 2f;
-            y = 0f;
+        }
+        else if (screenAspect < targetAspect)
+        {
+            // 세로가 더 긴 경우 상하 잘라냄
+            Vector3[] topCorners = new Vector3[4];
+            Vector3[] bottomCorners = new Vector3[4];
+            topLetterbox.rectTransform.GetWorldCorners(topCorners);
+            bottomLetterbox.rectTransform.GetWorldCorners(bottomCorners);
+
+            float bottomY = bottomCorners[2].y; // 위쪽 모서리
+            float topY = topCorners[0].y;       // 아래쪽 모서리
+
+            y = bottomY;
+            height = topY - bottomY;
+            x = 0;
+            width = screenWidth;
         }
         else
         {
-            // 화면이 더 세로로 길면 위아래를 자른다.
+            // 4:3 화면과 동일하면 전체 캡처
+            x = 0;
+            y = 0;
             width = screenWidth;
-            height = width / targetAspect;
-            x = 0f;
-            y = (screenHeight - height) / 2f;
+            height = screenHeight;
         }
 
-        // (0,0)은 좌하단이므로 Y 보정
-        float readY = screenHeight - y - height;
-
         Texture2D screenImage = new Texture2D((int)width, (int)height, TextureFormat.RGB24, false);
-        screenImage.ReadPixels(new Rect(x, readY, width, height), 0, 0);
+        screenImage.ReadPixels(new Rect(x, y, width, height), 0, 0);
         screenImage.Apply();
 
         string filename = "emotion_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".png";
