@@ -4,8 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class PlayerNameManager : MonoBehaviour
+public class PlayerNameInput : MonoBehaviour
 {
+    public MainStoryManager MainStoryManager;
+
     public TMP_InputField nameInputField;
     public GameObject confirmationPanel;
     public Button confrimationBtn;
@@ -43,15 +45,17 @@ public class PlayerNameManager : MonoBehaviour
         PlayerName = pendingName;
 
         // 이름 저장
-        PlayerPrefs.SetString("PlayerName", PlayerName);
-        PlayerPrefs.Save();
-        Debug.Log($"플레이어 이름 저장됨: {PlayerName}");
+        //PlayerPrefs.SetString("PlayerName", PlayerName);
+        //PlayerPrefs.Save();
+        //Debug.Log($"플레이어 이름 저장됨: {PlayerName}");
+        PlayerDataManager.Instance.SetPlayerName(pendingName);
 
         confirmationPanel.SetActive(false);
 
         // MainStoryManager의 NextStep() 호출
-        MainStoryManager.Instance.LoadPlayerName();
-        MainStoryManager.Instance.NextStep();
+        PlayerDataManager.Instance.LoadPlayerName(); // 이름 로드
+        MainStoryManager.PlayerName = PlayerDataManager.Instance.PlayerName; // 이름 가져오기
+        MainStoryManager.NextStep();
 
     }
     // 이름 입력 취소 시
