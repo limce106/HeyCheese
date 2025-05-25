@@ -34,7 +34,7 @@ public class ARFaceFilterApplier : MonoBehaviour
             DisableFaceRenderer(face);
         }
 
-        // ÇÊÅÍ°¡ ¼±ÅÃµÇÁö ¾Ê¾Ò´Ù¸é
+        // í•„í„°ê°€ ì„ íƒë˜ì§€ ì•Šì•˜ë‹¤ë©´
         if (string.IsNullOrEmpty(filterName))
         {
             return;
@@ -107,13 +107,12 @@ public class ARFaceFilterApplier : MonoBehaviour
 
     public void OnClick_Filter()
     {
-        StartCoroutine(ChangeFilter());
+        string selectedFilter = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name;
+        StartCoroutine(ChangeFilter(selectedFilter));
     }
 
-    private IEnumerator ChangeFilter()
+    private IEnumerator ChangeFilter(string selectedFilter)
     {
-        string selectedFilter = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name;
-
         if (filterName == selectedFilter)
             yield break;
 
@@ -121,14 +120,10 @@ public class ARFaceFilterApplier : MonoBehaviour
         yield return null;
 
         SetFilterName(selectedFilter);
-
-        if (filterPanel.activeSelf)
+        
+        if(bottomButtons)
         {
-            filterPanel.SetActive(false);
-        }
-        if (!bottomButtons.activeSelf)
-        {
-            bottomButtons.SetActive(true);
+            SetActiveBottomButtons(true);
         }
 
         foreach (var face in arFaceManager.trackables)
@@ -150,7 +145,7 @@ public class ARFaceFilterApplier : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"ÇÁ¸®ÆÕÀ» Ã£À» ¼ö ¾ø½À´Ï´Ù: {path}");
+            Debug.LogWarning($"í”„ë¦¬íŒ¹ì„ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤: {path}");
         }
     }
 
@@ -170,7 +165,7 @@ public class ARFaceFilterApplier : MonoBehaviour
                 continue;
             }
 
-            // Ä«¸Ş¶ó È¸Àü º¸Á¤ (Ä«¸Ş¶ó°¡ È¸ÀüÇØµµ ½ºÇÁ¶óÀÌÆ®°¡ ÀÌ»óÇÏÁö ¾Êµµ·Ï)
+            // ì¹´ë©”ë¼ íšŒì „ ë³´ì • (ì¹´ë©”ë¼ê°€ íšŒì „í•´ë„ ìŠ¤í”„ë¼ì´íŠ¸ê°€ ì´ìƒí•˜ì§€ ì•Šë„ë¡)
             Quaternion faceRotation = face.transform.rotation;
             Quaternion inverseCameraRotation = Quaternion.Inverse(arCamera.transform.rotation);
             Quaternion adjustedRotation = inverseCameraRotation * faceRotation;
@@ -204,8 +199,10 @@ public class ARFaceFilterApplier : MonoBehaviour
     public void OnClick_RemoveFilter()
     {
         filterName = null;
-        filterPanel.SetActive(false);
-        bottomButtons.SetActive(true);
+        if (bottomButtons)
+        {
+            SetActiveBottomButtons(true);
+        }
 
         RemoveFilter();
     }
@@ -217,5 +214,11 @@ public class ARFaceFilterApplier : MonoBehaviour
         {
             RemoveFaceFilter(face);
         }
+    }
+
+    public void SetActiveBottomButtons(bool active)
+    {
+        filterPanel.SetActive(!active);
+        bottomButtons.SetActive(active);
     }
 }
