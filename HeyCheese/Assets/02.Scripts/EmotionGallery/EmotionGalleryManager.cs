@@ -16,6 +16,7 @@ public class EmotionGalleryManager : MonoBehaviour
     public Text capturedAtText;
     public Text episodeTitleText;
     public Text selectedMoodText;
+    public Text emotionTypeText;
     public Transform contentParent;
     public GameObject thumbnailPrefab;
 
@@ -45,6 +46,8 @@ public class EmotionGalleryManager : MonoBehaviour
                 query += " WHERE photo_type = 'story'";
             else if (filter == "free")
                 query += " WHERE photo_type = 'free'";
+            else if (filter == "emotion")
+                query += " WHERE photo_type = 'emotion'";
 
             using (var cmd = new SqliteCommand(query, conn))
             using (var reader = cmd.ExecuteReader())
@@ -56,13 +59,12 @@ public class EmotionGalleryManager : MonoBehaviour
                     string photoType = reader["photo_type"].ToString();
                     string episodeTitle = reader["episode_title"].ToString();
                     string selectedMood = reader["selected_mood"].ToString();
+                    string emotionType = reader["emotion_type"].ToString(); // ← 감정 사진용
 
                     GameObject item = Instantiate(thumbnailPrefab, contentParent);
                     currentThumbnails.Add(item);
 
-                    // 썸네일에 이미지 로드
                     Image img = item.transform.Find("ThumbnailImage").GetComponent<Image>();
-
                     if (File.Exists(path))
                     {
                         byte[] imgData = File.ReadAllBytes(path);
@@ -70,18 +72,14 @@ public class EmotionGalleryManager : MonoBehaviour
                         tex.LoadImage(imgData);
                         img.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.one * 0.5f);
                     }
-                    else
-                    {
-                        Debug.LogWarning("이미지 파일 없음: " + path);
-                    }
 
-                    // 디테일 표시 이벤트 연결
                     Button btn = item.GetComponent<Button>();
-                    btn.onClick.AddListener(() => ShowDetail(path, capturedAt, photoType, episodeTitle, selectedMood));
+                    btn.onClick.AddListener(() => ShowDetail(path, capturedAt, photoType, episodeTitle, selectedMood, emotionType));
                 }
             }
         }
     }
+
 
     void ClearThumbnails()
     {
@@ -102,22 +100,34 @@ public class EmotionGalleryManager : MonoBehaviour
             LoadGallery("story");
         else if (selected == "치즈한컷")
             LoadGallery("free");
+        else if (selected == "감정 사진")
+            LoadGallery("emotion");
     }
+
 
     public void OnClick_BackButton()
     {
-        SceneManager.LoadScene("MainMenu");
+        string previousScene = SceneHistoryManager.PreviousSceneName;
+
+        if (!string.IsNullOrEmpty(previousScene))
+        {
+            SceneManager.LoadScene(previousScene);
+        }
+        else
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
     }
+
 
 
     // ----------------------------------- 아래는 디테일 패널 관련 메서드 -----------------------------------
 
-    void ShowDetail(string path, string capturedAt, string photoType, string episodeTitle, string selectedMood)
+    void ShowDetail(string path, string capturedAt, string photoType, string episodeTitle, string selectedMood, string emotionType)
     {
         if (detailPanel == null) return;
 
         currentSelectedPath = path;
-
         detailPanel.SetActive(true);
 
         if (File.Exists(path))
@@ -133,25 +143,50 @@ public class EmotionGalleryManager : MonoBehaviour
         else
             capturedAtText.text = capturedAt;
 
-        if (photoType == "story")
+        // 공통: episodeTitle은 스토리/감정 사진에서만 표시
+        if (photoType == "story" || photoType == "emotion")
         {
             episodeTitleText.gameObject.SetActive(true);
-            selectedMoodText.gameObject.SetActive(true);
             episodeTitleText.text = "에피소드: " + (string.IsNullOrEmpty(episodeTitle) ? "-" : episodeTitle);
-            selectedMoodText.text = "기록한 감정: " + (string.IsNullOrEmpty(selectedMood) ? "-" : selectedMood);
         }
         else
         {
             episodeTitleText.gameObject.SetActive(false);
+        }
+
+        // 스토리 사진용 감정 텍스트
+        if (photoType == "story")
+        {
+            selectedMoodText.gameObject.SetActive(true);
+            emotionTypeText.gameObject.SetActive(false);
+            selectedMoodText.text = "기록한 감정: " + (string.IsNullOrEmpty(selectedMood) ? "-" : selectedMood);
+        }
+        // 감정 사진용 감정 텍스트
+        else if (photoType == "emotion")
+        {
             selectedMoodText.gameObject.SetActive(false);
+            emotionTypeText.gameObject.SetActive(true);
+            emotionTypeText.text = "표현한 감정: " + (string.IsNullOrEmpty(emotionType) ? "-" : emotionType);
+        }
+        // 나머지(free)는 숨김
+        else
+        {
+            selectedMoodText.gameObject.SetActive(false);
+            emotionTypeText.gameObject.SetActive(false);
         }
     }
+
+
 
     public void CloseDetail()
     {
         if (detailPanel != null)
+        {
             detailPanel.SetActive(false);
+            emotionTypeText.gameObject.SetActive(false);
+        }
     }
+
 
     // 사진 삭제
     public void DeletePhoto()
