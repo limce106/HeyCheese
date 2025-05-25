@@ -51,7 +51,7 @@ public class EmotionGalleryDBWriter : MonoBehaviour
     }
 
     // 스토리 사진 DB 저장
-    public void InsertStoryPhoto(string filepath, string capturedAt, string expression, int episodeId, string episodeTitle, string mood)
+    public void InsertStoryPhoto(string filepath, string capturedAt, int episodeId, string episodeTitle, string mood)
     {
         using var conn = new SqliteConnection(dbPath);
         conn.Open();
@@ -59,12 +59,30 @@ public class EmotionGalleryDBWriter : MonoBehaviour
         cmd.CommandText = $@"
             INSERT OR REPLACE INTO emotion_gallery (
                 photo_path, captured_at, photo_type,
-                emotion_type, episode_id, episode_title, selected_mood
+                episode_id, episode_title, selected_mood
             ) VALUES (
                 '{filepath}', '{capturedAt}', 'story',
-                '{expression}', {episodeId}, '{episodeTitle}', '{mood}'
+                {episodeId}, '{episodeTitle}', '{mood}'
             );";
         cmd.ExecuteNonQuery();
         Debug.Log("[DB] 스토리 사진 저장 완료: " + filepath);
+    }
+
+    // 감정 사진 DB 저장
+    public void InsertEmotionPhoto(string filepath, string capturedAt, string expression, int episodeId, string episodeTitle)
+    {
+        using var conn = new SqliteConnection(dbPath);
+        conn.Open();
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = $@"
+            INSERT OR REPLACE INTO emotion_gallery (
+                photo_path, captured_at, photo_type,
+                emotion_type, episode_id, episode_title
+            ) VALUES (
+                '{filepath}', '{capturedAt}', 'emotion',
+                '{expression}', {episodeId}, '{episodeTitle}'
+            );";
+        cmd.ExecuteNonQuery();
+        Debug.Log("[DB] 감정 사진 저장 완료: " + filepath);
     }
 }
