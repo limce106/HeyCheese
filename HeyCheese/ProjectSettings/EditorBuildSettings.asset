@@ -20,6 +20,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/01.Scenes/MainMenu.unity
     guid: 205de62553b05a74dbf735880833664d
+  - enabled: 1
+    path: Assets/01.Scenes/TestScenes/MiniGame_HideAndSeek.unity
+    guid: 2428d5ca9a73d7044b8f387ba1205bcd
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 2f1402586e1131f4a94180c5d74a583c, type: 2}
     UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: 84c67cd34797d8146804029a29ae22a4, type: 2}
