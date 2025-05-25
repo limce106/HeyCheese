@@ -9,16 +9,17 @@ public class EmotionGalleryDBWriter : MonoBehaviour
 
     void Start()
     {
-        dbPath = "URI=file:" + Path.Combine(Application.persistentDataPath, "emotion_gallery.db");
-        EnsureTableExists(); // Å×ÀÌºí ¾øÀ¸¸é »ı¼º
+        dbPath = "URI=file:" + Path.Combine(Application.persistentDataPath, "HeyCheese.db");
+        EnsureTableExists(); // í…Œì´ë¸” ì—†ìœ¼ë©´ ìƒì„±
     }
 
-    // emotion_gallery Å×ÀÌºí »ı¼º (ÀÌ¹Ì ÀÖÀ¸¸é ¹«½ÃµÊ)
     private void EnsureTableExists()
     {
         using var conn = new SqliteConnection(dbPath);
         conn.Open();
         using var cmd = conn.CreateCommand();
+
+        // emotion_gallery í…Œì´ë¸” ìƒì„± (ì¡´ì¬í•˜ë©´ ë¬´ì‹œ)
         cmd.CommandText = @"
             CREATE TABLE IF NOT EXISTS emotion_gallery (
                 photo_path TEXT PRIMARY KEY,
@@ -30,10 +31,10 @@ public class EmotionGalleryDBWriter : MonoBehaviour
                 selected_mood TEXT
             );";
         cmd.ExecuteNonQuery();
-        Debug.Log("[DB] emotion_gallery Å×ÀÌºí È®ÀÎ ¹× »ı¼º ¿Ï·á");
+        Debug.Log("[DB] emotion_gallery í…Œì´ë¸” í™•ì¸ ë° ìƒì„± ì™„ë£Œ");
     }
 
-    // ÀÚÀ¯ »çÁø DB ÀúÀå
+    // ì¹˜ì¦ˆí•œì»· DB ì €ì¥
     public void InsertFreePhoto(string filepath, string capturedAt)
     {
         using var conn = new SqliteConnection(dbPath);
@@ -46,11 +47,11 @@ public class EmotionGalleryDBWriter : MonoBehaviour
                 '{filepath}', '{capturedAt}', 'free'
             );";
         cmd.ExecuteNonQuery();
-        Debug.Log("[DB] ÀÚÀ¯ »çÁø ÀúÀå ¿Ï·á: " + filepath);
+        Debug.Log("[DB] ì¹˜ì¦ˆí•œì»· ì €ì¥ ì™„ë£Œ: " + filepath);
     }
 
-    // ½ºÅä¸® »çÁø DB ÀúÀå
-    public void InsertStoryPhoto(string filepath, string capturedAt, string expression, int episodeId, string episodeTitle, string mood)
+    // ìŠ¤í† ë¦¬ ì‚¬ì§„ DB ì €ì¥
+    public void InsertStoryPhoto(string filepath, string capturedAt, int episodeId, string episodeTitle, string mood)
     {
         using var conn = new SqliteConnection(dbPath);
         conn.Open();
@@ -58,12 +59,30 @@ public class EmotionGalleryDBWriter : MonoBehaviour
         cmd.CommandText = $@"
             INSERT OR REPLACE INTO emotion_gallery (
                 photo_path, captured_at, photo_type,
-                emotion_type, episode_id, episode_title, selected_mood
+                episode_id, episode_title, selected_mood
             ) VALUES (
                 '{filepath}', '{capturedAt}', 'story',
-                '{expression}', {episodeId}, '{episodeTitle}', '{mood}'
+                {episodeId}, '{episodeTitle}', '{mood}'
             );";
         cmd.ExecuteNonQuery();
-        Debug.Log("[DB] ½ºÅä¸® »çÁø ÀúÀå ¿Ï·á: " + filepath);
+        Debug.Log("[DB] ìŠ¤í† ë¦¬ ì‚¬ì§„ ì €ì¥ ì™„ë£Œ: " + filepath);
+    }
+
+    // ê°ì • ì‚¬ì§„ DB ì €ì¥
+    public void InsertEmotionPhoto(string filepath, string capturedAt, string expression, int episodeId, string episodeTitle)
+    {
+        using var conn = new SqliteConnection(dbPath);
+        conn.Open();
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = $@"
+            INSERT OR REPLACE INTO emotion_gallery (
+                photo_path, captured_at, photo_type,
+                emotion_type, episode_id, episode_title
+            ) VALUES (
+                '{filepath}', '{capturedAt}', 'emotion',
+                '{expression}', {episodeId}, '{episodeTitle}'
+            );";
+        cmd.ExecuteNonQuery();
+        Debug.Log("[DB] ê°ì • ì‚¬ì§„ ì €ì¥ ì™„ë£Œ: " + filepath);
     }
 }

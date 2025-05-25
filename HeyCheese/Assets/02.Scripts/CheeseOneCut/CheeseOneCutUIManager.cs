@@ -15,7 +15,7 @@ public class CheeseOneCutUIManager : MonoBehaviour
 
     public Button cancelButton;
     public Button cameraButton;
-    // ÇÏ´Ü ¹öÆ°
+    // í•˜ë‹¨ ë²„íŠ¼
     public GameObject bottomButtons;
 
     public EmotionGalleryDBWriter emotionGalleryDBWriter;
@@ -26,6 +26,7 @@ public class CheeseOneCutUIManager : MonoBehaviour
 
     public void OnClick_Gallery()
     {
+        SceneHistoryManager.SetPreviousScene(SceneManager.GetActiveScene().name);
         SceneManager.LoadScene("EmotionGallery");
     }
 
@@ -68,7 +69,7 @@ public class CheeseOneCutUIManager : MonoBehaviour
         cancelButton.interactable = false;
     }
 
-    // ÇÊÅÍ ¹öÆ° ÀÌ¸§, ÀÌ¹ÌÁö ¼³Á¤
+    // í•„í„° ë²„íŠ¼ ì´ë¦„, ì´ë¯¸ì§€ ì„¤ì •
     private void UpdateFilterButtons()
     {
         Button[] filterButtons = filterPanel.GetComponentsInChildren<Button>();
@@ -92,8 +93,8 @@ public class CheeseOneCutUIManager : MonoBehaviour
         {
             if (itemValues[i] == false)
             {
-                // RemoveFilter ¹öÆ° Á¦¿ÜÇÏ¿© ÀÎµ¦½º + 1
-                // »ç¿ë ºÒ°¡´ÉÇÑ ¹öÆ°Àº »óÈ£ÀÛ¿ë ºÒ°¡´É
+                // RemoveFilter ë²„íŠ¼ ì œì™¸í•˜ì—¬ ì¸ë±ìŠ¤ + 1
+                // ì‚¬ìš© ë¶ˆê°€ëŠ¥í•œ ë²„íŠ¼ì€ ìƒí˜¸ì‘ìš© ë¶ˆê°€ëŠ¥
                 buttons[i + 1].interactable = false;
             }
 
@@ -109,8 +110,8 @@ public class CheeseOneCutUIManager : MonoBehaviour
 
     private IEnumerator CaptureAndCheckMission(int faceCount)
     {
-        // Ä¸Ã³°¡ ³¡³­ ÈÄ È÷µç¹Ì¼Ç ÆĞ³ÎÀÌ ¶ß°Ô ÇÑ´Ù.
-        // (Ä¸Ã³µÈ »çÁø¿¡ È÷µç¹Ì¼Ç ÆĞ³ÎÀÌ °°ÀÌ ÂïÈ÷´Â °ÍÀ» ¹æÁöÇÏ±â À§ÇÔ)
+        // ìº¡ì²˜ê°€ ëë‚œ í›„ íˆë“ ë¯¸ì…˜ íŒ¨ë„ì´ ëœ¨ê²Œ í•œë‹¤.
+        // (ìº¡ì²˜ëœ ì‚¬ì§„ì— íˆë“ ë¯¸ì…˜ íŒ¨ë„ì´ ê°™ì´ ì°íˆëŠ” ê²ƒì„ ë°©ì§€í•˜ê¸° ìœ„í•¨)
         yield return StartCoroutine(saveLoadPicture.CaptureAndSave((filepath, capturedAt) =>
         {
             emotionGalleryDBWriter.InsertFreePhoto(filepath, capturedAt);
