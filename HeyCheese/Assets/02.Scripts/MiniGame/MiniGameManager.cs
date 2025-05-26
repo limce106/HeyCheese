@@ -16,8 +16,11 @@ abstract public class MiniGameManager : MonoBehaviour
 
     public abstract void StartGame();
 
-    public void BackToMainStory()
+    public IEnumerator BackToMainStory()
     {
+        yield return new WaitForSeconds(2f);
+
         MainStoryGameManager.MainStoryGM.NextStep();
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainStory");
     }
 }

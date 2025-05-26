@@ -104,6 +104,9 @@ public class MiniGame2_1Manager : MiniGameManager
             // 클리어 패널 활성화
 
             ClearPanel.SetActive(true);
+
+            // 2초 후 자동으로 메인스토리 이동
+            StartCoroutine(BackToMainStory());
         }
         else
             yield return null;
