@@ -26,8 +26,8 @@ public class MiniGame4Manager : MiniGameManager
     [Header("Adult 랜덤으로 등장할 확률")]
     [SerializeField] private int apprearanceProbability = 40;
     public bool isAdultComing = false;
-
     private bool isTouching;
+    private bool previousTouchState; // 이전 터치 상태 저장
     private bool isCleared = false;
 
     private bool isStart;
@@ -35,17 +35,11 @@ public class MiniGame4Manager : MiniGameManager
 
     [SerializeField] private GameObject RestartPanel;
 
-    // 임시 효과음 재생
-    // 사운드 플레이어 만들면 그쪽 이용해서 사용할 예정
-    [Header("Audio Source")]
-    [SerializeField] private AudioSource SFXSoundPlayer;
-
-    [Header("AudioClip")]
-    [SerializeField] private AudioClip[] SFXSoundClips;
-
-    private const int Sound_Knocking = 0,
-        Sound_OpenDoor = 1,
-        Sound_CloseDoor = 2;
+    private enum currentState
+    {
+        SLEEPING,
+        DANCING
+    }
 
 
     private new void Awake()
@@ -56,6 +50,7 @@ public class MiniGame4Manager : MiniGameManager
 
         isStart = false;
         isAdultComing = false;
+        previousTouchState = false; // 초기화
 
         //animators = new Animator[characterObjects.Length];
         for (int i = 0; i < characterObjects.Length; i++)
@@ -66,6 +61,9 @@ public class MiniGame4Manager : MiniGameManager
 
         SetRestartActive(false);
         SetAdultImage(false);
+
+        // 자장가 bgm 재생
+        SoundPlayer.Instance.ChangeBGM((int)SoundPlayer.BGM.MINIGAME4_SLEEPING);
     }
 
     void Update()
@@ -115,6 +113,7 @@ public class MiniGame4Manager : MiniGameManager
         Time.timeScale = 1f;
         isStart = true;
         isRestart = false;
+        previousTouchState = false; // 게임 시작 시 초기화
 
         StartCoroutine(CheckAdultAppearanceLoop());
     }
@@ -132,6 +131,23 @@ public class MiniGame4Manager : MiniGameManager
 
     private void HandleTouchEffects()
     {
+        // 터치 상태가 변경되었을 때만 BGM 변경
+        if (isTouching != previousTouchState)
+        {
+            if (isTouching)
+            {
+                // 터치 시작: 댄싱 BGM으로 변경
+                SoundPlayer.Instance.ChangeBGM((int)SoundPlayer.BGM.MINIGAME4_DANCING);
+            }
+            else
+            {
+                // 터치 종료: 자장가 BGM으로 변경
+                SoundPlayer.Instance.ChangeBGM((int)SoundPlayer.BGM.MINIGAME4_SLEEPING);
+            }
+
+            previousTouchState = isTouching; // 현재 상태를 이전 상태로 저장
+        }
+
         if (isTouching)
         {
             // 터치 중일 때, 캐릭터들 춤을 춤
@@ -197,6 +213,9 @@ public class MiniGame4Manager : MiniGameManager
 
             if (ClearPanel != null)
                 ClearPanel.SetActive(true);
+
+            // 2초 후 자동으로 메인스토리 이동
+            StartCoroutine(BackToMainStory());
         }
     }
 
@@ -206,7 +225,9 @@ public class MiniGame4Manager : MiniGameManager
         for (int i = 0; i < characterObjects.Length; i++)
         {
             if (characterObjects[i].activeSelf != activate)
+            {
                 characterObjects[i].SetActive(activate);
+            }
 
             //if (activate)
             //    animators[i].SetBool("IsDancing", true);
@@ -230,6 +251,10 @@ public class MiniGame4Manager : MiniGameManager
         ClearPanel.SetActive(false);
         isAdultComing = false;
         SetAdultImage(false);
+        previousTouchState = false; // 초기화
+
+        // 자장가 bgm 재생
+        SoundPlayer.Instance.ChangeBGM((int)SoundPlayer.BGM.MINIGAME4_SLEEPING);
     }
 
 
@@ -252,14 +277,14 @@ public class MiniGame4Manager : MiniGameManager
         if (randomNumber < apprearanceProbability)
         {
             // 노크 소리 재생
-            SFXSoundPlay(Sound_Knocking);
+            SoundPlayer.Instance.SoundEffectPlay((int)SoundPlayer.SFX.KNOCKING);
 
             yield return new WaitForSeconds(waitingTime);
             // 문 여는 효과음 재생
-            SFXSoundPlay(Sound_OpenDoor);
+            SoundPlayer.Instance.SoundEffectPlay((int)SoundPlayer.SFX.OPENDOOR);
 
             // 효과음 다 재생된 후 등장
-            yield return new WaitWhile(()=>SFXSoundPlayer.isPlaying);
+            yield return new WaitWhile(()=>SoundPlayer.Instance.isSoundEffectPlaying());
 
             isAdultComing = true;
             SetAdultImage(true);
@@ -268,10 +293,10 @@ public class MiniGame4Manager : MiniGameManager
             yield return new WaitForSeconds(waitingTime);
 
             // 문 닫는 효과음 재생
-            SFXSoundPlay(Sound_CloseDoor);
+            SoundPlayer.Instance.SoundEffectPlay((int)SoundPlayer.SFX.CLOSEDOOR);
 
             // 효과음 다 재생된 후 사라짐
-            yield return new WaitWhile(() => SFXSoundPlayer.isPlaying);
+            yield return new WaitWhile(() => SoundPlayer.Instance.isSoundEffectPlaying());
 
             isAdultComing = false;
             SetAdultImage(false);
@@ -296,16 +321,5 @@ public class MiniGame4Manager : MiniGameManager
             AdultImage.gameObject.SetActive(false);
         }
 
-    }
-
-
-    // 사운드 플레이
-    private void SFXSoundPlay(int clipIndex)
-    {
-        // 재생할 효과음 변경
-        SFXSoundPlayer.clip = SFXSoundClips[clipIndex];
-
-        // 음악 재생
-        SFXSoundPlayer.Play();
     }
 }

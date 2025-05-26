@@ -171,6 +171,9 @@ public class MiniGame1Manager : MiniGameManager
             {
                 // 숨바꼭질 끝!
                 ClearPanel.SetActive(true);
+
+                // 2초 후 자동으로 메인스토리 이동
+                StartCoroutine(BackToMainStory());
                 yield break;
             }
 

@@ -72,6 +72,9 @@ public class MiniGame3Manager : MiniGameManager
 
         // 클리어 패널 표시
         ClearPanel.SetActive(true);
+
+        // 2초 후 자동으로 메인스토리 이동
+        StartCoroutine(BackToMainStory());
     }
 
     // ************************* temporary methods for goal slider *************************
