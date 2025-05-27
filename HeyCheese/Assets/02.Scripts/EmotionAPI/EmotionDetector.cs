@@ -8,6 +8,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Networking;
+using System;
+using System.IO;
 
 public class EmotionDetector : MonoBehaviour
 {
@@ -22,7 +24,7 @@ public class EmotionDetector : MonoBehaviour
     };
 
     public RawImage webcamDisplay;
-    public Text emotionText;
+    [SerializeField] private Text emotionText;
     private WebCamTexture webCamTexture;
 
     private bool isUsingWebcam = false;
@@ -96,88 +98,89 @@ public class EmotionDetector : MonoBehaviour
         }
     }
 
-    // 카메라 버튼 클릭 시
-    public void OnClick_DetectEmotion()
-    {
-        Debug.Log("감정 분석 시작");
-        if (isUsingWebcam)
-        {
-            StartCoroutine(CaptureAndDetect_Webcam());
-        }
-        else
-        {
-            StartCoroutine(CaptureAndDetect_ARCamera());
-        }
-    }
+    #region 카메라 버튼 클릭 및 base64 전송 테스트
+    //// 카메라 버튼 클릭 시(테스트용, 연결 해제함)
+    //public void OnClick_DetectEmotion()
+    //{
+    //    Debug.Log("감정 분석 시작");
+    //    if (isUsingWebcam)
+    //    {
+    //        StartCoroutine(CaptureAndDetect_Webcam());
+    //    }
+    //    else
+    //    {
+    //        StartCoroutine(CaptureAndDetect_ARCamera());
+    //    }
+    //}
 
-    // PC/Editor용 웹캠 사용 시 표정 분석
-    IEnumerator CaptureAndDetect_Webcam()
-    {
-        while (!webCamTexture.didUpdateThisFrame)
-            yield return null;
+    //// PC/Editor용 웹캠 사용 시 표정 분석(테스트용, CaptureAndSave() 만들어지기 전 버전)
+    //IEnumerator CaptureAndDetect_Webcam()
+    //{
+    //    while (!webCamTexture.didUpdateThisFrame)
+    //        yield return null;
 
-        int width = webCamTexture.width;
-        int height = webCamTexture.height;
+    //    int width = webCamTexture.width;
+    //    int height = webCamTexture.height;
 
-        if (width < 100 || height < 100)
-        {
-            Debug.LogError("웹캠이 아직 초기화되지 않았습니다.");
-            yield break;
-        }
+    //    if (width < 100 || height < 100)
+    //    {
+    //        Debug.LogError("웹캠이 아직 초기화되지 않았습니다.");
+    //        yield break;
+    //    }
 
-        Texture2D photo = new(width, height, TextureFormat.RGB24, false);
-        photo.SetPixels(webCamTexture.GetPixels());
-        photo.Apply();
+    //    Texture2D photo = new(width, height, TextureFormat.RGB24, false);
+    //    photo.SetPixels(webCamTexture.GetPixels());
+    //    photo.Apply();
 
-        webCamTexture.Stop();
+    //    webCamTexture.Stop();
 
-        Texture2D finalPhoto = RotateAndMirrorTexture(photo, webCamTexture.videoRotationAngle, webCamTexture.videoVerticallyMirrored);
+    //    Texture2D finalPhoto = RotateAndMirrorTexture(photo, webCamTexture.videoRotationAngle, webCamTexture.videoVerticallyMirrored);
 
-        // UI에 사진 표시
-        webcamDisplay.texture = finalPhoto;
-        webcamDisplay.rectTransform.localEulerAngles = Vector3.zero;
-        webcamDisplay.rectTransform.localScale = Vector3.one;
+    //    // UI에 사진 표시
+    //    webcamDisplay.texture = finalPhoto;
+    //    webcamDisplay.rectTransform.localEulerAngles = Vector3.zero;
+    //    webcamDisplay.rectTransform.localScale = Vector3.one;
 
-        // 감정 분석 시작
-        string base64Image = EncodeImageToBase64(finalPhoto);
-        StartCoroutine(CallVisionAPI(base64Image));
-    }
+    //    // 감정 분석 시작
+    //    string base64Image = EncodeImageToBase64(finalPhoto);
+    //    StartCoroutine(CallVisionAPI(base64Image));
+    //}
 
-    // Android 기기 카메라 사용 시 표정 분석
-    IEnumerator CaptureAndDetect_ARCamera()
-    {
-        yield return new WaitForEndOfFrame(); // AR 카메라 렌더 후 캡처
+    //// Android 기기 카메라 사용 시 표정 분석(테스트용, CaptureAndSave() 만들어지기 전 버전)
+    //IEnumerator CaptureAndDetect_ARCamera()
+    //{
+    //    yield return new WaitForEndOfFrame(); // AR 카메라 렌더 후 캡처
 
-        // RawImage의 RectTransform을 기준으로 스크린 좌표 계산
-        RectTransform rt = webcamDisplay.rectTransform;
-        Vector3[] corners = new Vector3[4];
-        rt.GetWorldCorners(corners); // [0]: bottom left, [1] top left, [2] top right, [3] bottom right
+    //    // RawImage의 RectTransform을 기준으로 스크린 좌표 계산
+    //    RectTransform rt = webcamDisplay.rectTransform;
+    //    Vector3[] corners = new Vector3[4];
+    //    rt.GetWorldCorners(corners); // [0]: bottom left, [1] top left, [2] top right, [3] bottom right
 
-        // 화면 좌표로 변환 (BottomLeft 기준)
-        float x = corners[0].x;
-        float y = corners[0].y;
-        Debug.Log("corners[0].x = " + x + "corners[0].y = " + y);
-        float width = corners[2].x - corners[0].x;
-        float height = corners[2].y - corners[0].y;
-        Debug.Log("width = " + width + "height = " + height);
-        Debug.Log("screen height = " + Screen.height);
+    //    // 화면 좌표로 변환 (BottomLeft 기준)
+    //    float x = corners[0].x;
+    //    float y = corners[0].y;
+    //    Debug.Log("corners[0].x = " + x + "corners[0].y = " + y);
+    //    float width = corners[2].x - corners[0].x;
+    //    float height = corners[2].y - corners[0].y;
+    //    Debug.Log("width = " + width + "height = " + height);
+    //    Debug.Log("screen height = " + Screen.height);
 
-        // y축은 아래가 0, 위에가 height인 스크린 좌표 기준이라 뒤집어줘야 함
-        y = Screen.height - y - height;
-        Debug.Log("Reversed y = " + y);
+    //    // y축은 아래가 0, 위에가 height인 스크린 좌표 기준이라 뒤집어줘야 함
+    //    y = Screen.height - y - height;
+    //    Debug.Log("Reversed y = " + y);
 
-        // 캡처
-        Texture2D photo = new Texture2D((int)width, (int)height, TextureFormat.RGB24, false);
-        photo.ReadPixels(new Rect(x, y, width, height), 0, 0);
-        photo.Apply();
+    //    // 캡처
+    //    Texture2D photo = new Texture2D((int)width, (int)height, TextureFormat.RGB24, false);
+    //    photo.ReadPixels(new Rect(x, y, width, height), 0, 0);
+    //    photo.Apply();
 
-        webcamDisplay.texture = photo;
-        webcamDisplay.rectTransform.localEulerAngles = Vector3.zero;
+    //    webcamDisplay.texture = photo;
+    //    webcamDisplay.rectTransform.localEulerAngles = Vector3.zero;
 
-        string base64Image = EncodeImageToBase64(photo);
-        StartCoroutine(CallVisionAPI(base64Image));
-    }
-
+    //    string base64Image = EncodeImageToBase64(photo);
+    //    StartCoroutine(CallVisionAPI(base64Image));
+    //}
+    #endregion
 
     Texture2D RotateAndMirrorTexture(Texture2D original, int angle, bool mirrorHorizontal)
     {
@@ -212,13 +215,21 @@ public class EmotionDetector : MonoBehaviour
         return rotated;
     }
 
+    // MainStoryTakePhoto.cs로부터 캡처된 이미지의 filepath를 받아 base64로 변환하고 CallVisionAPI를 호출해 emotion을 알아내는 함수
+    public IEnumerator DetectEmotionFromFile(string filepath, Action<Emotion> onComplete)
+    {
+        byte[] imageBytes = File.ReadAllBytes(filepath);
+        string base64Image = Convert.ToBase64String(imageBytes);
+        yield return CallVisionAPI(base64Image, onComplete);
+    }
+
     string EncodeImageToBase64(Texture2D image)
     {
         byte[] imageBytes = image.EncodeToJPG();
         return System.Convert.ToBase64String(imageBytes);
     }
 
-    IEnumerator CallVisionAPI(string base64Image)
+    IEnumerator CallVisionAPI(string base64Image, Action<Emotion> onComplete)
     {
         VisionRequest visionRequest = new VisionRequest
         {
@@ -258,13 +269,11 @@ public class EmotionDetector : MonoBehaviour
                 if (faceResponse.responses.Length > 0 && faceResponse.responses[0].faceAnnotations.Length > 0)
                 {
                     FaceAnnotation face = faceResponse.responses[0].faceAnnotations[0];
-                    string dominantEmotion = GetDominantEmotion(face);
-                    emotionText.text = $"감지된 표정: {dominantEmotion}";
-                    // 감지된 표정에 따라 유대감 점수 반영
-                    //MainStoryManager.Instance.UpdateDialogueAndBond(dominantEmotion);
+                    Emotion dominantEmotion = GetDominantEmotion(face);
 
-                    //emotionText.text = $"감지된 표정: {dominantEmotion}";
-                    //MainStoryManager.Instance.NextStep();
+                    emotionText.text = dominantEmotion.ToString();
+
+                    onComplete?.Invoke(dominantEmotion);
                 }
                 else
                 {
@@ -274,22 +283,23 @@ public class EmotionDetector : MonoBehaviour
         }
     }
 
-    string GetDominantEmotion(FaceAnnotation face)
+    // 판단된 표정 반환
+    Emotion GetDominantEmotion(FaceAnnotation face)
     {
-        Dictionary<string, string> emotions = new Dictionary<string, string>
-    {
-        { "기쁨", face.joyLikelihood },
-        { "슬픔", face.sorrowLikelihood },
-        { "분노", face.angerLikelihood },
-        { "놀람", face.surpriseLikelihood }
-    };
+        Dictionary<Emotion, string> emotions = new Dictionary<Emotion, string>
+        {
+            { Emotion.Happy, face.joyLikelihood },
+            { Emotion.Sad, face.sorrowLikelihood },
+            { Emotion.Angry, face.angerLikelihood },
+            { Emotion.Suprise, face.surpriseLikelihood }
+        };
 
-        string bestEmotion = "표정 없음";
+        Emotion bestEmotion = Emotion.Default;
         string bestLikelihood = "UNKNOWN";
 
         foreach (var emotion in emotions)
         {
-            Debug.Log($"{emotion.Key}: {emotion.Value}");  // 감정과 확률 값 출력
+            Debug.Log($"{emotion.Key.ToString()}: {emotion.Value}");  // 감정과 확률 값 출력
             if (IsMoreLikely(emotion.Value, bestLikelihood))
             {
                 bestLikelihood = emotion.Value;
@@ -300,7 +310,9 @@ public class EmotionDetector : MonoBehaviour
         int percent = likelihoodToPercent.ContainsKey(bestLikelihood) ? likelihoodToPercent[bestLikelihood] : 0;
 
         Debug.Log($"Best Emotion: {bestEmotion}");  // 최종 감정 확인
-        return $"{bestEmotion} ({percent}%)";
+        Debug.Log($"감지된 표정: {bestEmotion} ({percent}%");
+        //return $"{bestEmotion} ({percent}%)";
+        return bestEmotion;
     }
 
     bool IsMoreLikely(string current, string best)

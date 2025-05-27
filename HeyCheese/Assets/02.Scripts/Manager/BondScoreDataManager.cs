@@ -12,17 +12,27 @@ public class BondScoreDataManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(gameObject); // Áßº¹ ¹æÁö
+            Destroy(gameObject); // ì¤‘ë³µ ë°©ì§€
             return;
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject); // ¾À ³Ñ¾î°¡µµ À¯Áö
+        DontDestroyOnLoad(gameObject); // ì”¬ ë„˜ì–´ê°€ë„ ìœ ì§€
     }
 
-    // Á¡¼ö ÃÊ±âÈ­
+    // ì ìˆ˜ ì´ˆê¸°í™”
     public void ResetBondScore()
     {
         BondScore = 0f;
+    }
+
+    // ì ìˆ˜ ì˜êµ¬ ì €ì¥
+    public void SaveFinalBondScore(float episodeBondScore)
+    {
+        BondScore += episodeBondScore;
+
+        PlayerPrefs.SetFloat("BondScore", BondScore);
+        PlayerPrefs.Save();
+        Debug.Log($"[SAVE] ì ìˆ˜ ì €ì¥ë¨: {BondScore}");
     }
 }

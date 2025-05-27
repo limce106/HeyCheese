@@ -26,7 +26,7 @@ public class EmotionGalleryDBWriter : MonoBehaviour
                 captured_at TEXT NOT NULL,
                 photo_type TEXT NOT NULL,
                 emotion_type TEXT,
-                episode_id INTEGER,
+                episode_id TEXT,
                 episode_title TEXT,
                 selected_mood TEXT
             );";
@@ -69,7 +69,7 @@ public class EmotionGalleryDBWriter : MonoBehaviour
     }
 
     // 감정 사진 DB 저장
-    public void InsertEmotionPhoto(string filepath, string capturedAt, string expression, int episodeId, string episodeTitle)
+    public void InsertEmotionPhoto(string filepath, string capturedAt, string expression, string episodeId, string episodeTitle)
     {
         using var conn = new SqliteConnection(dbPath);
         conn.Open();
