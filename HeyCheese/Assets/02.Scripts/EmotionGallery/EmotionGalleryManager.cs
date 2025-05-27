@@ -217,5 +217,25 @@ public class EmotionGalleryManager : MonoBehaviour
         detailPanel.SetActive(false);
     }
 
+
+    // 사진 저장
+    public void SaveToGallery()
+    {
+        if (string.IsNullOrEmpty(currentSelectedPath)) return;
+        if (!File.Exists(currentSelectedPath)) return;
+
+        byte[] imageData = File.ReadAllBytes(currentSelectedPath);
+        Texture2D tex = new Texture2D(2, 2);
+        tex.LoadImage(imageData);
+
+        // 파일 이름 추출
+        string filename = Path.GetFileName(currentSelectedPath);
+
+        // HeyCheese라는 폴더로 저장됨
+        NativeGallery.SaveImageToGallery(tex, "HeyCheese", filename);
+
+        Debug.Log("갤러리에 저장 완료: " + filename);
+    }
+
 }
 
