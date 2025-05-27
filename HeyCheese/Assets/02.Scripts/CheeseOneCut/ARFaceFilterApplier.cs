@@ -134,6 +134,17 @@ public class ARFaceFilterApplier : MonoBehaviour
         }
     }
 
+    public void MainStory_Filter(string filterName)
+    {
+        RemoveFilter();
+        SetFilterName(filterName);
+
+        foreach (var face in arFaceManager.trackables)
+        {
+            InstantiateFaceFilter(face);
+        }
+    }
+
     void AddPart(ARFace face, Dictionary<string, GameObject> parts, string partName)
     {
         string path = $"5AR/{filterName}_{partName}";
