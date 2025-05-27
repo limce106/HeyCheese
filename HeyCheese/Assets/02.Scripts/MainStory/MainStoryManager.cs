@@ -16,6 +16,8 @@ public class MainStoryManager : MonoBehaviour
     //public PlayerNameManager playerNameManager;
     public DialogueManager dialougeManager;
     //public Speaker speaker;
+    public ARFaceFilterApplier arFaceFilterApplier;
+    public FrameApplier frameApplier;
     #endregion
 
     #region UI References
@@ -24,6 +26,7 @@ public class MainStoryManager : MonoBehaviour
     public GameObject dialogueCanvas;
     public GameObject choiceCanvas;
     public GameObject inputFieldCanvas;
+    public GameObject cameraCanvas;
     public GameObject emotionCameraCanvas;
     public GameObject storyCameraCanvas;
     public GameObject giftCanvas;
@@ -59,10 +62,16 @@ public class MainStoryManager : MonoBehaviour
     // 카메라를 변경해야 되나? XROrigin 활성화라던가
 
     [Header("UI Elements_Story Camera")] // Story Camera
-    public Button scCameraBtn;
+
+
     [Header("UI Elements_Gift")] // Gift
 
     [Header("UI Elements_Setting")] // Setting
+
+    [Header("Camera")]
+    public Camera arCamera;
+    public Camera storyCamera;
+
     #endregion
 
     #region Data
@@ -78,7 +87,7 @@ public class MainStoryManager : MonoBehaviour
         get => BondScoreDataManager.Instance.BondScore;
         set => BondScoreDataManager.Instance.BondScore = value;
     }
-    public float episodeBondScore = 0f; // 중단 시 점수 초기화 관리를 위한 BondScore
+    [SerializeField] private float episodeBondScore = 0f; // 중단 시 점수 초기화 관리를 위한 BondScore
     public string PlayerName;
     #endregion
 
@@ -225,7 +234,9 @@ public class MainStoryManager : MonoBehaviour
                 SceneManager.LoadScene(step.MiniGame);
                 break;
             case "EmotionCamera":
+                ShowARView();
                 TurnOffEveryCanvas();
+                cameraCanvas.SetActive(true);
                 emotionCameraCanvas.SetActive(true);
 
                 // 질문에 플레이어 이름 적용
@@ -238,11 +249,21 @@ public class MainStoryManager : MonoBehaviour
 
                 break;
             case "StoryCamera":
+                ShowARView();
                 TurnOffEveryCanvas();
+                cameraCanvas.SetActive(true);
                 storyCameraCanvas.SetActive(true);
 
                 // 필터 추가
+                string filterName = ConvertEpisodeToFilterName(step.EpisodeID);
+                Debug.Log("필터 이름"+ filterName);
+                arFaceFilterApplier.MainStory_Filter(filterName);
                 // 프레임 추가
+                string frameName = ConvertEpisodeToFrameName(step.EpisodeID);
+                Debug.Log("프레임 이름" + frameName);
+                frameApplier.ApplyFrame(frameName);
+
+                // 후에 카메라 버튼 클릭 가능하도록 하기 - 이름 바뀌지도 않았는데 연타하다가 버튼 누르면 안되니까
 
                 break;
             case "Gift":
@@ -252,6 +273,7 @@ public class MainStoryManager : MonoBehaviour
                 BondScoreDataManager.Instance.SaveFinalBondScore(episodeBondScore); // 유대감 점수 영구 저장
                 break;
         }
+        ShowStoryView();
     }
 
     public void NextStep()
@@ -262,7 +284,7 @@ public class MainStoryManager : MonoBehaviour
         ShowCurrentID(nextID);
     }
     // EmotionCamera 뒤의 대사와 유대감 점수 시스템을 위한 함수
-    public void EmotionDialogue(int nextID)
+    public void NextDialogue(int nextID)
     {
         nextDialogueBtn.interactable = true;
         ShowCurrentID(nextID);
@@ -278,6 +300,7 @@ public class MainStoryManager : MonoBehaviour
         dialogueCanvas.SetActive(false);
         choiceCanvas.SetActive(false);
         inputFieldCanvas.SetActive(false);
+        cameraCanvas.SetActive(false);
         emotionCameraCanvas.SetActive(false);
         storyCameraCanvas.SetActive(false);
         giftCanvas.SetActive(false);
@@ -350,6 +373,21 @@ public class MainStoryManager : MonoBehaviour
     }
     #endregion
 
+    #region Camera
+    void ShowARView()
+    {
+        arCamera.enabled = true;
+        storyCamera.enabled = false;
+    }
+
+    void ShowStoryView()
+    {
+        arCamera.enabled = false;
+        storyCamera.enabled = true;
+    }
+    #endregion
+
+    #region 유대감 점수와 다이얼로그(EmotionCamera)
     // 유대감 점수 업데이트
     // dominantEmotion에 따라 점수 반경
     // emotionCamera > Dialogue
@@ -386,7 +424,7 @@ public class MainStoryManager : MonoBehaviour
         bondSlider.value = episodeBondScore;
 
         // 대사 띄우기(다음 단계)
-        EmotionDialogue(nextID);
+        NextDialogue(nextID);
         //NextStep();
     }
     // 아니면 id를 1씩 증가시켜서 NextDialogue(currentID + 1 + a)로 바꾼다거나
@@ -408,7 +446,37 @@ public class MainStoryManager : MonoBehaviour
     {
         UpdateDialogueAndBond(Emotion.Happy);
     }
+    #endregion
 
+    #region 필터와 프레임 적용(StoryCamera)
+    // 에피소드ID를 필터 이름으로 변환
+    private string ConvertEpisodeToFilterName(string episodeID)
+    {
+        // "Episode1" → "Ep1"
+        if (episodeID.StartsWith("Episode"))
+        {
+            string number = episodeID.Substring("Episode".Length); // "1"
+            return $"Ep{number}";
+        }
+
+        Debug.LogWarning($"Invalid episodeID: {episodeID}");
+        return null;
+    }
+
+    // 에피소드ID를 프레임 이름으로 변환
+    private string ConvertEpisodeToFrameName(string episodeID)
+    {
+        // "Episode1" → "Ep1_Frame"
+        if (episodeID.StartsWith("Episode"))
+        {
+            string number = episodeID.Substring("Episode".Length); // "1"
+            return $"Ep{number}_Frame";
+        }
+
+        Debug.LogWarning($"Invalid episodeID: {episodeID}");
+        return null;
+    }
+    #endregion
 
     void EndEpisode()
     {

@@ -51,7 +51,7 @@ public class EmotionGalleryDBWriter : MonoBehaviour
     }
 
     // 스토리 사진 DB 저장
-    public void InsertStoryPhoto(string filepath, string capturedAt, int episodeId, string episodeTitle, string mood)
+    public void InsertStoryPhoto(string filepath, string capturedAt, string episodeId, string episodeTitle, string mood)
     {
         using var conn = new SqliteConnection(dbPath);
         conn.Open();
@@ -62,7 +62,7 @@ public class EmotionGalleryDBWriter : MonoBehaviour
                 episode_id, episode_title, selected_mood
             ) VALUES (
                 '{filepath}', '{capturedAt}', 'story',
-                {episodeId}, '{episodeTitle}', '{mood}'
+                '{episodeId}', '{episodeTitle}', '{mood}'
             );";
         cmd.ExecuteNonQuery();
         Debug.Log("[DB] 스토리 사진 저장 완료: " + filepath);
@@ -80,7 +80,7 @@ public class EmotionGalleryDBWriter : MonoBehaviour
                 emotion_type, episode_id, episode_title
             ) VALUES (
                 '{filepath}', '{capturedAt}', 'emotion',
-                '{expression}', {episodeId}, '{episodeTitle}'
+                '{expression}', '{episodeId}', '{episodeTitle}'
             );";
         cmd.ExecuteNonQuery();
         Debug.Log("[DB] 감정 사진 저장 완료: " + filepath);
