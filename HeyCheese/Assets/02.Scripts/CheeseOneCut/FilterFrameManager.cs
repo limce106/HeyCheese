@@ -45,7 +45,6 @@ public class FilterFrameManager : MonoBehaviour
 
     private Dictionary<string, string> hiddenMissionFilterName = new Dictionary<string, string>
     {
-        // 추후 key: 애셋명, value: 필터에 맞는 설명으로 변경할 예정
         {"Mission1", "외계 고양이 치즈 필터 👽😺"},
         {"Mission2", "부끄럼쟁이 부기 필터 🐢💛" }
     };
@@ -64,11 +63,11 @@ public class FilterFrameManager : MonoBehaviour
     {
         if(faceCount == 2)
         {
-            Unlockfilter("HiddenMission1");
+            Unlockfilter("Mission1");
         }
         else if (faceCount == 3)
         {
-            Unlockfilter("HiddenMission2");
+            Unlockfilter("Mission2");
         }
     }
 
