@@ -79,6 +79,6 @@
 ![image (5)](https://github.com/user-attachments/assets/ccedcd3d-cbd1-43a5-aa76-169dbe13839f)
 
 ![image (6)](https://github.com/user-attachments/assets/122724ff-2e6e-4131-8e30-86987724b07b)
-- main 선택 후 ‘Creat a merge commit’ 클릭
+- main 선택 후 ‘Create a merge commit’ 클릭
 
 ![image (7)](https://github.com/user-attachments/assets/eeb8d221-4c9f-4f72-801e-00f19d4a84a6)
