@@ -43,10 +43,16 @@ public class FilterFrameManager : MonoBehaviour
         {"Mission2", false }
     };
 
-    private Dictionary<string, string> hiddenMissionFilterName = new Dictionary<string, string>
+    private Dictionary<string, string> hiddenMissionFilterMessage = new Dictionary<string, string>
     {
         {"Mission1", "외계 고양이 치즈 필터 👽😺"},
         {"Mission2", "부끄럼쟁이 부기 필터 🐢💛" }
+    };
+
+    private Dictionary<int, string> faceCountToHiddenMissionKey = new Dictionary<int, string>
+    {
+        { 1, "Mission1" },
+        { 3, "Mission2" }
     };
 
     public ReadOnlyDictionary<string, bool> GetFrameUnlockedReadOnly()
@@ -61,13 +67,12 @@ public class FilterFrameManager : MonoBehaviour
 
     public void CheckHiddenMission(int faceCount)
     {
-        if(faceCount == 2)
+        if(faceCountToHiddenMissionKey.TryGetValue(faceCount, out string filterName))
         {
-            Unlockfilter("Mission1");
-        }
-        else if (faceCount == 3)
-        {
-            Unlockfilter("Mission2");
+            if(filterUnlocked.TryGetValue(filterName, out bool isUnlocked) && !isUnlocked)
+            {
+                Unlockfilter(filterName);
+            }
         }
     }
 
@@ -80,7 +85,7 @@ public class FilterFrameManager : MonoBehaviour
 
             if(SceneManager.GetActiveScene().name == "CheeseOneCut")
             {
-                StartCoroutine(OnHiddenMissionPopup(hiddenMissionFilterName[key]));
+                StartCoroutine(OnHiddenMissionPopup(hiddenMissionFilterMessage[key]));
             }
         }
     }
