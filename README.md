@@ -74,13 +74,13 @@
 ⚠️Discard는 영구 삭제이므로 유의할 것!
 
 ### 메인 가져오기
+![image (9)](https://github.com/user-attachments/assets/ca4955f0-fc6f-4caf-82d0-7e81d048a2da)
+
 ![image (5)](https://github.com/user-attachments/assets/ccedcd3d-cbd1-43a5-aa76-169dbe13839f)
 
 ![image (6)](https://github.com/user-attachments/assets/122724ff-2e6e-4131-8e30-86987724b07b)
+- main 선택 후 ‘Creat a merge commit’ 클릭
 
 ![image (7)](https://github.com/user-attachments/assets/eeb8d221-4c9f-4f72-801e-00f19d4a84a6)
 
-- main 선택 후 ‘Creat a merge commit’ 클릭
 ![image (8)](https://github.com/user-attachments/assets/781f02d6-53ea-4037-8085-b662843ad8f8)
-
-![image.png](attachment:19c096dd-a49b-4bc0-9334-f47acdb67989:image.png)
