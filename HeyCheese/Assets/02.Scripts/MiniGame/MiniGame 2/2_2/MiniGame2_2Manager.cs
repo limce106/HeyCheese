@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using TMPro;
 
-public class MiniGame2_2Manager : MonoBehaviour
+public class MiniGame2_2Manager : MiniGameManager
 {
     public enum ToDoList
     {
@@ -11,36 +12,37 @@ public class MiniGame2_2Manager : MonoBehaviour
         PickUpFoodWaste,
         SortDishes
     }
-    // ÇÒ ÀÏ »óÅÂ µñ¼Å³Ê¸®
+    // í•  ì¼ ìƒíƒœ ë”•ì…”ë„ˆë¦¬
     private Dictionary<int, bool> toDoListDictionary = new Dictionary<int, bool>();
 
-    [SerializeField] private List<int> currentToDoThingCountsList;  // ÇöÀç ÇÒÀÏ º° Ä¡¿î °³¼ö ¸®½ºÆ®
-    [SerializeField] private List<int> toDoThingFinishCriteriaList; // ÇÒÀÏ º° Ä¡¿î °³¼ö ¿Ï·á ±âÁØ ¸®½ºÆ®
+    [SerializeField] private List<int> currentToDoThingCountsList;  // í˜„ì¬ í• ì¼ ë³„ ì¹˜ìš´ ê°œìˆ˜ ë¦¬ìŠ¤íŠ¸
+    [SerializeField] private List<int> toDoThingFinishCriteriaList; // í• ì¼ ë³„ ì¹˜ìš´ ê°œìˆ˜ ì™„ë£Œ ê¸°ì¤€ ë¦¬ìŠ¤íŠ¸
 
-    [Header("ÆĞ³Îµé")]
-    [SerializeField] private GameObject GuidePanel;
-    [SerializeField] private GameObject ClearPanel;
+    [Header("í•´ì•¼ í•  ì¼ TMP")]
+    [SerializeField] private List<TextMeshProUGUI> ToDoListTMPs;
 
+    private List<string> toDoListTitle = new List<string> { "íœ´ì§€ ì¤ê¸°", "ë–¨ì–´ì§„ ìŒì‹ ì¤ê¸°", "ê·¸ë¦‡ ì •ë¦¬í•˜ê¸°" };
 
+    [Header("ì²­ì†Œ í›„ ë°˜ì§ì´ íš¨ê³¼")]
+    [SerializeField] private GameObject GlitterEffect;
 
-    private void Awake()
+    private new void Awake()
     {
-        // toDoListDictionary ÃÊ±âÈ­ µü ÇÑ¹ø¸¸
+        base.Awake();
+
+        // toDoListDictionary ì´ˆê¸°í™” ë”± í•œë²ˆë§Œ
         InitToDoListDictionary();
+        InitToDoListTMPs();
+
+        GlitterEffect.SetActive(false);
     }
 
-    void Start()
-    {
-        GuidePanel.SetActive(true);
-        ClearPanel.SetActive(false);
-    }
-
-    public void StartCleanTheTable()
+    public override void StartGame()
     {
         GuidePanel.SetActive(false);
     }
 
-    // toDoListDictionary ÃÊ±âÈ­
+    // toDoListDictionary ì´ˆê¸°í™”
     private void InitToDoListDictionary()
     {
         toDoListDictionary.Add((int)ToDoList.PickUpTissue, false);
@@ -51,58 +53,71 @@ public class MiniGame2_2Manager : MonoBehaviour
         toDoThingFinishCriteriaList = new List<int> { 5, 2, 6 };
     }
 
+    // í•´ì•¼ í•  ì¼ TMP ì´ˆê¸°í™”
+    private void InitToDoListTMPs()
+    {
+        int index = 0;
+        foreach (TextMeshProUGUI toDoTMP in ToDoListTMPs)
+        {
+            toDoTMP.text = toDoListTitle[index] +
+            $" ({currentToDoThingCountsList[0]}/{toDoThingFinishCriteriaList[0]})";
+            ++index;
+        }
+    }
+
+    public void UpdateToDoListTMPS(ToDoList toDoList)
+    {
+        ToDoListTMPs[(int)toDoList].text = toDoListTitle[(int)toDoList] +
+            $" ({currentToDoThingCountsList[(int)toDoList]}/{toDoThingFinishCriteriaList[(int)toDoList]})";
+
+        if (toDoListDictionary[(int)toDoList])
+        {
+            ToDoListTMPs[(int)toDoList].text = "<s>" + ToDoListTMPs[(int)toDoList].text + "</s>";
+        }
+    }
+
+
+
     public void IncrementCurrentToDoThingCount(ToDoList toDoList)
     {
         currentToDoThingCountsList[(int)toDoList] += 1;
         CheckFinishToDoThing(toDoList);
 
-        // ÄÚ·çÆ¾ À§Ä¡°¡ ¿©±â°¡ ¸Â³ª..? ¸Ş¼ÒµåÀÇ ¿ªÇÒÀÌ ¾Ö¸ÅÇØÁø ±âºĞ
-        // ¾î¶»°Ô ´õ ÄÚµå¸¦ ±¦Âú°Ô À¯Áö º¸¼ö ÇÒ ¼ö ÀÖÀ»Áö »ı°¢ÇØº¸±â..
+        // ì½”ë£¨í‹´ ìœ„ì¹˜ê°€ ì—¬ê¸°ê°€ ë§ë‚˜..? ë©”ì†Œë“œì˜ ì—­í• ì´ ì• ë§¤í•´ì§„ ê¸°ë¶„
+        // ì–´ë–»ê²Œ ë” ì½”ë“œë¥¼ ê´œì°®ê²Œ ìœ ì§€ ë³´ìˆ˜ í•  ìˆ˜ ìˆì„ì§€ ìƒê°í•´ë³´ê¸°..
         StartCoroutine(CheckToDoListState());   
     }
 
     public void CheckFinishToDoThing(ToDoList toDoList)
     {
-
-        switch (toDoList)
-        {
-            case ToDoList.PickUpTissue:
-                toDoListDictionary[(int)toDoList] =
-                currentToDoThingCountsList[(int)toDoList] == toDoThingFinishCriteriaList[(int)toDoList] ?
-                    true : false;
-                break;
-
-            case ToDoList.PickUpFoodWaste:
-                toDoListDictionary[(int)toDoList] =
-                currentToDoThingCountsList[(int)toDoList] == toDoThingFinishCriteriaList[(int)toDoList] ?
-                    true : false;
-                break;
-
-            case ToDoList.SortDishes:
-                toDoListDictionary[(int)toDoList] =
-                currentToDoThingCountsList[(int)toDoList] == toDoThingFinishCriteriaList[(int)toDoList] ?
-                    true : false;
-                break;
-        }
+        toDoListDictionary[(int)toDoList] =
+                        currentToDoThingCountsList[(int)toDoList] == toDoThingFinishCriteriaList[(int)toDoList] ?
+                            true : false;
 
         if (toDoListDictionary[(int)toDoList])
-            Debug.Log($"{toDoList} : ÇÒÀÏ ¿Ï·á!");
+            Debug.Log($"{toDoList} : í• ì¼ ì™„ë£Œ!");
     }
 
 
     private IEnumerator CheckToDoListState()
     {
-        // toDoListDictionary ÀÇ ¸ğµç value°¡ trueÀÌ¸é
+        // toDoListDictionary ì˜ ëª¨ë“  valueê°€ trueì´ë©´
         bool allTrue = toDoListDictionary.Values.All(value => value);
 
         if (allTrue)
         {
+            // ë°˜ì§ì´ íš¨ê³¼ í™œì„±í™”
+            GlitterEffect.SetActive(true);
+
             yield return new WaitForSeconds(1.5f);
 
-            // ½ÄÅ¹ ´Ù Ä¡¿ì±â ¼º°ø!
-            // Å¬¸®¾î ÆĞ³Î È°¼ºÈ­
+            // ì‹íƒ ë‹¤ ì¹˜ìš°ê¸° ì„±ê³µ!
+            // í´ë¦¬ì–´ íŒ¨ë„ í™œì„±í™”
 
             ClearPanel.SetActive(true);
+
+            // 2ì´ˆ í›„ ìë™ìœ¼ë¡œ ë©”ì¸ìŠ¤í† ë¦¬ ì´ë™
+            StartCoroutine(BackToMainStory());
         }
         else
             yield return null;

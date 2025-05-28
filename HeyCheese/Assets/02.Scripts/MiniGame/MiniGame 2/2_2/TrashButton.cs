@@ -17,8 +17,10 @@ public class TrashButton : MonoBehaviour
     {
         if (miniGame2_2Manager != null)
         {
-            // miniGame2_2ManagerÀÇ toDoList µñ¼Å³Ê¸® »óÅÂ ÇØ´çÇÏ´Â ÀÏ È½¼ö +1 ÇØÁÜ
+            // miniGame2_2Managerì˜ toDoList ë”•ì…”ë„ˆë¦¬ ìƒíƒœ í•´ë‹¹í•˜ëŠ” ì¼ íšŸìˆ˜ +1 í•´ì¤Œ
             miniGame2_2Manager.IncrementCurrentToDoThingCount(toDoThing);
+            // í•´ì•¼ í•  ì¼ TMP ì—…ë°ì´íŠ¸í•˜ì—¬ ì§„í–‰ë„ ë°˜ì˜
+            miniGame2_2Manager.UpdateToDoListTMPS(toDoThing);
 
             this.gameObject.SetActive(false);
         }
