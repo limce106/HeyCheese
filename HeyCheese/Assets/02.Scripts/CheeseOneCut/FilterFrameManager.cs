@@ -51,7 +51,7 @@ public class FilterFrameManager : MonoBehaviour
 
     private Dictionary<int, string> faceCountToHiddenMissionKey = new Dictionary<int, string>
     {
-        { 1, "Mission1" },
+        { 2, "Mission1" },
         { 3, "Mission2" }
     };
 
