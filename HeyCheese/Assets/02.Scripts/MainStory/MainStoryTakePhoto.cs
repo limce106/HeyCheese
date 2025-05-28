@@ -15,6 +15,8 @@ public class MainStoryTakePhoto : MonoBehaviour
 
     public void OnClick_EmotionCamera()
     {
+        MainStoryManager.emoCameraBtn.interactable =false; // 버튼 입력 막기
+
         // 사진 캡쳐 및 저장
         StartCoroutine(saveLoadPicture.CaptureAndSave((filepath, capturedAt) =>
         {

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.XR.ARFoundation;
 
 // UI에 이벤트 표시 역할
 // 스토리<->미니게임 시 해당 내용은 유지, 기억되어야 되지만
@@ -59,6 +60,7 @@ public class MainStoryManager : MonoBehaviour
     public TMP_Text inputNameText;
     [Header("UI Elements_Emotion Camera")] // Emotion Camera
     public TMP_Text emoQuestionText;
+    public Button emoCameraBtn;
     // 카메라를 변경해야 되나? XROrigin 활성화라던가
 
     [Header("UI Elements_Story Camera")] // Story Camera
@@ -71,6 +73,7 @@ public class MainStoryManager : MonoBehaviour
     [Header("Camera")]
     public Camera arCamera;
     public Camera storyCamera;
+    public ARSession arSession;
 
     #endregion
 
@@ -129,6 +132,34 @@ public class MainStoryManager : MonoBehaviour
     //    ShowCurrentID(CurrentID);
     //}
 
+    //public GameObject imageObject; // 활성화 여부를 감지할 Image GameObject
+    //private bool wasActive = false;
+    //private void Update()
+    //{
+    //    if (imageObject.activeSelf)
+    //    {
+    //        wasActive = true;
+    //        OnImageActivated();
+    //    }
+    //    else if (!imageObject.activeSelf)
+    //    {
+    //        wasActive = false;
+    //        OnImageDeactivated();
+    //    }
+    //}
+
+    //void OnImageActivated()
+    //{
+    //    Debug.Log("이미지가 활성화되었습니다!");
+    //    // 여기에 활성화 시 실행할 코드 작성
+    //}
+
+    //void OnImageDeactivated()
+    //{
+    //    Debug.Log("이미지가 비활성화되었습니다!");
+    //    // 여기에 비활성화 시 실행할 코드 작성
+    //}
+
 
     // 코루틴으로 MainStoryGameManager.cs에서 csv 파싱 완료될 때까지 기다리기
     IEnumerator Start() 
@@ -142,6 +173,7 @@ public class MainStoryManager : MonoBehaviour
         bondSlider.value = BondScore;
         episodeBondScore = BondScore;
 
+        ShowARView();
         ShowCurrentID(CurrentID);
     }
     #endregion
@@ -168,6 +200,7 @@ public class MainStoryManager : MonoBehaviour
             NextStep();
         }
 
+        ShowStoryView();
         switch (step.EventType)
         {
             case "Loading":
@@ -273,7 +306,7 @@ public class MainStoryManager : MonoBehaviour
                 BondScoreDataManager.Instance.SaveFinalBondScore(episodeBondScore); // 유대감 점수 영구 저장
                 break;
         }
-        ShowStoryView();
+        
     }
 
     public void NextStep()
@@ -378,12 +411,14 @@ public class MainStoryManager : MonoBehaviour
     {
         arCamera.enabled = true;
         storyCamera.enabled = false;
+        arSession.enabled = true;
     }
 
     void ShowStoryView()
     {
         arCamera.enabled = false;
         storyCamera.enabled = true;
+        arSession.enabled = false;
     }
     #endregion
 
@@ -482,4 +517,6 @@ public class MainStoryManager : MonoBehaviour
     {
 
     }
+
+    
 }
