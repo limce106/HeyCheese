@@ -9,6 +9,7 @@
 
 	<!-- 파일 저장 권한 추가 (Android 10 이하에서만 필요) -->
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 	<application>
 		<activity android:name="com.unity3d.player.UnityPlayerActivity"
