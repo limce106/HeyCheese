@@ -58,3 +58,25 @@
 - 작업 내용
 - 미리보기(첨부)
 <img width="640" alt="img1 daumcdn" src="https://github.com/user-attachments/assets/feda2e1e-8965-46fc-8548-48fc970402c8" />
+
+## 메인 가져오기
+### 기존 변경사항 잠시 버려두기 (해당 하지 않으면 '메인 가져오기'로 ->)
+⚠️가능하면 Changes가 없을 때 가져오는 것을 추천 (충돌이 날 수 있기 때문..)
+간혹 변경 사항을 없앤 후 받아오라는 문구가 뜰 때가 있는데
+![image.png](attachment:1a865f13-66e7-4113-945b-208644dd4f1e:image.png)
+- 11 changed files 부분 우클릭 후 Stash all changes (잠시 버리기)
+⚠️Discard all changes는 영구 삭제이므로 유의할 것!
+- 이 상태에서 메인 가져오기(1번~마지막까지 진행)
+![image.png](attachment:0df696a4-bf63-4199-a97b-356c1f1c024e:image.png)
+- 이후 View Stash를 누르면 임의로 버린 파일들을 볼 수 있음
+- ![image.png](attachment:5b52f818-c44e-40b6-9664-e05a1a672a93:image.png)
+- Restore 클릭 시 임시로 버렸던 변경사항들이 다시 돌아옴
+⚠️Discard는 영구 삭제이므로 유의할 것!
+
+### 메인 가져오기
+![image.png](attachment:bcb9f74a-e679-4561-85f2-510fad41273e:image.png)
+![image.png](attachment:45dc5713-9cdb-40c2-8717-915a75451624:image.png)
+![image.png](attachment:4b08b449-e11f-4098-9d52-ce3718870123:image.png)
+- main 선택 후 ‘Creat a merge commit’ 클릭
+![image.png](attachment:fd3e8e51-97ab-4428-baf1-51ed8824d1a1:image.png)
+![image.png](attachment:19c096dd-a49b-4bc0-9334-f47acdb67989:image.png)
