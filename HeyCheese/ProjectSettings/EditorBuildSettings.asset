@@ -8,10 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/01.Scenes/CheeseOneCut.unity
     guid: 0149090d7985f6543bd2a712fc744f69
-  - enabled: 0
+  - enabled: 1
     path: Assets/01.Scenes/EpisodeMenu.unity
     guid: 7b52e21b2a4b0744995a84ab62d5d86a
-  - enabled: 0
+  - enabled: 1
     path: Assets/01.Scenes/MainStory.unity
     guid: dda51abbf91bfe64ca5931f3f83f4289
   - enabled: 1
@@ -21,8 +21,20 @@ EditorBuildSettings:
     path: Assets/01.Scenes/MainMenu.unity
     guid: 205de62553b05a74dbf735880833664d
   - enabled: 1
-    path: Assets/01.Scenes/TestScenes/MiniGame_HideAndSeek.unity
-    guid: 2428d5ca9a73d7044b8f387ba1205bcd
+    path: Assets/01.Scenes/MiniGame/MiniGame_1.unity
+    guid: c29e6d8ec87958d4ca53ce066d0a1608
+  - enabled: 1
+    path: Assets/01.Scenes/MiniGame/MiniGame_2_1.unity
+    guid: 9f38784dfc92cdf4b8e9c9b513bf6e34
+  - enabled: 1
+    path: Assets/01.Scenes/MiniGame/MiniGame_2_2.unity
+    guid: 6d10f7334e02a69498da98905bf9ca0d
+  - enabled: 1
+    path: Assets/01.Scenes/MiniGame/MiniGame_3.unity
+    guid: 606129129d7b509408bd2183fabbf5dd
+  - enabled: 1
+    path: Assets/01.Scenes/MiniGame/MiniGame_4.unity
+    guid: f6a2a9a95bae8b444b8b6145889da617
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 2f1402586e1131f4a94180c5d74a583c, type: 2}
     UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: 84c67cd34797d8146804029a29ae22a4, type: 2}

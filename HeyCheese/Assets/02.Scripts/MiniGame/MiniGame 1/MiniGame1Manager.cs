@@ -1,11 +1,15 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MiniGame1Manager : MonoBehaviour
+public class MiniGame1Manager : MiniGameManager
 {
+    [SerializeField] private TextMeshProUGUI GuideLevelText;
+    [SerializeField] private GameObject RestartPanel;
+    [SerializeField] private TextMeshProUGUI RestartLevelText;
+
     enum CharacterIconName
     {
         Cheese,
@@ -32,19 +36,10 @@ public class MiniGame1Manager : MonoBehaviour
 
     [SerializeField] private List<Image> characterIconsList;
 
-    [Header("패널들")]
-
-    [SerializeField] private GameObject GuidePanel;
-    [SerializeField] private TextMeshProUGUI GuideLevelText;
-
-    [SerializeField] private GameObject RestartPanel;
-    [SerializeField] private TextMeshProUGUI RestartLevelText;
-
-    [SerializeField] private GameObject ClearPanel;
-
-
-    private void Start()
+    private new void Awake()
     {
+        base.Awake();
+
         isRestart = false;
 
         currentStageLevel = 0;
@@ -54,13 +49,7 @@ public class MiniGame1Manager : MonoBehaviour
         SetGuideActive(true);
     }
 
-    void Update()
-    {
-        
-    }
-
-
-    public void StartHideAndSeek()
+    public override void StartGame()
     {
         isPlaying = true;
 
@@ -182,6 +171,9 @@ public class MiniGame1Manager : MonoBehaviour
             {
                 // 숨바꼭질 끝!
                 ClearPanel.SetActive(true);
+
+                // 2초 후 자동으로 메인스토리 이동
+                StartCoroutine(BackToMainStory());
                 yield break;
             }
 

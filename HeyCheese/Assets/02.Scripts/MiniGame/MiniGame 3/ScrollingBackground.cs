@@ -12,7 +12,7 @@ public class ScrollingBackground : MonoBehaviour
     // 화면 연속으로 터치하면 7f정도로 올라갔다가 다시 5f로 돌아옴.
 
     public RawImage rawImage;
-    [SerializeField] private Vector2 scrollSpeed = new Vector2(-0.1f, 0);
+    [SerializeField] private Vector2 scrollSpeed = new Vector2(0.1f, 0);
 
     private Rect uvRect;
 
