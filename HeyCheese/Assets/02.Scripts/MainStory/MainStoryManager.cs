@@ -69,7 +69,8 @@ public class MainStoryManager : MonoBehaviour
     [Header("UI Elements_FaceSearching")] // Camera_FaceSearching
     public GameObject faceSearchingPanel;
     [Header("UI Elements_Gift")] // Gift
-
+    public GameObject giftAlarmPanel;
+    public TMP_Text giftInfoText;
     [Header("UI Elements_Setting")] // Setting
 
     [Header("Camera")]
@@ -77,10 +78,14 @@ public class MainStoryManager : MonoBehaviour
     public Camera storyCamera;
     public ARSession arSession;
 
-    [Header("StoryCameraPhoto Data")]
+    // StoryCameraPhoto Data
     private string storyPhoto_filepath;
     private string storyPhoto_capturedAt;
     private string storyPhoto_mood;
+
+    // Filter and Frame
+    private string filterName = "";
+    private string frameName = "";
 
     #endregion
 
@@ -177,7 +182,7 @@ public class MainStoryManager : MonoBehaviour
         PlayerName = MainStoryGameManager.MainStoryGM.playerName;
 
         // 스토리카메라 데이터 내역 초기화
-        ResetStoryPhotoData();
+        ResetStoryPhotoData();        
 
         // 유대감 슬라이드 내역 반영
         bondSlider.value = BondScore;
@@ -194,13 +199,6 @@ public class MainStoryManager : MonoBehaviour
     {
         MainStory step = CurrentEpisode[id];
         CurrentID = id;
-
-        if (step.NextID == 0)
-        {
-            Debug.Log("스토리 종료 지점에 도달했습니다.");
-            EndEpisode();
-            return;
-        }
 
         // 잘못된 스텝 건너뛰기
         // id가 -1(문제o)인 경우, 해당 스텝(csv의 열)을 스킵함
@@ -298,11 +296,6 @@ public class MainStoryManager : MonoBehaviour
                 // 질문에 플레이어 이름 적용
                 string rawQuestionText = "치즈가 {PlayerName}의 얼굴을 보는 중\n표정으로 내 감정을 알려주자.";
                 emoQuestionText.text = rawQuestionText.Replace("{PlayerName}", PlayerName);
-
-                // 후에 카메라 버튼 클릭 가능하도록 하기 - 이름 바뀌지도 않았는데 연타하다가 버튼 누르면 안되니까
-
-                // 뭐.. 카메라를 바꾼다거나 내용 추가
-
                 break;
             case "StoryCamera":
                 ShowARView();
@@ -312,28 +305,43 @@ public class MainStoryManager : MonoBehaviour
                 cameraCanvas.SetActive(true);
                 storyCameraCanvas.SetActive(true);
                 
-                
-
                 // 필터 추가
-                string filterName = ConvertEpisodeToFilterName(step.EpisodeID);
-                ////Debug.Log("필터 이름"+ filterName);
+                filterName = ConvertEpisodeToFilterName(step.EpisodeID);
                 arFaceFilterApplier.MainStory_Filter(filterName);
                 // 프레임 추가
-                string frameName = ConvertEpisodeToFrameName(step.EpisodeID);
-                ////Debug.Log("프레임 이름" + frameName);
+                frameName = ConvertEpisodeToFrameName(step.EpisodeID);
                 frameApplier.ApplyFrame(frameName);
-
-                // 후에 카메라 버튼 클릭 가능하도록 하기 - 이름 바뀌지도 않았는데 연타하다가 버튼 누르면 안되니까
-
                 break;
             case "Gift":
                 TurnOffEveryCanvas();
-                storyCameraCanvas.SetActive(true);
+                giftCanvas.SetActive(true);
+
+                // 필터, 프레임 해금
+                filterName = ConvertEpisodeToFilterName(step.EpisodeID);
+                frameName = ConvertEpisodeToFrameName(step.EpisodeID);
+
+                FilterFrameManager.instance.Unlockfilter(filterName);
+                FilterFrameManager.instance.Unlockframe(frameName);
+
+                // 해금 내용 표시
+                string rawText = step.ScriptID;
+                string processedText = rawText.Replace("\\n", "\n");
+                giftInfoText.text = processedText; // 변경될 수 있음
+                StartCoroutine(PopupAnimator.OnPanelPopup(giftAlarmPanel)); // 패널 표시(애니메이션 적용)
+
+                // 다음 스토리 해금을 위한 데이터 저장
+
 
                 BondScoreDataManager.Instance.SaveFinalBondScore(episodeBondScore); // 유대감 점수 영구 저장
                 break;
         }
-        
+
+        if (step.NextID == 0)
+        {
+            Debug.Log("스토리 종료 지점에 도달했습니다.");
+            EndEpisode();
+            return;
+        }
     }
 
     public void NextStep()
@@ -368,6 +376,8 @@ public class MainStoryManager : MonoBehaviour
         settingsCanvas.SetActive(false);
     }
     #endregion
+
+
 
     //#region Player Name
     //// 플레이어 이름 불러오기
