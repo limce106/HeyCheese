@@ -62,11 +62,10 @@ public class MainStoryManager : MonoBehaviour
     [Header("UI Elements_Emotion Camera")] // Emotion Camera
     public TMP_Text emoQuestionText;
     public Button emoCameraBtn;
-    // 카메라를 변경해야 되나? XROrigin 활성화라던가
-
     [Header("UI Elements_Story Camera")] // Story Camera
-
-
+    public Button arCameraBtn;
+    [Header("UI Elements_FaceSearching")] // Camera_FaceSearching
+    public GameObject faceSearchingPanel;
     [Header("UI Elements_Gift")] // Gift
 
     [Header("UI Elements_Setting")] // Setting
@@ -271,10 +270,11 @@ public class MainStoryManager : MonoBehaviour
             case "EmotionCamera":
                 ShowARView();
                 TurnOffEveryCanvas();
+                ActivateCameraBtnInteraction();
+                background.SetActive(false);
                 cameraCanvas.SetActive(true);
                 emotionCameraCanvas.SetActive(true);
-                background.SetActive(false);
-
+                
                 // 질문에 플레이어 이름 적용
                 string rawQuestionText = "치즈가 {PlayerName}의 얼굴을 보는 중\n표정으로 내 감정을 알려주자.";
                 emoQuestionText.text = rawQuestionText.Replace("{PlayerName}", PlayerName);
@@ -287,17 +287,20 @@ public class MainStoryManager : MonoBehaviour
             case "StoryCamera":
                 ShowARView();
                 TurnOffEveryCanvas();
+                ActivateCameraBtnInteraction();
+                background.SetActive(false);
                 cameraCanvas.SetActive(true);
                 storyCameraCanvas.SetActive(true);
-                background.SetActive(false);
+                
+                
 
                 // 필터 추가
                 string filterName = ConvertEpisodeToFilterName(step.EpisodeID);
-                Debug.Log("필터 이름"+ filterName);
+                ////Debug.Log("필터 이름"+ filterName);
                 arFaceFilterApplier.MainStory_Filter(filterName);
                 // 프레임 추가
                 string frameName = ConvertEpisodeToFrameName(step.EpisodeID);
-                Debug.Log("프레임 이름" + frameName);
+                ////Debug.Log("프레임 이름" + frameName);
                 frameApplier.ApplyFrame(frameName);
 
                 // 후에 카메라 버튼 클릭 가능하도록 하기 - 이름 바뀌지도 않았는데 연타하다가 버튼 누르면 안되니까
@@ -340,6 +343,7 @@ public class MainStoryManager : MonoBehaviour
         cameraCanvas.SetActive(false);
         emotionCameraCanvas.SetActive(false);
         storyCameraCanvas.SetActive(false);
+        HideFaceSearching();
         giftCanvas.SetActive(false);
         settingsCanvas.SetActive(false);
     }
@@ -424,6 +428,29 @@ public class MainStoryManager : MonoBehaviour
         storyCamera.enabled = true;
         arSession.enabled = false;
     }
+    
+    // 카메라 실행 시 카메라 버튼 인터렉션 활성화/비활성화
+    public void ActivateCameraBtnInteraction()
+    {
+        emoCameraBtn.interactable = true;
+        arCameraBtn.interactable = true;
+    }
+    public void DeActivateCameraBtnInteraction()
+    {
+        emoCameraBtn.interactable = false;
+        arCameraBtn.interactable = false;
+    }
+
+    // 표정 탐색 중 표정 탐색 패널 보여주기/숨기기
+    public void ShowFaceSearching()
+    {
+        faceSearchingPanel.SetActive(true);
+    }
+    public void HideFaceSearching()
+    {
+        faceSearchingPanel.SetActive(false);
+    }
+
     #endregion
 
     #region 유대감 점수와 다이얼로그(EmotionCamera)
@@ -461,6 +488,10 @@ public class MainStoryManager : MonoBehaviour
 
         // 유대감 슬라이드 내역 반영
         bondSlider.value = episodeBondScore;
+
+        // 카메라 버튼 활성화 및 표정 탐색 패널 숨기기
+        ActivateCameraBtnInteraction();
+        HideFaceSearching();
 
         // 대사 띄우기(다음 단계)
         NextDialogue(nextID);
