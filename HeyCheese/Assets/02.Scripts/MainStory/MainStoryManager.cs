@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.EventSystems;
 
 // UI에 이벤트 표시 역할
 // 스토리<->미니게임 시 해당 내용은 유지, 기억되어야 되지만
@@ -19,6 +20,7 @@ public class MainStoryManager : MonoBehaviour
     //public Speaker speaker;
     public ARFaceFilterApplier arFaceFilterApplier;
     public FrameApplier frameApplier;
+    public EmotionGalleryDBWriter emotionGalleryDBWriter;
     #endregion
 
     #region UI References
@@ -74,6 +76,11 @@ public class MainStoryManager : MonoBehaviour
     public Camera arCamera;
     public Camera storyCamera;
     public ARSession arSession;
+
+    [Header("StoryCameraPhoto Data")]
+    private string storyPhoto_filepath;
+    private string storyPhoto_capturedAt;
+    private string storyPhoto_mood;
 
     #endregion
 
@@ -169,6 +176,9 @@ public class MainStoryManager : MonoBehaviour
         CurrentEpisode = MainStoryGameManager.MainStoryGM.currentEpisode;
         PlayerName = MainStoryGameManager.MainStoryGM.playerName;
 
+        // 스토리카메라 데이터 내역 초기화
+        ResetStoryPhotoData();
+
         // 유대감 슬라이드 내역 반영
         bondSlider.value = BondScore;
         episodeBondScore = BondScore;
@@ -246,6 +256,16 @@ public class MainStoryManager : MonoBehaviour
                 Canvas.ForceUpdateCanvases(); // UI 업데이트 - 제거 시 정상적으로 색 반영되지 않음
                 break;
             case "Choice":
+                TurnOffEveryCanvas();
+                choiceCanvas.SetActive(true);
+
+                choiceQuestionText.text = step.ScriptID; // 대사 변경
+                choice1Text.text = step.Choice1; // 선택지 변경
+                choice2Text.text = step.Choice2; // 선택지 변경
+                choice3Text.text = step.Choice3; // 선택지 변경
+
+                break;
+            case "SaveChoice":
                 TurnOffEveryCanvas();
                 choiceCanvas.SetActive(true);
 
@@ -414,7 +434,7 @@ public class MainStoryManager : MonoBehaviour
     }
     #endregion
 
-    #region Camera
+    #region Show/Hide ARCamera&StoryCamera Btn, FaceSearching Panel(EmotionCamera, StoryCamera)
     void ShowARView()
     {
         arCamera.enabled = true;
@@ -453,7 +473,7 @@ public class MainStoryManager : MonoBehaviour
 
     #endregion
 
-    #region 유대감 점수와 다이얼로그(EmotionCamera)
+    #region Update 유대감 점수와 다이얼로그(EmotionCamera)
     // 유대감 점수 업데이트
     // dominantEmotion에 따라 점수 반경
     // emotionCamera > Dialogue
@@ -545,6 +565,53 @@ public class MainStoryManager : MonoBehaviour
 
         Debug.LogWarning($"Invalid episodeID: {episodeID}");
         return null;
+    }
+    #endregion
+
+    #region Choice DB
+    // 누른 Choice의 내용 저장 후 StoryCamera 실행 시 찍은 사진과 DB에 넣을 수 있도록 하기
+    // 사진 찍은 이후 사진 데이터 저장
+    public void SaveStoryPhoto(string filepath, string capturedAt)
+    {
+        storyPhoto_filepath = filepath;
+        storyPhoto_capturedAt = capturedAt;
+    }
+    // 선택지 선택 이후 선택지 텍스트 저장 및 DB에 저장
+    public void OnClickSaveChoiceText(Button clickedBtn)
+    {
+        Debug.Log("SaveChoiceText 클릭됨");
+        MainStory step = CurrentEpisode[CurrentID-1];
+        print(step.EventType);
+        if (step.EventType == "SaveChoice")
+        {
+            // 선택한 버튼의 텍스트 저장
+            TextMeshProUGUI tmp = clickedBtn.GetComponentInChildren<TextMeshProUGUI>();
+            Debug.Log("선택한 선택지의 텍스트: " + tmp.text);
+            storyPhoto_mood = tmp.text;
+
+            Debug.Log(storyPhoto_filepath + " " + storyPhoto_capturedAt + " " + storyPhoto_mood);
+
+            // DB에 저장
+            SaveStoryPhotoDatas();
+        }
+    }
+    // 사진 데이터들 DB에 저장
+    void SaveStoryPhotoDatas()
+    {
+        // episodeID, episodeTitle 가져오기
+        string episodeId = CurrentEpisode[CurrentID].EpisodeID;
+        string episodeTitle = CurrentEpisode[CurrentID].ChapterTitle;
+
+        // DB에 저장
+        emotionGalleryDBWriter.InsertStoryPhoto(storyPhoto_filepath, storyPhoto_capturedAt, episodeId, episodeTitle, storyPhoto_mood);
+    }
+
+    // 재실행 시 사진 데이터 초기화
+    private void ResetStoryPhotoData()
+    {
+        storyPhoto_filepath = "";
+        storyPhoto_capturedAt = "";
+        storyPhoto_mood = "";
     }
     #endregion
 

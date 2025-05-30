@@ -849,7 +849,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &111477567
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3059,6 +3059,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 970218344}
+        m_TargetAssemblyTypeName: MainStoryManager, Assembly-CSharp
+        m_MethodName: OnClickSaveChoiceText
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 383602205}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -6510,6 +6522,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 970218344}
+        m_TargetAssemblyTypeName: MainStoryManager, Assembly-CSharp
+        m_MethodName: OnClickSaveChoiceText
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 840809239}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &840809240
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7000,6 +7024,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 970218344}
+        m_TargetAssemblyTypeName: MainStoryManager, Assembly-CSharp
+        m_MethodName: OnClickSaveChoiceText
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 947998482}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &947998483
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7254,6 +7290,7 @@ MonoBehaviour:
   dialougeManager: {fileID: 970218347}
   arFaceFilterApplier: {fileID: 1476636087}
   frameApplier: {fileID: 1476636086}
+  emotionGalleryDBWriter: {fileID: 1231362646}
   loadingCanvas: {fileID: 1867401841}
   dialogueCanvas: {fileID: 171413653}
   choiceCanvas: {fileID: 1035599474}
@@ -7286,8 +7323,8 @@ MonoBehaviour:
   inputNameText: {fileID: 1393105807}
   emoQuestionText: {fileID: 353943525}
   emoCameraBtn: {fileID: 29996136}
-  arCameraBtn: {fileID: 0}
-  faceSearchingPanel: {fileID: 0}
+  arCameraBtn: {fileID: 1062173941}
+  faceSearchingPanel: {fileID: 152141787}
   arCamera: {fileID: 1923685083}
   storyCamera: {fileID: 1833819276}
   arSession: {fileID: 65822361}
@@ -7629,7 +7666,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1035599475
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14573,6 +14610,7 @@ GameObject:
   - component: {fileID: 1902452112}
   - component: {fileID: 1902452111}
   - component: {fileID: 1902452110}
+  - component: {fileID: 1902452113}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -14630,6 +14668,14 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!81 &1902452113
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1902452109}
+  m_Enabled: 1
 --- !u!1 &1912566323
 GameObject:
   m_ObjectHideFlags: 0
