@@ -15,7 +15,9 @@ public class MainStoryTakePhoto : MonoBehaviour
 
     public void OnClick_EmotionCamera()
     {
-        MainStoryManager.emoCameraBtn.interactable =false; // 버튼 입력 막기
+        // 카메라 버튼 비활성화 및 표정 탐색 패널 보여주기
+        MainStoryManager.DeActivateCameraBtnInteraction();
+        MainStoryManager.ShowFaceSearching();
 
         // 사진 캡쳐 및 저장
         StartCoroutine(saveLoadPicture.CaptureAndSave((filepath, capturedAt) =>
@@ -42,6 +44,9 @@ public class MainStoryTakePhoto : MonoBehaviour
 
     public void OnClick_StoryCamera()
     {
+        // 카메라 버튼 비활성화
+        MainStoryManager.DeActivateCameraBtnInteraction();
+
         // 사진 캡쳐 및 저장
         StartCoroutine(saveLoadPicture.CaptureAndSave((filepath, capturedAt) =>
         {
