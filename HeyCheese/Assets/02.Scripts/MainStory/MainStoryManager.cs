@@ -34,7 +34,8 @@ public class MainStoryManager : MonoBehaviour
     public GameObject settingsCanvas;
 
     [Header("UI Elements_Background")]
-    public UnityEngine.UI.Image backgroundImg;
+    public GameObject background;
+    public Image backgroundImg;
     [Header("UI Elements_Loading")] 
     public Button loadingBtn;
     public TMP_Text episodeIDText;
@@ -200,6 +201,7 @@ public class MainStoryManager : MonoBehaviour
             NextStep();
         }
 
+        background.SetActive(true);
         ShowStoryView();
         switch (step.EventType)
         {
@@ -271,6 +273,7 @@ public class MainStoryManager : MonoBehaviour
                 TurnOffEveryCanvas();
                 cameraCanvas.SetActive(true);
                 emotionCameraCanvas.SetActive(true);
+                background.SetActive(false);
 
                 // 질문에 플레이어 이름 적용
                 string rawQuestionText = "치즈가 {PlayerName}의 얼굴을 보는 중\n표정으로 내 감정을 알려주자.";
@@ -286,6 +289,7 @@ public class MainStoryManager : MonoBehaviour
                 TurnOffEveryCanvas();
                 cameraCanvas.SetActive(true);
                 storyCameraCanvas.SetActive(true);
+                background.SetActive(false);
 
                 // 필터 추가
                 string filterName = ConvertEpisodeToFilterName(step.EpisodeID);

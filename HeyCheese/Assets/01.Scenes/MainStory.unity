@@ -7193,6 +7193,7 @@ MonoBehaviour:
   storyCameraCanvas: {fileID: 604441544}
   giftCanvas: {fileID: 1831824504}
   settingsCanvas: {fileID: 142814960}
+  background: {fileID: 1919774929}
   backgroundImg: {fileID: 1393387854}
   loadingBtn: {fileID: 1867401845}
   episodeIDText: {fileID: 577325105}
@@ -11110,7 +11111,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1505489934
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13853,7 +13854,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!20 &1833819276
 Camera:
   m_ObjectHideFlags: 0
@@ -13861,7 +13862,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1833819275}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 4
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
