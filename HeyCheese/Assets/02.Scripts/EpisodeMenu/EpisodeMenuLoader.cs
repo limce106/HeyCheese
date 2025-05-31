@@ -109,7 +109,7 @@ public class EpisodeMenuLoader : MonoBehaviour
             newBtn.onClick.AddListener(() => OnEpisodeSelected(capturedId));
 
             // PlayerPref 확인
-            Debug.Log($"[DEBUG] {episodeID}: {isUnlocked} | PlayerPref = {PlayerPrefs.GetInt($"{episodeID}_Cleared", -1)}");
+            //Debug.Log($"[DEBUG] {episodeID}: {isUnlocked} | PlayerPref = {PlayerPrefs.GetInt($"{episodeID}_Cleared", -1)}");
         }
     }
  
