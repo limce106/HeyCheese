@@ -32,23 +32,23 @@ public class MenuButtons : MonoBehaviour
     public GameObject madeByGO;
 
     #region Settings
-    // ¸ğµåº° È¯°æ ¼³Á¤ ¹öÆ° È°¼ºÈ­ ¿©ºÎ °áÁ¤
-    // Menu¿¡ ÀÖÀ» ½Ã Á¦ÀÛÀÚ(MadeBy), ºÎ¸ğ´Ô °¡ÀÌµå(ParentGuide)¸¸ È°¼ºÈ­
-    // Menu°¡ ¾Æ´Ò ½Ã ¸ŞÀÎ ¸Ş´º·Î(toMainMenu)¸¸ È°¼ºÈ­
+    // ëª¨ë“œë³„ í™˜ê²½ ì„¤ì • ë²„íŠ¼ í™œì„±í™” ì—¬ë¶€ ê²°ì •
+    // Menuì— ìˆì„ ì‹œ ì œì‘ì(MadeBy), ë¶€ëª¨ë‹˜ ê°€ì´ë“œ(ParentGuide)ë§Œ í™œì„±í™”
+    // Menuê°€ ì•„ë‹ ì‹œ ë©”ì¸ ë©”ë‰´ë¡œ(toMainMenu)ë§Œ í™œì„±í™”
     public void SetMode(SettingsMode mode)
     {
         bool isMenu = (mode == SettingsMode.Menu);
 
-        // ¹öÆ° È°¼ºÈ­/ºñÈ°¼ºÈ­ ¼³Á¤
+        // ë²„íŠ¼ í™œì„±í™”/ë¹„í™œì„±í™” ì„¤ì •
         toMainMenuBtn.SetActive(!isMenu);
         madeByBtn.SetActive(isMenu);
         parentGuideBtn.SetActive(isMenu);
     }
 
-    // È¯°æ ¼³Á¤ ¹öÆ° Å¬¸¯ ½Ã È¯°æ ¼³Á¤ È­¸é ¶ç¿ò
+    // í™˜ê²½ ì„¤ì • ë²„íŠ¼ í´ë¦­ ì‹œ í™˜ê²½ ì„¤ì • í™”ë©´ ë„ì›€
     public void OnClickSettingsOpen()
     {
-        // ¾À ÀÌ¸§¿¡ µû¸¥ È¯°æ ¼³Á¤ ¼Ó ¹öÆ° È°¼ºÈ­ ¿©ºÎ °áÁ¤
+        // ì”¬ ì´ë¦„ì— ë”°ë¥¸ í™˜ê²½ ì„¤ì • ì† ë²„íŠ¼ í™œì„±í™” ì—¬ë¶€ ê²°ì •
         string currentScene = SceneManager.GetActiveScene().name;
         if (currentScene == "MainMenu" || currentScene == "EpisodeMenu")
         {
@@ -59,13 +59,24 @@ public class MenuButtons : MonoBehaviour
             SetMode(SettingsMode.InGame);
         }
 
-        // È¯°æ ¼³Á¤ ÆĞ³Î ¿­±â
+        // í™˜ê²½ ì„¤ì • íŒ¨ë„ ì—´ê¸°
         settingWindow.SetActive(true);
     }
 
     public void OnClickSettingsClose()
     {
         settingWindow.SetActive(false);
+    }
+    #endregion
+
+    #region PlayerPrefs
+    public void OnClickCheckPlayerPrefs()
+    {
+        PlayerPrefsControll.PrintAllPrefs(); // ì €ì¥ í™•ì¸ìš©
+    }
+    public void OnClickDeletePlayerPrefs_EpisodeUnLock()
+    {
+        PlayerPrefsControll.DeleteEpisodeUnLock();
     }
     #endregion
 }
