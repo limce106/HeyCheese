@@ -7,33 +7,67 @@ using UnityEngine.UI;
 
 public class SaveLoadPicture : MonoBehaviour
 {
-    [Header("UI")]
-    public RectTransform panelToCapture;
+    public Image topLetterbox;
+    public Image bottomLetterbox;
+    public Image leftLetterbox;
+    public Image rightLetterbox;
 
     /// <summary>
-    /// »çÁøÀ» Ä¸Ã³ÇÏ°í ÀúÀåÇÑ ÈÄ, ¿ÜºÎ¿¡¼­ Àü´ŞÇÑ Äİ¹éÀ¸·Î ÆÄÀÏ °æ·Î¿Í ½Ã°£ Á¤º¸¸¦ ³Ñ±ä´Ù.
+    /// ì‚¬ì§„ì„ ìº¡ì²˜í•˜ê³  ì €ì¥í•œ í›„, ì™¸ë¶€ì—ì„œ ì „ë‹¬í•œ ì½œë°±ìœ¼ë¡œ íŒŒì¼ ê²½ë¡œì™€ ì‹œê°„ ì •ë³´ë¥¼ ë„˜ê¸´ë‹¤.
     /// </summary>
     public IEnumerator CaptureAndSave(Action<string, string> onSavedCallback = null)
     {
         yield return new WaitForEndOfFrame();
 
-        // Ä¸Ã³ÇÒ UI ÆĞ³ÎÀÇ È­¸é ÁÂÇ¥ °è»ê
-        Vector3[] corners = new Vector3[4];
-        panelToCapture.GetWorldCorners(corners);
+        // AR ì¹´ë©”ë¼ í™”ë©´ì´ ìˆëŠ” ì˜ì—­ë§Œ ìº¡ì²˜
 
-        float x = corners[0].x;
-        float y = corners[0].y;
-        float width = corners[2].x - corners[0].x;
-        float height = corners[2].y - corners[0].y;
+        float screenWidth = Screen.width;
+        float screenHeight = Screen.height;
+        float screenAspect = screenWidth / screenHeight;
+        float targetAspect = 3f / 4f; // 4:3 (ì„¸ë¡œê°€ ê¸´ ë¹„ìœ¨)
 
-        // È­¸é ÁÂÇ¥¸¦ ÇÈ¼¿ ÁÂÇ¥·Î º¯È¯
-        x = Mathf.Clamp(x, 0, Screen.width);
-        y = Mathf.Clamp(y, 0, Screen.height);
-        width = Mathf.Clamp(width, 0, Screen.width - x);
-        height = Mathf.Clamp(height, 0, Screen.height - y);
+        float x = 0f, y = 0f, width = screenWidth, height = screenHeight;
 
-        // y ÁÂÇ¥´Â ¾Æ·¡¿¡¼­ À§·Î °è»êµÇ¹Ç·Î º¸Á¤ ÇÊ¿ä
-        y = Screen.height - y - height;
+        if (screenAspect > targetAspect)
+        {
+            // ê°€ë¡œê°€ ë” ê¸´ ê²½ìš° ì¢Œìš° ì˜ë¼ëƒ„
+            Vector3[] leftCorners = new Vector3[4];
+            Vector3[] rightCorners = new Vector3[4];
+            leftLetterbox.rectTransform.GetWorldCorners(leftCorners);
+            rightLetterbox.rectTransform.GetWorldCorners(rightCorners);
+
+            float leftX = leftCorners[2].x;   // ì˜¤ë¥¸ìª½ ëª¨ì„œë¦¬
+            float rightX = rightCorners[0].x; // ì™¼ìª½ ëª¨ì„œë¦¬
+
+            x = leftX;
+            width = rightX - leftX;
+            y = 0;
+            height = screenHeight;
+        }
+        else if (screenAspect < targetAspect)
+        {
+            // ì„¸ë¡œê°€ ë” ê¸´ ê²½ìš° ìƒí•˜ ì˜ë¼ëƒ„
+            Vector3[] topCorners = new Vector3[4];
+            Vector3[] bottomCorners = new Vector3[4];
+            topLetterbox.rectTransform.GetWorldCorners(topCorners);
+            bottomLetterbox.rectTransform.GetWorldCorners(bottomCorners);
+
+            float bottomY = bottomCorners[2].y; // ìœ„ìª½ ëª¨ì„œë¦¬
+            float topY = topCorners[0].y;       // ì•„ë˜ìª½ ëª¨ì„œë¦¬
+
+            y = bottomY;
+            height = topY - bottomY;
+            x = 0;
+            width = screenWidth;
+        }
+        else
+        {
+            // 4:3 í™”ë©´ê³¼ ë™ì¼í•˜ë©´ ì „ì²´ ìº¡ì²˜
+            x = 0;
+            y = 0;
+            width = screenWidth;
+            height = screenHeight;
+        }
 
         Texture2D screenImage = new Texture2D((int)width, (int)height, TextureFormat.RGB24, false);
         screenImage.ReadPixels(new Rect(x, y, width, height), 0, 0);
@@ -46,7 +80,7 @@ public class SaveLoadPicture : MonoBehaviour
 
         string capturedAt = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
 
-        // ¿ÜºÎ¿¡ Àü´Ş
+        // ì™¸ë¶€ì— ì „ë‹¬
         onSavedCallback?.Invoke(filepath, capturedAt);
     }
 }

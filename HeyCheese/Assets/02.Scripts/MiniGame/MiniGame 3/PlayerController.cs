@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     public RectTransform playerRect;
     public float burstDuration = 3f;
     public float burstSpeedMultiplier = 1.8f;
-    public Vector2 burstOffset = new Vector2(-150f, 0f);
+    public Vector2 burstOffset = new Vector2(150f, 0f);
 
     private bool hasStartedRunning = false;
     [SerializeField] private bool isInBurst = false;
@@ -36,6 +36,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        // 클릭할 때 한 번만 실행해야 하기 때문에 
+        // 아래와 같은 코드 사용
         if (Input.touchCount > 0 || Input.GetMouseButtonDown(0))
         {
             HandleTouch();
@@ -81,7 +83,7 @@ public class PlayerController : MonoBehaviour
         miniGame3Manager.scrollingBackground.SetBurstSpeed(true);
         miniGame3Manager.SetSliderSpeedMultiplier(burstSpeedMultiplier); // 슬라이더도 빨라짐
 
-        // 위치 살짝 왼쪽으로
+        // 위치 살짝 앞쪽으로
         StartCoroutine(MoveRect(playerRect, originalPosition + burstOffset,burstDuration));
 
         yield return new WaitForSeconds(burstDuration);
@@ -120,11 +122,11 @@ public class PlayerController : MonoBehaviour
     public void HidePlayerOffScreen()
     {
         StopAllCoroutines(); // 이동 중이면 멈춤
-        Vector2 offScreenPos = new Vector2(-2000f, originalPosition.y);
+        Vector2 offScreenPos = new Vector2(2000f, playerRect.anchoredPosition.y);
         StartCoroutine(MoveRect(playerRect, offScreenPos, 0.5f));
 
-        Vector2 offScreenPos_rival1 = new Vector2(-1500f, rival1.anchoredPosition.y);
-        Vector2 offScreenPos_rival2 = new Vector2(-1500f, rival2.anchoredPosition.y);
+        Vector2 offScreenPos_rival1 = new Vector2(1500f, rival1.anchoredPosition.y);
+        Vector2 offScreenPos_rival2 = new Vector2(1500f, rival2.anchoredPosition.y);
         StartCoroutine(MoveRect(rival1, offScreenPos_rival1, 2f));
         StartCoroutine(MoveRect(rival2, offScreenPos_rival2, 2f));
     }
@@ -135,7 +137,7 @@ public class PlayerController : MonoBehaviour
         float delay = Random.Range(3f, 5f); // 3~5초 딜레이
         yield return new WaitForSeconds(delay);
 
-        Vector2 targetPos = rival.anchoredPosition + new Vector2(300f, 0f); // 플레이어보다 뒤쳐지게
+        Vector2 targetPos = rival.anchoredPosition + new Vector2(-300f, 0f); // 플레이어보다 뒤쳐지게
         yield return StartCoroutine(MoveRect(rival, targetPos, 3f));
     }
 
@@ -149,8 +151,8 @@ public class PlayerController : MonoBehaviour
         foreach (var rival in rivals)
         {
             Vector2 original = rival.anchoredPosition;
-            Vector2 wiggleOut = original + new Vector2(-leftWiggle, 0); // 살짝 앞으로
-            Vector2 fallBack = original + new Vector2(rightShift, 0);  // 더 뒤로
+            Vector2 wiggleOut = original + new Vector2(leftWiggle, 0); // 살짝 앞으로
+            Vector2 fallBack = original + new Vector2(-rightShift, 0);  // 더 뒤로
 
             // 앞으로 치고 나옴
             yield return StartCoroutine(MoveRect(rival, wiggleOut, 0.2f));
