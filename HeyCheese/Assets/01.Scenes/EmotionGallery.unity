@@ -5147,7 +5147,7 @@ MonoBehaviour:
     m_Left: 20
     m_Right: 20
     m_Top: 20
-    m_Bottom: 20
+    m_Bottom: 100
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
