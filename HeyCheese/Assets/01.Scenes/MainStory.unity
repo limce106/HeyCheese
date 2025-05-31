@@ -3006,7 +3006,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -175}
-  m_SizeDelta: {x: 900, y: 140}
+  m_SizeDelta: {x: 870, y: 140}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &383602204
 MonoBehaviour:
@@ -6464,7 +6464,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -500}
-  m_SizeDelta: {x: 900, y: 140}
+  m_SizeDelta: {x: 870, y: 140}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &840809238
 MonoBehaviour:
@@ -6966,7 +6966,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 150}
-  m_SizeDelta: {x: 900, y: 140}
+  m_SizeDelta: {x: 870, y: 140}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &947998481
 MonoBehaviour:
@@ -7316,7 +7316,7 @@ MonoBehaviour:
   giftCanvas: {fileID: 1831824504}
   settingsCanvas: {fileID: 142814960}
   background: {fileID: 1919774929}
-  backgroundImg: {fileID: 1393387854}
+  backgroundImg: {fileID: 1919774931}
   loadingBtn: {fileID: 1867401845}
   episodeIDText: {fileID: 577325105}
   chapterTitleText: {fileID: 1706226780}
@@ -14108,14 +14108,13 @@ GameObject:
   m_Component:
   - component: {fileID: 1833819278}
   - component: {fileID: 1833819276}
-  - component: {fileID: 1833819277}
   m_Layer: 0
   m_Name: Main Camera (1)
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!20 &1833819276
 Camera:
   m_ObjectHideFlags: 0
@@ -14167,14 +14166,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &1833819277
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1833819275}
-  m_Enabled: 1
 --- !u!4 &1833819278
 Transform:
   m_ObjectHideFlags: 0
@@ -14769,7 +14760,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1919774930
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14784,11 +14775,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1252444627}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: 50}
   m_SizeDelta: {x: 1443, y: 2048}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1919774931
 MonoBehaviour:
   m_ObjectHideFlags: 0

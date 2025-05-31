@@ -266,7 +266,7 @@ public class MainStoryManager : MonoBehaviour
                 break;
         }
 
-        if (step.NextID == 0)
+        if (step.NextID == 0 && step.EventType != "Gift")
         {
             Debug.Log("스토리 종료 지점에 도달했습니다.");
             EndEpisode();
