@@ -5,41 +5,49 @@ using UnityEngine.UI;
 
 public class FrameApplier : MonoBehaviour
 {
-    [Header("½ºÅä¸® & Ä¡ÁîÇÑÄÆ")]
+    [Header("ìŠ¤í† ë¦¬ & ì¹˜ì¦ˆí•œì»·")]
     [SerializeField]
-    // ÇÁ·¹ÀÓÀ» ¶ç¿ï ÀÌ¹ÌÁö ¿ÀºêÁ§Æ®
+    // í”„ë ˆì„ì„ ë„ìš¸ ì´ë¯¸ì§€ ì˜¤ë¸Œì íŠ¸
     private GameObject frameObj;
-    // ÀÌ¹ÌÁö ¿ÀºêÁ§Æ® ³» ÀÌ¹ÌÁö ÄÄÆ÷³ÍÆ®
+    // ì´ë¯¸ì§€ ì˜¤ë¸Œì íŠ¸ ë‚´ ì´ë¯¸ì§€ ì»´í¬ë„ŒíŠ¸
     private Image frameImg;
-    [Header("Ä¡ÁîÇÑÄÆ")]
+    private RectTransform canvasRect;
+    [Header("ì¹˜ì¦ˆí•œì»·")]
     [SerializeField]
     private GameObject framePanel;
     [SerializeField]
     private GameObject bottomButtons;
 
+    public Image topLetterbox;
+    public Image bottomLetterbox;
+    public Image leftLetterbox;
+    public Image rightLetterbox;
 
     void Awake()
     {
         frameImg = frameObj.GetComponent<Image>();
+        canvasRect = frameImg.canvas.GetComponent<RectTransform>();
     }
 
     public void ApplyFrame(string frameName)
     {
         string framePath = $"6Frame/{frameName}";
         Sprite frame = Resources.Load<Sprite>(framePath);
-        if(frame != null )
+        if(frame != null)
         {
             frameImg.sprite = frame;
+
+            GetFrameSizeAndPosition(out Vector2 size, out Vector2 pos);
+            frameImg.rectTransform.sizeDelta = size;
+            frameImg.rectTransform.anchoredPosition = pos;
+
+            if (!frameObj.activeSelf)
+                frameObj.SetActive(true);
         }
         else
         {
             Debug.Log($"Cannot Find {frameName}!");
             return;
-        }
-
-        if (!frameObj.activeSelf)
-        {
-            frameObj.SetActive(true);
         }
     }
 
@@ -59,5 +67,32 @@ public class FrameApplier : MonoBehaviour
     {
         framePanel.SetActive(false);
         bottomButtons.SetActive(true);
+    }
+
+    private void GetFrameSizeAndPosition(out Vector2 size, out Vector2 position)
+    {
+        float canvasWidth = canvasRect.rect.width;
+        float canvasHeight = canvasRect.rect.height;
+        float targetAspect = 3f / 4f;
+        float currentAspect = canvasWidth / canvasHeight;
+
+        if (currentAspect > targetAspect)
+        {
+            // ê°€ë¡œê°€ ë” ë„“ìœ¼ë©´ ì„¸ë¡œ ê¸°ì¤€
+            float targetWidth = Screen.width - leftLetterbox.rectTransform.sizeDelta.x - rightLetterbox.rectTransform.sizeDelta.x;
+            float xOffset = (canvasWidth - targetWidth) / 2f;
+
+            size = new Vector2(targetWidth, canvasHeight);
+            position = new Vector2(xOffset - (canvasWidth / 2f - targetWidth / 2f), 0);
+        }
+        else
+        {
+            // ì„¸ë¡œê°€ ë” ê¸¸ê±°ë‚˜ ê°™ìœ¼ë©´ ê°€ë¡œ ê¸°ì¤€
+            float targetHeight = Screen.height - topLetterbox.rectTransform.sizeDelta.y - bottomLetterbox.rectTransform.sizeDelta.y;
+            float yOffset = (canvasHeight - targetHeight) / 2f;
+
+            size = new Vector2(canvasWidth, targetHeight);
+            position = new Vector2(0, yOffset - (canvasHeight / 2f - targetHeight / 2f));
+        }
     }
 }

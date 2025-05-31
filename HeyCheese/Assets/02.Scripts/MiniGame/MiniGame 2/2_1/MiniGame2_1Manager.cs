@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class MiniGame2_1Manager : MonoBehaviour
+public class MiniGame2_1Manager : MiniGameManager
 {
     public enum FoodName
     {
@@ -20,46 +20,35 @@ public class MiniGame2_1Manager : MonoBehaviour
         Bugi
     }
 
-    // À½½Ä ´ãÀº »óÅÂ µñ¼Å³Ê¸®
+    // ìŒì‹ ë‹´ì€ ìƒíƒœ ë”•ì…”ë„ˆë¦¬
     private Dictionary<int, bool> foodState = new Dictionary<int, bool>();
-    // ´ã°ÜÁø À½½Ä ÀÌ¹ÌÁö ¸®½ºÆ®
-    // ¶±ººÀÌ, ÇÇÂ¥, Ä¡Å² ¼øÀ¸·Î ÀÌ¹ÌÁö ¸®½ºÆ® ³Ö±â
+    // ë‹´ê²¨ì§„ ìŒì‹ ì´ë¯¸ì§€ ë¦¬ìŠ¤íŠ¸
+    // ë–¡ë³¶ì´, í”¼ì§œ, ì¹˜í‚¨ ìˆœìœ¼ë¡œ ì´ë¯¸ì§€ ë¦¬ìŠ¤íŠ¸ ë„£ê¸°
     [SerializeField] private List<GameObject> foodInPlateImages;
 
-    [Header("ÆĞ³Îµé")]
-    [SerializeField] private GameObject GuidePanel;
-    [SerializeField] private GameObject ClearPanel;
-
-    [Header("Ä¡Áî¿Í ºÎ±â")]
+    [Header("ì¹˜ì¦ˆì™€ ë¶€ê¸°")]
     [SerializeField] private List<CharacterReaction> characterReactionsList;
 
     private int foodInPlateNum = 0;
 
-    private void Awake()
+    private new void Awake()
     {
-        // À½½Ä ´ãÀº »óÅÂ µñ¼Å³Ê¸® ÃÊ±âÈ­ ÇÑ¹ø¸¸
+        base.Awake();
+        // ìŒì‹ ë‹´ì€ ìƒíƒœ ë”•ì…”ë„ˆë¦¬ ì´ˆê¸°í™” í•œë²ˆë§Œ
         InitFoodStateDictionary();
     }
 
-
-    void Start()
-    {
-        GuidePanel.SetActive(true);
-        ClearPanel.SetActive(false);
-    }
-
-
-    public void StartPutFoodInPlate()
+    public override void StartGame()
     {
         GuidePanel.SetActive(false);
     }
 
-    // Å¬¸¯µÈ À½½Ä ¹öÆ°À¸·Î Á¢½Ã¿¡ À½½ÄÀÌ Ã¤¿öÁü
+    // í´ë¦­ëœ ìŒì‹ ë²„íŠ¼ìœ¼ë¡œ ì ‘ì‹œì— ìŒì‹ì´ ì±„ì›Œì§
     private void PutFooldInPlate(FoodName foodName)
     {
         foodInPlateImages[(int)foodName].SetActive(true);
 
-        // Ä³¸¯ÅÍ ¸®¾×¼Ç º¯°æ ¸Ş¼Òµå È£Ãâ
+        // ìºë¦­í„° ë¦¬ì•¡ì…˜ ë³€ê²½ ë©”ì†Œë“œ í˜¸ì¶œ
         foreach(CharacterReaction characterReaction in characterReactionsList)
         {
             characterReaction.ChangeReactionImage();
@@ -68,7 +57,7 @@ public class MiniGame2_1Manager : MonoBehaviour
         StartCoroutine(CheckfoodInPlateState());
     }
 
-    // ÇöÀç ´ã°ÜÁø À½½Ä °³¼ö ÇöÈ²
+    // í˜„ì¬ ë‹´ê²¨ì§„ ìŒì‹ ê°œìˆ˜ í˜„í™©
     public int GetFoodInPlateNum()
     {
         foodInPlateNum = 0;
@@ -79,12 +68,12 @@ public class MiniGame2_1Manager : MonoBehaviour
                 ++foodInPlateNum;
         }
 
-        Debug.Log($"ÇöÀç ´ã±ä À½½Ä °³¼ö : {foodInPlateNum}");
+        Debug.Log($"í˜„ì¬ ë‹´ê¸´ ìŒì‹ ê°œìˆ˜ : {foodInPlateNum}");
         return foodInPlateNum;
     }
 
 
-    // Å¬¸¯µÈ À½½ÄÀÇ »óÅÂ¸¦ true·Î ¹Ù²ãÁÜ
+    // í´ë¦­ëœ ìŒì‹ì˜ ìƒíƒœë¥¼ trueë¡œ ë°”ê¿”ì¤Œ
     public void SetFoodStateDictionary(FoodName foodName, bool isTrue)
     {
         foodState[(int)foodName] = isTrue;
@@ -94,7 +83,7 @@ public class MiniGame2_1Manager : MonoBehaviour
         Debug.Log($"{foodName} is Clicked!");
     }
 
-    // FoodStateDictionary ÃÊ±âÈ­
+    // FoodStateDictionary ì´ˆê¸°í™”
     private void InitFoodStateDictionary()
     {
         foodState.Add((int)FoodName.Tteokbokki, false);
@@ -106,15 +95,18 @@ public class MiniGame2_1Manager : MonoBehaviour
 
     private IEnumerator CheckfoodInPlateState()
     {
-        // foodInPlateNum°¡ 3°³¸é
+        // foodInPlateNumê°€ 3ê°œë©´
         if (foodInPlateNum == 3)
         {
             yield return new WaitForSeconds(1.5f);
 
-            // ¸ğµç À½½Ä ´Ù ³ª´²ÁÖ±â ¼º°ø!
-            // Å¬¸®¾î ÆĞ³Î È°¼ºÈ­
+            // ëª¨ë“  ìŒì‹ ë‹¤ ë‚˜ëˆ ì£¼ê¸° ì„±ê³µ!
+            // í´ë¦¬ì–´ íŒ¨ë„ í™œì„±í™”
 
             ClearPanel.SetActive(true);
+
+            // 2ì´ˆ í›„ ìë™ìœ¼ë¡œ ë©”ì¸ìŠ¤í† ë¦¬ ì´ë™
+            StartCoroutine(BackToMainStory());
         }
         else
             yield return null;

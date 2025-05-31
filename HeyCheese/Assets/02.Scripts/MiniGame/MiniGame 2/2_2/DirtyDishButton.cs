@@ -23,16 +23,18 @@ public class DirtyDishButton : MonoBehaviour
     {
         if (miniGame2_2Manager != null)
         {
-            // miniGame2_2ManagerÀÇ toDoList µñ¼Å³Ê¸® »óÅÂ ÇØ´çÇÏ´Â ÀÏÀÇ °ÍÀ» 
-            // Á¢½ÃÀÇ rectTransform Æ÷Áö¼ÇÀ» 
-            // Vector2.zero À¸·Î ¸ÂÃç¼­ °¡¿îµ¥¿¡ Á¤¸®µÇ°Ô ÇÔ.
+            // miniGame2_2Managerì˜ toDoList ë”•ì…”ë„ˆë¦¬ ìƒíƒœ í•´ë‹¹í•˜ëŠ” ì¼ì˜ ê²ƒì„ 
+            // ì ‘ì‹œì˜ rectTransform í¬ì§€ì…˜ì„ 
+            // Vector2.zero ìœ¼ë¡œ ë§ì¶°ì„œ ê°€ìš´ë°ì— ì •ë¦¬ë˜ê²Œ í•¨.
             rectTransform.localPosition = Vector3.zero;
 
-            // Á¤¸®µÈ Á¢½ÃÀÇ ¹öÆ°Àº ºñÈ°¼ºÈ­ Ã³¸®
+            // ì •ë¦¬ëœ ì ‘ì‹œì˜ ë²„íŠ¼ì€ ë¹„í™œì„±í™” ì²˜ë¦¬
             button.interactable = false;
 
-            // miniGame2_2Manager¿¡ ÀÖ´Â Á¤¸®µÈ Á¢½Ã °³¼ö Ä«¿îÆ® ¿Ã¸®±â
+            // miniGame2_2Managerì— ìˆëŠ” ì •ë¦¬ëœ ì ‘ì‹œ ê°œìˆ˜ ì¹´ìš´íŠ¸ ì˜¬ë¦¬ê¸°
             miniGame2_2Manager.IncrementCurrentToDoThingCount(toDoThing);
+            // í•´ì•¼ í•  ì¼ TMP ì—…ë°ì´íŠ¸í•˜ì—¬ ì§„í–‰ë„ ë°˜ì˜
+            miniGame2_2Manager.UpdateToDoListTMPS(toDoThing);
         }
 
     }

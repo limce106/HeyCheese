@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MiniGame3Manager : MonoBehaviour
+public class MiniGame3Manager : MiniGameManager
 {
     [SerializeField] private Slider goalSlider;
     private float sliderSpeedMultiplier = 1f; // 기본값은 1
@@ -19,27 +19,19 @@ public class MiniGame3Manager : MonoBehaviour
 
     public ScrollingBackground scrollingBackground;
 
-
-    [Header("패널들")]
-    [SerializeField] private GameObject GuidePanel;
-    [SerializeField] private GameObject ClearPanel;
-
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
+
         Time.timeScale = 0f; // 게임 정지
         goalSlider.minValue = 0;
         goalSlider.maxValue = duration;
     }
 
-    void Start()
-    {
-        GuidePanel.SetActive(true);
-        ClearPanel.SetActive(false);
-    }
 
     // " 3, 2, 1, 시작! " 카운트 다운 표시
 
-    public void StartGame()
+    public override void StartGame()
     {
         GuidePanel.SetActive(false);
         if (countdownText != null)
@@ -80,6 +72,9 @@ public class MiniGame3Manager : MonoBehaviour
 
         // 클리어 패널 표시
         ClearPanel.SetActive(true);
+
+        // 2초 후 자동으로 메인스토리 이동
+        StartCoroutine(BackToMainStory());
     }
 
     // ************************* temporary methods for goal slider *************************
