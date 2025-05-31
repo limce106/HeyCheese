@@ -5,18 +5,19 @@ using System.Collections.Generic;
 using Mono.Data.Sqlite;
 using System.Data;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class EmotionGalleryManager : MonoBehaviour
 {
     [Header("UI 연결")]
-    public Text titleText;
-    public Dropdown filterDropdown;
+    public TMP_Text titleText;
+    public TMP_Dropdown filterDropdown;
     public GameObject detailPanel;
     public Image previewImage;
-    public Text capturedAtText;
-    public Text episodeTitleText;
-    public Text selectedMoodText;
-    public Text emotionTypeText;
+    public TMP_Text capturedAtText;
+    public TMP_Text episodeTitleText;
+    public TMP_Text selectedMoodText;
+    public TMP_Text emotionTypeText;
     public Transform contentParent;
     public GameObject thumbnailPrefab;
 
