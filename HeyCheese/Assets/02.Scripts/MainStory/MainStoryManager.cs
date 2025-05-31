@@ -265,6 +265,12 @@ public class MainStoryManager : MonoBehaviour
                 StartCoroutine(HandleGiftPopupAndEnd(step)); // 패널 표시(애니메이션 적용)
                 break;
         }
+
+        if (step.NextID == 0)
+        {
+            Debug.Log("스토리 종료 지점에 도달했습니다.");
+            EndEpisode();
+        }
     }
 
     private IEnumerator HandleGiftPopupAndEnd(MainStory step)
