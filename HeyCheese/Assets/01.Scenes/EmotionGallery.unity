@@ -1169,6 +1169,7 @@ MonoBehaviour:
   emotionTypeText: {fileID: 485879349}
   contentParent: {fileID: 1094847692}
   thumbnailPrefab: {fileID: 2056239266617496372, guid: 2c85326922609d04687e7aed5065bc87, type: 3}
+  scrollRect: {fileID: 538719864}
 --- !u!1 &711612725
 GameObject:
   m_ObjectHideFlags: 0
