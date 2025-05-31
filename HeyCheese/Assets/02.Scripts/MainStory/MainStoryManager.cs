@@ -560,6 +560,7 @@ public class MainStoryManager : MonoBehaviour
 
         // 다음 스토리 해금을 위한 데이터 저장
         BondScoreDataManager.Instance.SaveFinalBondScore(episodeBondScore); // 유대감 점수 영구 저장
+        //PlayerPrefs.SetInt(episodeID + "_Cleared", 1); // 해당 에피소드 클리어(1) 내역 저장
         PlayerPrefsControll.SavePref_SetInt(episodeID + "_Cleared", 1);
         print(episodeID + "_Cleared 저장됨");
 
@@ -569,6 +570,7 @@ public class MainStoryManager : MonoBehaviour
             // episodeID를 PlayerPrefs에 저장
             //PlayerPrefs.SetString("SelectedEpisodeID", "Episode1");
             //PlayerPrefs.Save();
+            PlayerPrefsControll.SavePref_SetString("SelectedEpisodeID", "Episode1");
 
             string test = PlayerPrefs.GetString("SelectedEpisodeID");
             Debug.Log("에피소드 ID 설정됨: " + test);
