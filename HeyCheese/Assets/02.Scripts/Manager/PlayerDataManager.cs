@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// ÇÃ·¹ÀÌ¾î ÀÌ¸§ ¼³Á¤ ¹× ÀúÀå
-// °ÔÀÓ ÃÊ¹İºÎ¿¡ ÀÖ¾î¾ß ÇÔ
+// í”Œë ˆì´ì–´ ì´ë¦„ ì„¤ì • ë° ì €ì¥
+// ê²Œì„ ì´ˆë°˜ë¶€ì— ìˆì–´ì•¼ í•¨
 // Non-lazy, DDOL
 public class PlayerDataManager : MonoBehaviour
 {
@@ -15,28 +15,29 @@ public class PlayerDataManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(gameObject); // Áßº¹ ¹æÁö
+            Destroy(gameObject); // ì¤‘ë³µ ë°©ì§€
             return;
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject); // ¾À ³Ñ¾î°¡µµ À¯Áö
+        DontDestroyOnLoad(gameObject); // ì”¬ ë„˜ì–´ê°€ë„ ìœ ì§€
 
         LoadPlayerName();
     }
 
-    // ÇÃ·¹ÀÌ¾î ÀÌ¸§ ¼³Á¤
+    // í”Œë ˆì´ì–´ ì´ë¦„ ì„¤ì •
     public void SetPlayerName(string name)
     {
         PlayerName = name;
-        PlayerPrefs.SetString("PlayerName", name);
-        PlayerPrefs.Save();
-        Debug.Log($"ÇÃ·¹ÀÌ¾î ÀÌ¸§ ÀúÀåµÊ: {PlayerName}");
+        //PlayerPrefs.SetString("PlayerName", name);
+        //PlayerPrefs.Save();
+        PlayerPrefsControll.SavePref_SetString("PlayerName", name);
+        Debug.Log($"í”Œë ˆì´ì–´ ì´ë¦„ ì €ì¥ë¨: {PlayerName}");
     }
 
-    // ÇÃ·¹ÀÌ¾î ÀÌ¸§ ºÒ·¯¿À±â
+    // í”Œë ˆì´ì–´ ì´ë¦„ ë¶ˆëŸ¬ì˜¤ê¸°
     public void LoadPlayerName()
     {
-        PlayerName = PlayerPrefs.GetString("PlayerName", "ÁÖÀÎ°ø");
+        PlayerName = PlayerPrefs.GetString("PlayerName", "ì£¼ì¸ê³µ");
     }
 }

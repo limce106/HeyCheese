@@ -15,7 +15,9 @@ public class MainStoryTakePhoto : MonoBehaviour
 
     public void OnClick_EmotionCamera()
     {
-        MainStoryManager.emoCameraBtn.interactable =false; // 버튼 입력 막기
+        // 카메라 버튼 비활성화 및 표정 탐색 패널 보여주기
+        MainStoryManager.DeActivateCameraBtnInteraction();
+        MainStoryManager.ShowFaceSearching();
 
         // 사진 캡쳐 및 저장
         StartCoroutine(saveLoadPicture.CaptureAndSave((filepath, capturedAt) =>
@@ -42,17 +44,23 @@ public class MainStoryTakePhoto : MonoBehaviour
 
     public void OnClick_StoryCamera()
     {
+        // 카메라 버튼 비활성화
+        MainStoryManager.DeActivateCameraBtnInteraction();
+
         // 사진 캡쳐 및 저장
         StartCoroutine(saveLoadPicture.CaptureAndSave((filepath, capturedAt) =>
         {
+            // 사진 저장
+            MainStoryManager.SaveStoryPhoto(filepath, capturedAt);
+
             // episodeID, episodeTitle 가져오기
-            int currentID = MainStoryManager.CurrentID;
-            string episodeId = MainStoryManager.CurrentEpisode[currentID].EpisodeID;
-            string episodeTitle = MainStoryManager.CurrentEpisode[currentID].ChapterTitle;
-            string mood = "이건 나중에 수정할 예정:3";
+            //int currentID = MainStoryManager.CurrentID;
+            //string episodeId = MainStoryManager.CurrentEpisode[currentID].EpisodeID;
+            //string episodeTitle = MainStoryManager.CurrentEpisode[currentID].ChapterTitle;
+            //string mood = "이건 나중에 수정할 예정:3";
 
             // DB에 저장
-            emotionGalleryDBWriter.InsertStoryPhoto(filepath, capturedAt, episodeId, episodeTitle, mood);
+            //emotionGalleryDBWriter.InsertStoryPhoto(filepath, capturedAt, episodeId, episodeTitle, mood);
 
             // 다이얼로그 대사 갱신
             MainStoryManager.NextStep();
