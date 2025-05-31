@@ -60,6 +60,8 @@ public class MiniGame3Manager : MiniGameManager
 
     private void OnGoalComplete()
     {
+        SoundPlayer.Instance.SoundEffectPlay((int)SoundPlayer.SFX.Shining_SFX);
+
         scrollingBackground.SetIsRunning(false);
         isPlaying = false;
 

@@ -63,7 +63,7 @@ public class MiniGame4Manager : MiniGameManager
         SetAdultImage(false);
 
         // 자장가 bgm 재생
-        SoundPlayer.Instance.ChangeBGM((int)SoundPlayer.BGM.MINIGAME4_SLEEPING);
+        SoundPlayer.Instance.ChangeBGM((int)SoundPlayer.BGM.MINIGAME4_BGM_SLEEPING);
     }
 
     void Update()
@@ -137,12 +137,12 @@ public class MiniGame4Manager : MiniGameManager
             if (isTouching)
             {
                 // 터치 시작: 댄싱 BGM으로 변경
-                SoundPlayer.Instance.ChangeBGM((int)SoundPlayer.BGM.MINIGAME4_DANCING);
+                SoundPlayer.Instance.ChangeBGM((int)SoundPlayer.BGM.MINIGAME4_BGM_DANCING);
             }
             else
             {
                 // 터치 종료: 자장가 BGM으로 변경
-                SoundPlayer.Instance.ChangeBGM((int)SoundPlayer.BGM.MINIGAME4_SLEEPING);
+                SoundPlayer.Instance.ChangeBGM((int)SoundPlayer.BGM.MINIGAME4_BGM_SLEEPING);
             }
 
             previousTouchState = isTouching; // 현재 상태를 이전 상태로 저장
@@ -254,7 +254,7 @@ public class MiniGame4Manager : MiniGameManager
         previousTouchState = false; // 초기화
 
         // 자장가 bgm 재생
-        SoundPlayer.Instance.ChangeBGM((int)SoundPlayer.BGM.MINIGAME4_SLEEPING);
+        SoundPlayer.Instance.ChangeBGM((int)SoundPlayer.BGM.MINIGAME4_BGM_SLEEPING);
     }
 
 
@@ -277,11 +277,11 @@ public class MiniGame4Manager : MiniGameManager
         if (randomNumber < apprearanceProbability)
         {
             // 노크 소리 재생
-            SoundPlayer.Instance.SoundEffectPlay((int)SoundPlayer.SFX.KNOCKING);
+            SoundPlayer.Instance.SoundEffectPlay((int)SoundPlayer.SFX.KNOCKING_SFX);
 
             yield return new WaitForSeconds(waitingTime);
             // 문 여는 효과음 재생
-            SoundPlayer.Instance.SoundEffectPlay((int)SoundPlayer.SFX.OPENDOOR);
+            SoundPlayer.Instance.SoundEffectPlay((int)SoundPlayer.SFX.OPENDOOR_SFX);
 
             // 효과음 다 재생된 후 등장
             yield return new WaitWhile(()=>SoundPlayer.Instance.isSoundEffectPlaying());
@@ -293,7 +293,7 @@ public class MiniGame4Manager : MiniGameManager
             yield return new WaitForSeconds(waitingTime);
 
             // 문 닫는 효과음 재생
-            SoundPlayer.Instance.SoundEffectPlay((int)SoundPlayer.SFX.CLOSEDOOR);
+            SoundPlayer.Instance.SoundEffectPlay((int)SoundPlayer.SFX.CLOSEDOOR_SFX);
 
             // 효과음 다 재생된 후 사라짐
             yield return new WaitWhile(() => SoundPlayer.Instance.isSoundEffectPlaying());
