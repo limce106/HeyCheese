@@ -86,6 +86,7 @@ public static class PopupAnimator
     {
         CanvasGroup canvasGroup = targetPanel.GetComponent<CanvasGroup>();
 
+        Debug.Log("실행");
         canvasGroup.alpha = 0f;
         targetPanel.SetActive(true); // 패널 표시
         yield return AnimationPopupIn(targetPanel, moveY, duration); // 0 > 1

@@ -261,15 +261,21 @@ public class MainStoryManager : MonoBehaviour
                 string rawText = step.ScriptID;
                 string processedText = rawText.Replace("\\n", "\n");
                 giftInfoText.text = processedText; // 변경될 수 있음
-                StartCoroutine(PopupAnimator.OnPanelPopup(giftAlarmPanel)); // 패널 표시(애니메이션 적용)
+
+                StartCoroutine(HandleGiftPopupAndEnd(step)); // 패널 표시(애니메이션 적용)
                 break;
         }
+    }
 
+    private IEnumerator HandleGiftPopupAndEnd(MainStory step)
+    {
+        yield return PopupAnimator.OnPanelPopup(giftAlarmPanel); // 애니메이션 끝날 때까지 기다림, 패널 표시(애니메이션 적용)
+
+        // 애니메이션 후 종료 처리
         if (step.NextID == 0)
         {
             Debug.Log("스토리 종료 지점에 도달했습니다.");
             EndEpisode();
-            return;
         }
     }
 
