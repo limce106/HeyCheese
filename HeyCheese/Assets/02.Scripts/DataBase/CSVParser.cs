@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CSVParser
 {
-    // CSV ÆÄÀÏ
+    // CSV íŒŒì¼
     private TextAsset eduMenuCSV = Resources.Load<TextAsset>("Datas/EduMenu");
     private TextAsset storyMenuCSV = Resources.Load<TextAsset>("Datas/StoryMenu");
     private TextAsset mainStoryCSV = Resources.Load<TextAsset>("Datas/MainStory");
@@ -15,18 +15,18 @@ public class CSVParser
     //public List<MainStory> storyDataList = new List<MainStory>();
 
     // EduMenu
-    // emotionID ÇÏÀ§¿¡ situationIDµéÀÌ ¸®½ºÆ®·Î ÀúÀåµÇ´Â ÇüÅÂÀÇ µñ¼Å³Ê¸®
-    // Å°: emotionID, °ª: [{emotionID, situationID, iconPath}, ...]
+    // emotionID í•˜ìœ„ì— situationIDë“¤ì´ ë¦¬ìŠ¤íŠ¸ë¡œ ì €ì¥ë˜ëŠ” í˜•íƒœì˜ ë”•ì…”ë„ˆë¦¬
+    // í‚¤: emotionID, ê°’: [{emotionID, situationID, iconPath}, ...]
     public Dictionary<string, List<EduMenu>> ParseEduMenus()
     {
         string[] lines = eduMenuCSV.text.Split('\n');
 
-        for (int i = 1; i < lines.Length; i++) // 0Àº Çì´õ¶ó 1ºÎÅÍ ½ÃÀÛ
+        for (int i = 1; i < lines.Length; i++) // 0ì€ í—¤ë”ë¼ 1ë¶€í„° ì‹œì‘
         {
             if (string.IsNullOrWhiteSpace(lines[i])) continue;
 
             string[] fields = lines[i].Split(',');
-            //if (fields.Length < 3) continue; // ¿­Àº Ç×»ó 3°³, µ¥ÀÌÅÍ°¡ ¸ğµÎ Â÷ÀÖ¾î¾ß ÇÔ
+            //if (fields.Length < 3) continue; // ì—´ì€ í•­ìƒ 3ê°œ, ë°ì´í„°ê°€ ëª¨ë‘ ì°¨ìˆì–´ì•¼ í•¨
 
             string emotionID = fields[0].Trim();
             string situationID = fields[1].Trim();
@@ -39,21 +39,23 @@ public class CSVParser
                 eduMenus[emotionID] = new List<EduMenu>();
             }
 
-            eduMenus[emotionID].Add(eduMenu); // ¸®½ºÆ®¿¡ Ãß°¡
+            eduMenus[emotionID].Add(eduMenu); // ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
         }
 
         return eduMenus;
     }
 
     // StoryMenu
-    // episodeID ÇÏÀ§¿¡ chapterTitleµéÀÌ ¸®½ºÆ®·Î ÀúÀåµÇ´Â ÇüÅÂÀÇ µñ¼Å³Ê¸®
-    // Å°: episodeID, °ª: StoryMenu °´Ã¼ -> {"episdoeID": StoryMenu°´Ã¼, ...}
-    // ¿¡ÇÇ¼Òµå Å¬¸¯ ½Ã ¿¡ÇÇ¼Òµå ¹øÈ£¿¡ µû¶ó ¸ŞÀÎ½ºÅä¸® ÁøÇàµÉ ¼ö ÀÖµµ·Ï ÇØ¾ß µÊ
+    // episodeID í•˜ìœ„ì— chapterTitleë“¤ì´ ë¦¬ìŠ¤íŠ¸ë¡œ ì €ì¥ë˜ëŠ” í˜•íƒœì˜ ë”•ì…”ë„ˆë¦¬
+    // í‚¤: episodeID, ê°’: StoryMenu ê°ì²´ -> {"episdoeID": StoryMenuê°ì²´, ...}
+    // ì—í”¼ì†Œë“œ í´ë¦­ ì‹œ ì—í”¼ì†Œë“œ ë²ˆí˜¸ì— ë”°ë¼ ë©”ì¸ìŠ¤í† ë¦¬ ì§„í–‰ë  ìˆ˜ ìˆë„ë¡ í•´ì•¼ ë¨
     public Dictionary<string, StoryMenu> ParseStoryMenus()
     {
+        Dictionary<string, StoryMenu> parsedMenusDict = new Dictionary<string, StoryMenu>();
+
         string[] lines = storyMenuCSV.text.Split('\n');
 
-        for (int i = 1; i < lines.Length; i++) // 0Àº Çì´õ¶ó 1ºÎÅÍ ½ÃÀÛ
+        for (int i = 1; i < lines.Length; i++) // 0ì€ í—¤ë”ë¼ 1ë¶€í„° ì‹œì‘
         {
             if (string.IsNullOrWhiteSpace(lines[i])) continue;
 
@@ -64,40 +66,41 @@ public class CSVParser
             string imagePath = fields[2].Trim();
 
             StoryMenu storyMenu = new StoryMenu(episodeID, chapterTitle, imagePath);
+            parsedMenusDict[storyMenu.EpisodeID] = storyMenu;
 
-            if (!storyMenus.ContainsKey(episodeID))
-            {
-                storyMenus[episodeID] = storyMenu;
-            }
+            //if (!storyMenus.ContainsKey(episodeID))
+            //{
+            //    parsedMenusDict[episodeID] = storyMenu;
+            //}
 
-            //storyMenus[episodeID].Add(storyMenu); // ¸®½ºÆ®¿¡ Ãß°¡
+            //storyMenus[episodeID].Add(storyMenu); // ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
         }
 
-        return storyMenus;
+        return parsedMenusDict;
     }
 
-    // MainStory ÆÄ½Ì
-    // Episodeº°·Î ½ºÅä¸® ·Îµå
-    // get: ¿¡ÇÇ¼Òµå ¸Ş´º ´©¸¥ ÈÄ ÀúÀåµÈ ¿¡ÇÇ¼ÒµåID¸¦ Àü´ŞÇÏ¿© ÇØ´ç ¿¡ÇÇ¼ÒµåID¿¡ ´ëÇÑ ºÎºĞ¸¸ ÆÄ½ÌÇÏ¿© ÀúÀå
-    // (x)return: ¸®½ºÆ® ÇüÅÂ·Î MainStory °´Ã¼ ÀúÀå [MainStory("Episode1", "Chapter 1", 0, 1, "dialogue", ..., "bgm1", "sfx1"),..]
-    // return: µñ¼Å³Ê¸® ÇüÅÂ·Î {0:MainStory("Episode1", "Chapter1", 0, 1...), 1:} => {ID:MainStory°´Ã¼}
+    // MainStory íŒŒì‹±
+    // Episodeë³„ë¡œ ìŠ¤í† ë¦¬ ë¡œë“œ
+    // get: ì—í”¼ì†Œë“œ ë©”ë‰´ ëˆ„ë¥¸ í›„ ì €ì¥ëœ ì—í”¼ì†Œë“œIDë¥¼ ì „ë‹¬í•˜ì—¬ í•´ë‹¹ ì—í”¼ì†Œë“œIDì— ëŒ€í•œ ë¶€ë¶„ë§Œ íŒŒì‹±í•˜ì—¬ ì €ì¥
+    // (x)return: ë¦¬ìŠ¤íŠ¸ í˜•íƒœë¡œ MainStory ê°ì²´ ì €ì¥ [MainStory("Episode1", "Chapter 1", 0, 1, "dialogue", ..., "bgm1", "sfx1"),..]
+    // return: ë”•ì…”ë„ˆë¦¬ í˜•íƒœë¡œ {0:MainStory("Episode1", "Chapter1", 0, 1...), 1:} => {ID:MainStoryê°ì²´}
     public Dictionary<int, MainStory> ParseMainStories(string episodeID)
     {
         var episodeDict = new Dictionary<int, MainStory>();
         string[] lines = mainStoryCSV.text.Split('\n');
 
-        for (int i = 1; i < lines.Length; i++) // 0Àº Çì´õ¶ó 1ºÎÅÍ ½ÃÀÛ
+        for (int i = 1; i < lines.Length; i++) // 0ì€ í—¤ë”ë¼ 1ë¶€í„° ì‹œì‘
         {
             if (string.IsNullOrWhiteSpace(lines[i])) continue;
 
             //string[] fields = lines[i].Split(',');
             List<string> fields = ParseCSVLine(lines[i]);
-            if (fields[0].Trim() != episodeID) continue; // ÇØ´ç episodeID¿¡ ´ëÇÑ ³»¿ë¸¸ µñ¼Å³Ê¸®¿¡ Æ÷ÇÔ½ÃÅ°±â À§ÇÑ ÀÛ¾÷
+            if (fields[0].Trim() != episodeID) continue; // í•´ë‹¹ episodeIDì— ëŒ€í•œ ë‚´ìš©ë§Œ ë”•ì…”ë„ˆë¦¬ì— í¬í•¨ì‹œí‚¤ê¸° ìœ„í•œ ì‘ì—…
 
 
             string epiID = fields[0].Trim();
             string chapterTitle = fields[1].Trim();
-            int id = int.TryParse(fields[2].Trim(), out int parsedId) ? parsedId : -1; // °ø¹é Á¦°Å ÈÄ º¯È¯ ¼º°ø ½Ã true ¹İÈ¯ ¹× parsedID¿¡ °á°ú ÀúÀå, ½ÇÆĞ ½Ã -1 ´ëÀÔ
+            int id = int.TryParse(fields[2].Trim(), out int parsedId) ? parsedId : -1; // ê³µë°± ì œê±° í›„ ë³€í™˜ ì„±ê³µ ì‹œ true ë°˜í™˜ ë° parsedIDì— ê²°ê³¼ ì €ì¥, ì‹¤íŒ¨ ì‹œ -1 ëŒ€ì…
             int nextID = int.TryParse(fields[3].Trim(), out int parsedNextId) ? parsedNextId : -1;
             string eventType = fields[4].Trim();
             string screenEffect = fields[5].Trim();
@@ -120,10 +123,10 @@ public class CSVParser
             //storyDataList.Add(data);
             episodeDict[data.ID] = data;
 
-            // int Å¸ÀÔÀÎ ID, NextID ÆÄ½Ì ½ÇÆĞ ½Ã µğ¹ö±× Ç¥½Ã
+            // int íƒ€ì…ì¸ ID, NextID íŒŒì‹± ì‹¤íŒ¨ ì‹œ ë””ë²„ê·¸ í‘œì‹œ
             if (data.ID == -1 || data.NextID == -1)
             {
-                Debug.LogWarning($"[MainStory] ID or NextID ÆÄ½Ì ½ÇÆĞ: Line {i}, Episode: {fields[0]}");
+                Debug.LogWarning($"[MainStory] ID or NextID íŒŒì‹± ì‹¤íŒ¨: Line {i}, Episode: {fields[0]}");
             }
 
             Debug.Log($"[CSVParser] EpisodeID: {episodeID}, Parsed Line: {lines[i]}");
@@ -133,9 +136,9 @@ public class CSVParser
         return episodeDict;
     }
 
-    // CSV¿¡¼­ µû¿ÈÇ¥(") »çÀÌ¿¡ ÀÖ´Â ÄÄ¸¶(,)´Â ÆÄ½ÌÇÏÁö ¾Êµµ·Ï Ã³¸®ÇÏ´Â ÆÄ½á
-    // Get: CSVÀÇ ÇÑ ¶óÀÎÀ» ¹ŞÀ½
-    // Return: ÄÄ¸¶(,)º°·Î ÆÄ½ÌÇÑ ¶óÀÎ ¸®½ºÆ®
+    // CSVì—ì„œ ë”°ì˜´í‘œ(") ì‚¬ì´ì— ìˆëŠ” ì»´ë§ˆ(,)ëŠ” íŒŒì‹±í•˜ì§€ ì•Šë„ë¡ ì²˜ë¦¬í•˜ëŠ” íŒŒì¨
+    // Get: CSVì˜ í•œ ë¼ì¸ì„ ë°›ìŒ
+    // Return: ì»´ë§ˆ(,)ë³„ë¡œ íŒŒì‹±í•œ ë¼ì¸ ë¦¬ìŠ¤íŠ¸
     public List<string> ParseCSVLine(string line)
     {
         List<string> result = new List<string>();
@@ -146,11 +149,11 @@ public class CSVParser
         {
             char c = line[i];
 
-            if(c=='\"') // Å«µû¿ÈÇ¥¸é
+            if(c=='\"') // í°ë”°ì˜´í‘œë©´
             {
                 inQuotes = !inQuotes;
             }
-            else if (c == ',' && !inQuotes) // Å«µû¿ÈÇ¥ ¼Ó ÄÄ¸¶°¡ ¾Æ´Ò °æ¿ì
+            else if (c == ',' && !inQuotes) // í°ë”°ì˜´í‘œ ì† ì»´ë§ˆê°€ ì•„ë‹ ê²½ìš°
             {
                 result.Add(current);
                 current = "";
