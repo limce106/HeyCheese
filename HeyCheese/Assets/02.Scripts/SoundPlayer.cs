@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -249,14 +250,24 @@ public class SoundPlayer : MonoBehaviour
         ttsPlayer.Play();
     }
 
+    // 특수 문자 제거 함수 (필요한 문자만 허용)
+    private string CleanText(string input)
+    {
+        return Regex.Replace(input, @"[^가-힣a-zA-Z0-9\s.,!?]", "");
+    }
+
+
+    // 언어 코드 붙이기
     private string getString(string text, string stateName)
     {
         return text + "&tl=" + stateName + "-gb";
     }
 
+    // 외부에서 호출: 읽을 텍스트 입력
     public void ReadText(string scriptText)
     {
-        StartCoroutine(PlaySpeak(url + getString(scriptText, korea)));
+        string cleanedText = CleanText(scriptText);
+        StartCoroutine(PlaySpeak(url + getString(cleanedText, korea)));
     }
 
 
