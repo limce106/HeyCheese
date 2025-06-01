@@ -158,7 +158,7 @@ Episode3,『신나는 운동회 날!』,47,48,Dialogue,,시스템,오늘은 가�
 Episode3,『신나는 운동회 날!』,48,0,Gift,,,에피소드 3 한정『신나는 운동회』프레임\nAR 패션 아이템: ‘승리요정’ 머리띠 🏅✨,,,,,,,,,,,,
 Episode4,『내 생일 파티에 놀러와!』,0,1,Loading,,,,,,,,,,2Back/Epi4_1,,,,STOP_BGM,
 Episode4,『내 생일 파티에 놀러와!』,1,2,Dialogue,,시스템,(교실 안 풍경),,,,,,NONE,2Back/Epi1_1,,,,StoryEpi4_BGM,
-Episode4,『내 생일 파티에 놀러와!』,2,3,Dialogue,,부기,(반가운 표정으로) 어? [플레이어] 왔다..,,,,,,9Speaker/미소_부기,,,,,,
+Episode4,『내 생일 파티에 놀러와!』,2,3,Dialogue,,부기,(반가운 표정으로) 어? {PlayerName} 왔다..,,,,,,9Speaker/미소_부기,,,,,,
 Episode4,『내 생일 파티에 놀러와!』,3,4,Dialogue,,치즈,달리기 영웅! {PlayerName} 왔구나!!,,,,,,9Speaker/미소_표정_치즈,,,,,,
 Episode4,『내 생일 파티에 놀러와!』,4,5,Dialogue,,부기,{PlayerName}. 안녕!!,,,,,,9Speaker/기본_부기,,,,,,
 Episode4,『내 생일 파티에 놀러와!』,5,6,Dialogue,,치즈,선생님께서 말씀해주셨는데..,,,,,,9Speaker/기본_표정_치즈,,,,,,
