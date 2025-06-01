@@ -110,7 +110,9 @@ public class MainStoryManager : MonoBehaviour
     // 코루틴으로 MainStoryGameManager.cs에서 csv 파싱 완료될 때까지 기다리기
     IEnumerator Start() 
     {
+        loadingBtn.interactable = false; // 로딩 버튼 비활성화(파싱 중 급격한 전환 방지)
         yield return new WaitUntil(() => MainStoryGameManager.MainStoryGM?.currentEpisode != null);
+        loadingBtn.interactable = true; // 로딩 버튼 활성화(파싱 완료 후)
 
         CurrentEpisode = MainStoryGameManager.MainStoryGM.currentEpisode;
         PlayerName = MainStoryGameManager.MainStoryGM.playerName;
@@ -266,7 +268,7 @@ public class MainStoryManager : MonoBehaviour
                 break;
         }
 
-        if (step.NextID == 0)
+        if (step.NextID == 0 && step.EventType != "Gift")
         {
             Debug.Log("스토리 종료 지점에 도달했습니다.");
             EndEpisode();
@@ -317,8 +319,6 @@ public class MainStoryManager : MonoBehaviour
         settingsCanvas.SetActive(false);
     }
     #endregion
-
-
 
     //#region Player Name
     //// 플레이어 이름 불러오기
