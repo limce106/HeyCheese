@@ -3712,7 +3712,7 @@ MonoBehaviour:
   AdultSprites:
   - {fileID: 21300000, guid: 855f4eb6f601472498b3a9b6cccc5ceb, type: 3}
   - {fileID: 21300000, guid: e21d13bff77d8454bbba8055112b05e0, type: 3}
-  apprearanceProbability: 40
+  apprearanceProbability: 50
   isAdultComing: 0
   isRestart: 0
   RestartPanel: {fileID: 1075294028}

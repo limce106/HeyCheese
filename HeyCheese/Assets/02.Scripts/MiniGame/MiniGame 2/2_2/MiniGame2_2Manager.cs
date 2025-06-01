@@ -106,6 +106,8 @@ public class MiniGame2_2Manager : MiniGameManager
 
         if (allTrue)
         {
+            SoundPlayer.Instance.SoundEffectPlay((int)SoundPlayer.SFX.Shining_SFX);
+
             // 반짝이 효과 활성화
             GlitterEffect.SetActive(true);
 
