@@ -118,4 +118,15 @@ public class MenuButtons : MonoBehaviour
         Time.timeScale = 1f;
     }
     #endregion
+
+    #region PlayerPrefs
+    public void OnClickCheckPlayerPrefs()
+    {
+        PlayerPrefsControll.PrintAllPrefs(); // 저장 확인용
+    }
+    public void OnClickDeletePlayerPrefs_EpisodeUnLock()
+    {
+        PlayerPrefsControll.DeleteEpisodeUnLock();
+    }
+    #endregion
 }

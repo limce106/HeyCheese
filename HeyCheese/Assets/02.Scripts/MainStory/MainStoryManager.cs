@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.EventSystems;
 
 // UI에 이벤트 표시 역할
 // 스토리<->미니게임 시 해당 내용은 유지, 기억되어야 되지만
@@ -19,6 +20,7 @@ public class MainStoryManager : MonoBehaviour
     //public Speaker speaker;
     public ARFaceFilterApplier arFaceFilterApplier;
     public FrameApplier frameApplier;
+    public EmotionGalleryDBWriter emotionGalleryDBWriter;
     #endregion
 
     #region UI References
@@ -34,7 +36,8 @@ public class MainStoryManager : MonoBehaviour
     public GameObject settingsCanvas;
 
     [Header("UI Elements_Background")]
-    public UnityEngine.UI.Image backgroundImg;
+    public GameObject background;
+    public Image backgroundImg;
     [Header("UI Elements_Loading")] 
     public Button loadingBtn;
     public TMP_Text episodeIDText;
@@ -61,19 +64,28 @@ public class MainStoryManager : MonoBehaviour
     [Header("UI Elements_Emotion Camera")] // Emotion Camera
     public TMP_Text emoQuestionText;
     public Button emoCameraBtn;
-    // 카메라를 변경해야 되나? XROrigin 활성화라던가
-
     [Header("UI Elements_Story Camera")] // Story Camera
-
-
+    public Button arCameraBtn;
+    [Header("UI Elements_FaceSearching")] // Camera_FaceSearching
+    public GameObject faceSearchingPanel;
     [Header("UI Elements_Gift")] // Gift
-
+    public GameObject giftAlarmPanel;
+    public TMP_Text giftInfoText;
     [Header("UI Elements_Setting")] // Setting
 
     [Header("Camera")]
     public Camera arCamera;
     public Camera storyCamera;
     public ARSession arSession;
+
+    // StoryCameraPhoto Data
+    private string storyPhoto_filepath;
+    private string storyPhoto_capturedAt;
+    private string storyPhoto_mood;
+
+    // Filter and Frame
+    private string filterName = "";
+    private string frameName = "";
 
     #endregion
 
@@ -95,79 +107,18 @@ public class MainStoryManager : MonoBehaviour
     #endregion
 
     #region Unity Lifecycle
-    //public void Clear()
-    //{
-    //    selectedLevel = 0;
-    //    selectedEmotion = "None";
-    //    selectedSituation = "None";
-    //}
-
-    //// 메인 씬 넘어갔을 때 호출 필요
-    //public void DestroySelf()
-    //{
-    //    Clear();
-    //    Destroy(gameObject);
-    //    Instance = null;
-    //}
-
-    //// !!메인 씬 갔을 때 아래 작성해주기!!
-    ////void Start()
-    ////{
-    ////    if (StoryManagerTest.Instance != null)
-    ////    {
-    ////        StoryManagerTest.Instance.DestroySelf();
-    ////    }
-    ////}
-
-    //void Start()
-    //{
-    //    // 에피소드 메뉴에서 선택된 
-    //    string episodeID = PlayerPrefs.GetString("SelectedEpisodeID");
-    //    print("매니저: " + episodeID);
-
-    //    // 시작할 때 저장된 이름 불러오기
-    //    //LoadPlayerName();
-
-    //    //loadingCanvas.gameObject.SetActive(true);
-    //    ShowCurrentID(CurrentID);
-    //}
-
-    //public GameObject imageObject; // 활성화 여부를 감지할 Image GameObject
-    //private bool wasActive = false;
-    //private void Update()
-    //{
-    //    if (imageObject.activeSelf)
-    //    {
-    //        wasActive = true;
-    //        OnImageActivated();
-    //    }
-    //    else if (!imageObject.activeSelf)
-    //    {
-    //        wasActive = false;
-    //        OnImageDeactivated();
-    //    }
-    //}
-
-    //void OnImageActivated()
-    //{
-    //    Debug.Log("이미지가 활성화되었습니다!");
-    //    // 여기에 활성화 시 실행할 코드 작성
-    //}
-
-    //void OnImageDeactivated()
-    //{
-    //    Debug.Log("이미지가 비활성화되었습니다!");
-    //    // 여기에 비활성화 시 실행할 코드 작성
-    //}
-
-
     // 코루틴으로 MainStoryGameManager.cs에서 csv 파싱 완료될 때까지 기다리기
     IEnumerator Start() 
     {
+        loadingBtn.interactable = false; // 로딩 버튼 비활성화(파싱 중 급격한 전환 방지)
         yield return new WaitUntil(() => MainStoryGameManager.MainStoryGM?.currentEpisode != null);
+        loadingBtn.interactable = true; // 로딩 버튼 활성화(파싱 완료 후)
 
         CurrentEpisode = MainStoryGameManager.MainStoryGM.currentEpisode;
         PlayerName = MainStoryGameManager.MainStoryGM.playerName;
+
+        // 스토리카메라 데이터 내역 초기화
+        ResetStoryPhotoData();        
 
         // 유대감 슬라이드 내역 반영
         bondSlider.value = BondScore;
@@ -185,13 +136,6 @@ public class MainStoryManager : MonoBehaviour
         MainStory step = CurrentEpisode[id];
         CurrentID = id;
 
-        if (step.NextID == 0)
-        {
-            Debug.Log("스토리 종료 지점에 도달했습니다.");
-            EndEpisode();
-            return;
-        }
-
         // 잘못된 스텝 건너뛰기
         // id가 -1(문제o)인 경우, 해당 스텝(csv의 열)을 스킵함
         if (id == -1)
@@ -200,6 +144,7 @@ public class MainStoryManager : MonoBehaviour
             NextStep();
         }
 
+        background.SetActive(true);
         ShowStoryView();
         switch (step.EventType)
         {
@@ -265,6 +210,16 @@ public class MainStoryManager : MonoBehaviour
                 choice3Text.text = step.Choice3; // 선택지 변경
 
                 break;
+            case "SaveChoice":
+                TurnOffEveryCanvas();
+                choiceCanvas.SetActive(true);
+
+                choiceQuestionText.text = step.ScriptID; // 대사 변경
+                choice1Text.text = step.Choice1; // 선택지 변경
+                choice2Text.text = step.Choice2; // 선택지 변경
+                choice3Text.text = step.Choice3; // 선택지 변경
+
+                break;
             case "NameInput":
                 nextDialogueBtn.interactable = false; // 대사 버튼 막기
                 inputFieldCanvas.SetActive(true);
@@ -280,44 +235,67 @@ public class MainStoryManager : MonoBehaviour
             case "EmotionCamera":
                 ShowARView();
                 TurnOffEveryCanvas();
+                ActivateCameraBtnInteraction();
+                background.SetActive(false);
                 cameraCanvas.SetActive(true);
                 emotionCameraCanvas.SetActive(true);
-
+                
                 // 질문에 플레이어 이름 적용
                 string rawQuestionText = "치즈가 {PlayerName}의 얼굴을 보는 중\n표정으로 내 감정을 알려주자.";
                 emoQuestionText.text = rawQuestionText.Replace("{PlayerName}", PlayerName);
-
-                // 후에 카메라 버튼 클릭 가능하도록 하기 - 이름 바뀌지도 않았는데 연타하다가 버튼 누르면 안되니까
-
-                // 뭐.. 카메라를 바꾼다거나 내용 추가
-
                 break;
             case "StoryCamera":
                 ShowARView();
                 TurnOffEveryCanvas();
+                ActivateCameraBtnInteraction();
+                background.SetActive(false);
                 cameraCanvas.SetActive(true);
                 storyCameraCanvas.SetActive(true);
-
+                
                 // 필터 추가
-                string filterName = ConvertEpisodeToFilterName(step.EpisodeID);
-                Debug.Log("필터 이름"+ filterName);
+                filterName = ConvertEpisodeToFilterName(step.EpisodeID);
                 arFaceFilterApplier.MainStory_Filter(filterName);
                 // 프레임 추가
-                string frameName = ConvertEpisodeToFrameName(step.EpisodeID);
-                Debug.Log("프레임 이름" + frameName);
+                frameName = ConvertEpisodeToFrameName(step.EpisodeID);
                 frameApplier.ApplyFrame(frameName);
-
-                // 후에 카메라 버튼 클릭 가능하도록 하기 - 이름 바뀌지도 않았는데 연타하다가 버튼 누르면 안되니까
-
                 break;
             case "Gift":
                 TurnOffEveryCanvas();
-                storyCameraCanvas.SetActive(true);
+                giftCanvas.SetActive(true);
 
-                BondScoreDataManager.Instance.SaveFinalBondScore(episodeBondScore); // 유대감 점수 영구 저장
+                // 필터, 프레임 해금
+                filterName = ConvertEpisodeToFilterName(step.EpisodeID);
+                frameName = ConvertEpisodeToFrameName(step.EpisodeID);
+
+                FilterFrameManager.instance.Unlockfilter(filterName);
+                FilterFrameManager.instance.Unlockframe(frameName);
+
+                // 해금 내용 표시
+                string rawText = step.ScriptID;
+                string processedText = rawText.Replace("\\n", "\n");
+                giftInfoText.text = processedText; // 변경될 수 있음
+
+                StartCoroutine(HandleGiftPopupAndEnd(step)); // 패널 표시(애니메이션 적용)
                 break;
         }
-        
+
+        if (step.NextID == 0 && step.EventType != "Gift")
+        {
+            Debug.Log("스토리 종료 지점에 도달했습니다.");
+            EndEpisode();
+        }
+    }
+
+    private IEnumerator HandleGiftPopupAndEnd(MainStory step)
+    {
+        yield return PopupAnimator.OnPanelPopup(giftAlarmPanel); // 애니메이션 끝날 때까지 기다림, 패널 표시(애니메이션 적용)
+
+        // 애니메이션 후 종료 처리
+        if (step.NextID == 0)
+        {
+            Debug.Log("스토리 종료 지점에 도달했습니다.");
+            EndEpisode();
+        }
     }
 
     public void NextStep()
@@ -347,6 +325,7 @@ public class MainStoryManager : MonoBehaviour
         cameraCanvas.SetActive(false);
         emotionCameraCanvas.SetActive(false);
         storyCameraCanvas.SetActive(false);
+        HideFaceSearching();
         giftCanvas.SetActive(false);
         settingsCanvas.SetActive(false);
     }
@@ -437,7 +416,7 @@ public class MainStoryManager : MonoBehaviour
     }
     #endregion
 
-    #region Camera
+    #region Show/Hide ARCamera&StoryCamera Btn, FaceSearching Panel(EmotionCamera, StoryCamera)
     void ShowARView()
     {
         arCamera.enabled = true;
@@ -451,9 +430,32 @@ public class MainStoryManager : MonoBehaviour
         storyCamera.enabled = true;
         arSession.enabled = false;
     }
+    
+    // 카메라 실행 시 카메라 버튼 인터렉션 활성화/비활성화
+    public void ActivateCameraBtnInteraction()
+    {
+        emoCameraBtn.interactable = true;
+        arCameraBtn.interactable = true;
+    }
+    public void DeActivateCameraBtnInteraction()
+    {
+        emoCameraBtn.interactable = false;
+        arCameraBtn.interactable = false;
+    }
+
+    // 표정 탐색 중 표정 탐색 패널 보여주기/숨기기
+    public void ShowFaceSearching()
+    {
+        faceSearchingPanel.SetActive(true);
+    }
+    public void HideFaceSearching()
+    {
+        faceSearchingPanel.SetActive(false);
+    }
+
     #endregion
 
-    #region 유대감 점수와 다이얼로그(EmotionCamera)
+    #region Update 유대감 점수와 다이얼로그(EmotionCamera)
     // 유대감 점수 업데이트
     // dominantEmotion에 따라 점수 반경
     // emotionCamera > Dialogue
@@ -488,6 +490,10 @@ public class MainStoryManager : MonoBehaviour
 
         // 유대감 슬라이드 내역 반영
         bondSlider.value = episodeBondScore;
+
+        // 카메라 버튼 활성화 및 표정 탐색 패널 숨기기
+        ActivateCameraBtnInteraction();
+        HideFaceSearching();
 
         // 대사 띄우기(다음 단계)
         NextDialogue(nextID);
@@ -544,10 +550,81 @@ public class MainStoryManager : MonoBehaviour
     }
     #endregion
 
-    void EndEpisode()
+    #region Choice DB
+    // 누른 Choice의 내용 저장 후 StoryCamera 실행 시 찍은 사진과 DB에 넣을 수 있도록 하기
+    // 사진 찍은 이후 사진 데이터 저장
+    public void SaveStoryPhoto(string filepath, string capturedAt)
     {
+        storyPhoto_filepath = filepath;
+        storyPhoto_capturedAt = capturedAt;
+    }
+    // 선택지 선택 이후 선택지 텍스트 저장 및 DB에 저장
+    public void OnClickSaveChoiceText(Button clickedBtn)
+    {
+        Debug.Log("SaveChoiceText 클릭됨");
+        MainStory step = CurrentEpisode[CurrentID-1];
+        print(step.EventType);
+        if (step.EventType == "SaveChoice")
+        {
+            // 선택한 버튼의 텍스트 저장
+            TextMeshProUGUI tmp = clickedBtn.GetComponentInChildren<TextMeshProUGUI>();
+            Debug.Log("선택한 선택지의 텍스트: " + tmp.text);
+            storyPhoto_mood = tmp.text;
 
+            Debug.Log(storyPhoto_filepath + " " + storyPhoto_capturedAt + " " + storyPhoto_mood);
+
+            // DB에 저장
+            SaveStoryPhotoDatas();
+        }
+    }
+    // 사진 데이터들 DB에 저장
+    void SaveStoryPhotoDatas()
+    {
+        // episodeID, episodeTitle 가져오기
+        string episodeId = CurrentEpisode[CurrentID].EpisodeID;
+        string episodeTitle = CurrentEpisode[CurrentID].ChapterTitle;
+
+        // DB에 저장
+        emotionGalleryDBWriter.InsertStoryPhoto(storyPhoto_filepath, storyPhoto_capturedAt, episodeId, episodeTitle, storyPhoto_mood);
     }
 
-    
+    // 재실행 시 사진 데이터 초기화
+    private void ResetStoryPhotoData()
+    {
+        storyPhoto_filepath = "";
+        storyPhoto_capturedAt = "";
+        storyPhoto_mood = "";
+    }
+    #endregion
+
+    void EndEpisode()
+    {
+        string episodeID = CurrentEpisode[CurrentID].EpisodeID;
+
+        // 다음 스토리 해금을 위한 데이터 저장
+        BondScoreDataManager.Instance.SaveFinalBondScore(episodeBondScore); // 유대감 점수 영구 저장
+        //PlayerPrefs.SetInt(episodeID + "_Cleared", 1); // 해당 에피소드 클리어(1) 내역 저장
+        PlayerPrefsControll.SavePref_SetInt(episodeID + "_Cleared", 1);
+        print(episodeID + "_Cleared 저장됨");
+
+        // Prolog라면 Episode1 이어서 실행
+        if (episodeID == "Prolog")
+        {
+            // episodeID를 PlayerPrefs에 저장
+            //PlayerPrefs.SetString("SelectedEpisodeID", "Episode1");
+            //PlayerPrefs.Save();
+            PlayerPrefsControll.SavePref_SetString("SelectedEpisodeID", "Episode1");
+
+            string test = PlayerPrefs.GetString("SelectedEpisodeID");
+            Debug.Log("에피소드 ID 설정됨: " + test);
+
+            // MainStory로 재전환
+            SceneManager.LoadScene("MainStory");
+        }
+        else
+        {
+            // 에피소드 메뉴로 나가기
+            SceneManager.LoadScene("EpisodeMenu");
+        }
+    } 
 }
