@@ -14,8 +14,10 @@ public class ARFaceFilterApplier : MonoBehaviour
     public Camera arCamera;
     private string filterName;
 
-    public GameObject filterPanel;
-    public GameObject bottomButtons;
+    [SerializeField]
+    private GameObject filterPanel;
+    [SerializeField]
+    private GameObject bottomButtons;
 
     private Dictionary<string, int> faceLandmarkIndices = new Dictionary<string, int>
     {
@@ -125,6 +127,17 @@ public class ARFaceFilterApplier : MonoBehaviour
         {
             SetActiveBottomButtons(true);
         }
+
+        foreach (var face in arFaceManager.trackables)
+        {
+            InstantiateFaceFilter(face);
+        }
+    }
+
+    public void MainStory_Filter(string filterName)
+    {
+        RemoveFilter();
+        SetFilterName(filterName);
 
         foreach (var face in arFaceManager.trackables)
         {

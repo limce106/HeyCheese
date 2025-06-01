@@ -7,12 +7,12 @@ using UnityEngine.SceneManagement;
 public class EpisodeMenuLoader : MonoBehaviour
 {
     [Header("UI Elements")]
-    // ÆĞ³Î
-    public Transform episodeBtnContainer; // ÇÏÀ§¿¡ ¸Ş´º ¹öÆ° ¹èÄ¡
-    // ¹öÆ°
-    public GameObject episodeBtnPrefab; // ¸Ş´º ¹öÆ° ÇÁ¸®ÆÕ
+    // íŒ¨ë„
+    public Transform episodeBtnContainer; // í•˜ìœ„ì— ë©”ë‰´ ë²„íŠ¼ ë°°ì¹˜
+    // ë²„íŠ¼
+    public GameObject episodeBtnPrefab; // ë©”ë‰´ ë²„íŠ¼ í”„ë¦¬íŒ¹
 
-    // ID °ª
+    // ID ê°’
     private string selectedEpisodeID;
 
     // Data Structure
@@ -20,7 +20,7 @@ public class EpisodeMenuLoader : MonoBehaviour
 
     private void Awake()
     {
-        // ÆÄ½ÌÇÑ ³»¿ë ºÒ·¯¿À±â
+        // íŒŒì‹±í•œ ë‚´ìš© ë¶ˆëŸ¬ì˜¤ê¸°
         CSVParser csvParser = new CSVParser();
         storyMenus = csvParser.ParseStoryMenus();
     }
@@ -31,31 +31,31 @@ public class EpisodeMenuLoader : MonoBehaviour
 
         foreach (var entry in storyMenus)
         {
-            print("¹öÆ° »ı¼º");
+            //print("ë²„íŠ¼ ìƒì„±");
             string episodeID = entry.Key;
-            StoryMenu info = entry.Value; // °ªÀÌ StoryMenu °´Ã¼¶ó ±× °´Ã¼¸¦ °¡Á®¿È
+            StoryMenu info = entry.Value; // ê°’ì´ StoryMenu ê°ì²´ë¼ ê·¸ ê°ì²´ë¥¼ ê°€ì ¸ì˜´
 
-            // ¹öÆ° »ı¼º
+            // ë²„íŠ¼ ìƒì„±
             GameObject newBtnObj = Instantiate(episodeBtnPrefab, episodeBtnContainer);
 
-            // ¹öÆ°ÀÇ ³»¿ë¹° °¡Á®¿À±â
+            // ë²„íŠ¼ì˜ ë‚´ìš©ë¬¼ ê°€ì ¸ì˜¤ê¸°
             Button newBtn = newBtnObj.GetComponent<Button>();
             TMP_Text[] texts = newBtnObj.GetComponentsInChildren<TMP_Text>();
             Image episodeImage = newBtnObj.transform.Find("EpisodeImage")?.GetComponent<Image>();
 
-            // ¹öÆ° ³»¿ë¹° Ã¤¿ì±â
+            // ë²„íŠ¼ ë‚´ìš©ë¬¼ ì±„ìš°ê¸°
             if (texts.Length >= 2)
             {
                 texts[0].text = episodeID;
                 texts[1].text = info.ChapterTitle;
             }
 
-            // ¹öÆ° ÀÌ¹ÌÁö ¼³Á¤
+            // ë²„íŠ¼ ì´ë¯¸ì§€ ì„¤ì •
             if (!string.IsNullOrEmpty(info.ImagePath))
             {
                 if (info.ImagePath == "NONE")
                 {
-                    episodeImage.sprite = null; // »çÁø Á¦°Å
+                    episodeImage.sprite = null; // ì‚¬ì§„ ì œê±°
                     episodeImage.color = new Color(1, 1, 1, 0);
                     continue;
                 }
@@ -68,7 +68,7 @@ public class EpisodeMenuLoader : MonoBehaviour
                     episodeImage.sprite = newSprite;
                 }
                 else
-                    Debug.LogWarning(info.EpisodeID + " ¸Ş´º ÀÌ¹ÌÁö ·Îµå ½ÇÆĞ: " + info.ImagePath);
+                    Debug.LogWarning(info.EpisodeID + " ë©”ë‰´ ì´ë¯¸ì§€ ë¡œë“œ ì‹¤íŒ¨: " + info.ImagePath);
             }
 
             newBtn.onClick.AddListener(() => OnEpisodeSelected(episodeID));
@@ -78,22 +78,22 @@ public class EpisodeMenuLoader : MonoBehaviour
     // StoryMenu > MainStory
     public void OnEpisodeSelected(string episodeID)
     {
-        // ´­¸° ¿¡ÇÇ¼Òµå È®ÀÎ
+        // ëˆŒë¦° ì—í”¼ì†Œë“œ í™•ì¸
         selectedEpisodeID = episodeID;
 
         if (!storyMenus.ContainsKey(episodeID))
         {
-            Debug.LogError("ÇØ´ç ¿¡ÇÇ¼Òµå°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù: " + episodeID);
+            Debug.LogError("í•´ë‹¹ ì—í”¼ì†Œë“œê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤: " + episodeID);
             return;
         }
 
-        // episodeID¸¦ PlayerPrefs¿¡ ÀúÀå
+        // episodeIDë¥¼ PlayerPrefsì— ì €ì¥
         PlayerPrefs.SetString("SelectedEpisodeID", episodeID);
         PlayerPrefs.Save();
 
         print(PlayerPrefs.GetString("SelectedEpisodeID"));
 
-        // MainStory·Î ÀüÈ¯
+        // MainStoryë¡œ ì „í™˜
         SceneManager.LoadScene("MainStory");
     }
 }

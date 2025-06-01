@@ -43,6 +43,7 @@ public class FrameApplier : MonoBehaviour
 
             if (!frameObj.activeSelf)
                 frameObj.SetActive(true);
+            Debug.Log("프레임 적용");
         }
         else
         {

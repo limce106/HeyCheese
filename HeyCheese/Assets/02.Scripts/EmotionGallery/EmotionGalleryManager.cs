@@ -49,6 +49,8 @@ public class EmotionGalleryManager : MonoBehaviour
             else if (filter == "emotion")
                 query += " WHERE photo_type = 'emotion'";
 
+            query += " ORDER BY captured_at DESC";
+
             using (var cmd = new SqliteCommand(query, conn))
             using (var reader = cmd.ExecuteReader())
             {
