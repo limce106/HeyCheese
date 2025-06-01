@@ -3,20 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// non-lazy, DDOL ½Ì±ÛÅæ °ÔÀÓ ¸Å´ÏÀú
-// MainStory ¾À¿¡¼­ ¹ß»ı
-// ½ºÅä¸® <-> ¹Ì´Ï°ÔÀÓ ÀüÈ¯ ½Ã¿¡µµ ID, bondScore µî ÀúÀåÇÏ´Â ¿ªÇÒ
-// MainStory, MiniGame ÀÌ¿ÜÀÇ ¾À¿¡ °¡¸é Destroy
-// ÇöÀç ½ºÅä¸® ÁøÇà »óÅÂ º¸°ü
+// non-lazy, DDOL ì‹±ê¸€í†¤ ê²Œì„ ë§¤ë‹ˆì €
+// MainStory ì”¬ì—ì„œ ë°œìƒ
+// ìŠ¤í† ë¦¬ <-> ë¯¸ë‹ˆê²Œì„ ì „í™˜ ì‹œì—ë„ ID, bondScore ë“± ì €ì¥í•˜ëŠ” ì—­í• 
+// MainStory, MiniGame ì´ì™¸ì˜ ì”¬ì— ê°€ë©´ Destroy
+// í˜„ì¬ ìŠ¤í† ë¦¬ ì§„í–‰ ìƒíƒœ ë³´ê´€
 public class MainStoryGameManager : MonoBehaviour
 {
     #region Singleton
     public static MainStoryGameManager MainStoryGM;
     #endregion
 
-    public Dictionary<int, MainStory> currentEpisode; // Àü´ŞÇÑ ¿¡ÇÇ¼Òµå¿¡ ÇØ´çÇÏ´Â {id:MainStory CSVÀÇ ÇÑ ¿­(step), ..}
-    public int currentID = 0; // ÇöÀç ID¸¦ ÀúÀåÇÏ¿© ½ºÅä¸®<->¹Ì´Ï°ÔÀÓ ÀüÈ¯ ½Ã¿¡µµ ÀÌ¾î¼­ ½ºÅä¸®¸¦ ¿­¶÷ÇÒ ¼ö ÀÖµµ·Ï ÇÑ´Ù.
-    public string playerName = "ÁÖÀÎ°ø";
+    public Dictionary<int, MainStory> currentEpisode; // ì „ë‹¬í•œ ì—í”¼ì†Œë“œì— í•´ë‹¹í•˜ëŠ” {id:MainStory CSVì˜ í•œ ì—´(step), ..}
+    public int currentID = 0; // í˜„ì¬ IDë¥¼ ì €ì¥í•˜ì—¬ ìŠ¤í† ë¦¬<->ë¯¸ë‹ˆê²Œì„ ì „í™˜ ì‹œì—ë„ ì´ì–´ì„œ ìŠ¤í† ë¦¬ë¥¼ ì—´ëŒí•  ìˆ˜ ìˆë„ë¡ í•œë‹¤.
+    string prevEpisodeID;
+    string episodeID;
+    public string playerName = "ì£¼ì¸ê³µ";
 
 
     #region Unity Lifecycle
@@ -24,32 +26,51 @@ public class MainStoryGameManager : MonoBehaviour
     {
         if (MainStoryGM != null && MainStoryGM != this)
         {
-            Destroy(gameObject); // Áßº¹ ¹æÁö
+            Destroy(gameObject); // ì¤‘ë³µ ë°©ì§€
         }
         else
         {
             MainStoryGM = this;
-            DontDestroyOnLoad(gameObject); // ¾À ³Ñ¾î°¡µµ À¯Áö
-            SceneManager.sceneLoaded += OnSceneLoaded; // ¾À ÀüÈ¯ °¨Áö
+            DontDestroyOnLoad(gameObject); // ì”¬ ë„˜ì–´ê°€ë„ ìœ ì§€
+            SceneManager.sceneLoaded += OnSceneLoaded; // ì”¬ ì „í™˜ ê°ì§€
 
         }
     }
     private void OnDestroy()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded; // ¸®½º³Ê ÇØÁ¦
+        SceneManager.sceneLoaded -= OnSceneLoaded; // ë¦¬ìŠ¤ë„ˆ í•´ì œ
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // ¾À ÀÌ¸§ È®ÀÎ
+        // ì”¬ ì´ë¦„ í™•ì¸
         if (!IsAllowedScene(scene.name))
         {
-            Debug.Log($"[MainStoryGM] {scene.name}Àº Çã¿ëµÈ ¾ÀÀÌ ¾Æ´Ï¹Ç·Î ÆÄ±«µË´Ï´Ù.");
+            Debug.Log($"[MainStoryGM] {scene.name}ì€ í—ˆìš©ëœ ì”¬ì´ ì•„ë‹ˆë¯€ë¡œ íŒŒê´´ë©ë‹ˆë‹¤.");
             Destroy(gameObject);
             MainStoryGM = null;
         }
+
+        // ì—í”¼ì†Œë“œ ë©”ë‰´ì—ì„œ ì„ íƒëœ ì—í”¼ì†Œë“œID ê°€ì ¸ì˜¤ê¸°
+        prevEpisodeID = episodeID;
+        episodeID = PlayerPrefs.GetString("SelectedEpisodeID");
+        Debug.Log("ì—í”¼ì†Œë“œ ID ë¶ˆëŸ¬ì˜´: " + episodeID);
+
+        if(prevEpisodeID != episodeID)
+        {
+            // íŒŒì‹±í•œ ë‚´ìš© ë¶ˆëŸ¬ì˜¤ê¸°
+            CSVParser csvParser = new CSVParser();
+            currentEpisode = csvParser.ParseMainStories(episodeID);
+            Debug.Log($"[MainStoryManager] Loaded EpisodeID: {episodeID}");
+
+            currentID = 0;
+
+            // ì‹œì‘í•  ë•Œ ì €ì¥ëœ ì´ë¦„ ë¶ˆëŸ¬ì˜¤ê¸°
+            PlayerDataManager.Instance.LoadPlayerName(); // ì´ë¦„ ë¶ˆëŸ¬ì˜¤ê¸°
+            playerName = PlayerDataManager.Instance.PlayerName; // ì´ë¦„ ê°€ì ¸ì˜¤ê¸°
+        }
     }
-    // »ì¾ÆÀÖ¾î¾ß ÇÏ´Â ¾À
+    // ì‚´ì•„ìˆì–´ì•¼ í•˜ëŠ” ì”¬
     private bool IsAllowedScene(string sceneName)
     {
         return sceneName.StartsWith("MainStory") || sceneName.StartsWith("MiniGame");
@@ -57,21 +78,21 @@ public class MainStoryGameManager : MonoBehaviour
 
     void Start()
     {
-        // ¿¡ÇÇ¼Òµå ¸Ş´º¿¡¼­ ¼±ÅÃµÈ ¿¡ÇÇ¼ÒµåID °¡Á®¿À±â
-        string episodeID = PlayerPrefs.GetString("SelectedEpisodeID");
+        // ì—í”¼ì†Œë“œ ë©”ë‰´ì—ì„œ ì„ íƒëœ ì—í”¼ì†Œë“œID ê°€ì ¸ì˜¤ê¸°
+        //episodeID = PlayerPrefs.GetString("SelectedEpisodeID");
 
-        // ÆÄ½ÌÇÑ ³»¿ë ºÒ·¯¿À±â
+        // íŒŒì‹±í•œ ë‚´ìš© ë¶ˆëŸ¬ì˜¤ê¸°
         CSVParser csvParser = new CSVParser();
         currentEpisode = csvParser.ParseMainStories(episodeID);
         Debug.Log($"[MainStoryManager] Loaded EpisodeID: {episodeID}");
 
-        // ½ÃÀÛÇÒ ¶§ ÀúÀåµÈ ÀÌ¸§ ºÒ·¯¿À±â
-        PlayerDataManager.Instance.LoadPlayerName(); // ÀÌ¸§ ºÒ·¯¿À±â
-        playerName = PlayerDataManager.Instance.PlayerName; // ÀÌ¸§ °¡Á®¿À±â
+        // ì‹œì‘í•  ë•Œ ì €ì¥ëœ ì´ë¦„ ë¶ˆëŸ¬ì˜¤ê¸°
+        PlayerDataManager.Instance.LoadPlayerName(); // ì´ë¦„ ë¶ˆëŸ¬ì˜¤ê¸°
+        playerName = PlayerDataManager.Instance.PlayerName; // ì´ë¦„ ê°€ì ¸ì˜¤ê¸°
     }
     #endregion
 
-    // ¹Ì´Ï°ÔÀÓ->½ºÅä¸® ½Ã ´ÙÀ½ ÀÌº¥Æ®·Î ³Ñ¾î°¥ ¼ö ÀÖµµ·Ï currentID º¯°æ
+    // ë¯¸ë‹ˆê²Œì„->ìŠ¤í† ë¦¬ ì‹œ ë‹¤ìŒ ì´ë²¤íŠ¸ë¡œ ë„˜ì–´ê°ˆ ìˆ˜ ìˆë„ë¡ currentID ë³€ê²½
     public void NextStep()
     {
         int nextID = currentEpisode[currentID].NextID;
