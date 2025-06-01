@@ -157,6 +157,9 @@ public class MainStoryManager : MonoBehaviour
                 
                 episodeIDText.text = step.EpisodeID; // 에피소드ID 변경
                 chapterTitleText.text = step.ChapterTitle; // 에피소드 제목 변경
+
+                // bgm 정지
+                PlayBGM(step.BGM);
                 break;
             case "Video":
                 print("Video 재생");
@@ -188,6 +191,14 @@ public class MainStoryManager : MonoBehaviour
                 nameImg.color = nameColor;
                 dialogueImg.color = dialogueColor;
                 Canvas.ForceUpdateCanvases(); // UI 업데이트 - 제거 시 정상적으로 색 반영되지 않음
+
+                // bgm 재생
+                PlayBGM(step.BGM);
+                // 효과음 재생
+                PlaySoundEffect(step.SFX);
+
+                // TTS 재생
+                SoundPlayer.Instance.ReadText(namedScriptText);
                 break;
             case "Choice":
                 TurnOffEveryCanvas();
@@ -382,6 +393,26 @@ public class MainStoryManager : MonoBehaviour
         {
             targetImg.sprite = defaultSprite;
         }
+    }
+    #endregion
+
+    #region Sound Utility
+    // 효과음 ID 포함되어 있으면 효과음 재생
+    void PlaySoundEffect(string sfxId)
+    {
+        if (string.IsNullOrWhiteSpace(sfxId))
+            return;
+
+        SoundPlayer.Instance.PlaySoundByID(sfxId);
+    }
+
+    // 배경음악 ID 포함되어 있으면 bgm 재생
+    void PlayBGM(string bgmId)
+    {
+        if (string.IsNullOrWhiteSpace(bgmId))
+            return;
+
+        SoundPlayer.Instance.PlaySoundByID(bgmId);
     }
     #endregion
 

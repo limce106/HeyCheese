@@ -98,6 +98,8 @@ public class MiniGame2_1Manager : MiniGameManager
         // foodInPlateNum가 3개면
         if (foodInPlateNum == 3)
         {
+            SoundPlayer.Instance.SoundEffectPlay((int)SoundPlayer.SFX.Shouting_SFX);
+
             yield return new WaitForSeconds(1.5f);
 
             // 모든 음식 다 나눠주기 성공!
