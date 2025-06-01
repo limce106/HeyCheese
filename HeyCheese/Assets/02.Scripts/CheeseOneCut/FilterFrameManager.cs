@@ -6,13 +6,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections.ObjectModel;
+using UnityEngine.InputSystem;
 
 public class FilterFrameManager : MonoBehaviour
 {
     public static FilterFrameManager instance;
     void Awake()
     {
-        if(instance == null)
+        if (instance == null)
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
@@ -99,7 +100,7 @@ public class FilterFrameManager : MonoBehaviour
     }
 
     // 히든 미션 달성 팝업 띄우기
-    private IEnumerator OnHiddenMissionPopup(string filterName)
+    private IEnumerator OnHiddenMissionPopup(string filterMessage)
     {
         CheeseOneCutUIManager cheeseOneCutUIManager = GameObject.Find("GameManager").GetComponent<CheeseOneCutUIManager>();
         GameObject hiddenMissionPanel = cheeseOneCutUIManager.hiddenMissionPanel;
@@ -117,11 +118,8 @@ public class FilterFrameManager : MonoBehaviour
             yield break;
         }
 
-        missionClearText.text = "🎁 선물 🎁 \n AR 패션 아이템: " + filterName;
-        hiddenMissionPanel.SetActive(true);
+        missionClearText.text += "AR 패션 아이템: " + filterMessage;
 
-        yield return new WaitForSeconds(3f);
-
-        hiddenMissionPanel.SetActive(false);
+        yield return PopupAnimator.OnPanelPopup(hiddenMissionPanel);
     }
 }
