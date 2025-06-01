@@ -23,5 +23,6 @@ abstract public class MiniGameManager : MonoBehaviour
 
         MainStoryGameManager.MainStoryGM.NextStep();
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainStory");
+        Time.timeScale = 1f;
     }
 }

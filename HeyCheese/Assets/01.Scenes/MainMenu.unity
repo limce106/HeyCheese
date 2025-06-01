@@ -4226,15 +4226,15 @@ MonoBehaviour:
   ttsPlayer: {fileID: 96913409}
   touchSFXPlayer: {fileID: 642172154}
   bgmClip:
-  - {fileID: 8300000, guid: 642c8c97e0e33bf43b569f5c0dbd85fb, type: 3}
-  - {fileID: 8300000, guid: 642c8c97e0e33bf43b569f5c0dbd85fb, type: 3}
+  - {fileID: 8300000, guid: 578b4a3090be2f1438b5afb8017445f4, type: 3}
+  - {fileID: 8300000, guid: 578b4a3090be2f1438b5afb8017445f4, type: 3}
   - {fileID: 8300000, guid: bf3e02da5aa9d3d4e9f1514ec247bdaa, type: 3}
   - {fileID: 8300000, guid: e0fa5c9b31946e1439e18e5522e7b8be, type: 3}
   - {fileID: 8300000, guid: 1ebdd7b356925cd4b816939a31851ec4, type: 3}
   - {fileID: 8300000, guid: 2b61e3842d296c543972eb3fbf448c84, type: 3}
   - {fileID: 8300000, guid: 773cd7fa74998ed419a4ab9f8f26cfca, type: 3}
   - {fileID: 8300000, guid: eb2aee0f51de4074292fd8b2e23a7998, type: 3}
-  - {fileID: 8300000, guid: 3beb48f78e79a70448b5dcaf0a4da148, type: 3}
+  - {fileID: 8300000, guid: 3d12585e738846b4c911f17ea79b0f3d, type: 3}
   soundEffectClip:
   - {fileID: 8300000, guid: afe6abcd15525274bbe7c479cc5c3393, type: 3}
   - {fileID: 8300000, guid: 47b42695beeb4df4ca552518723e1dd6, type: 3}
