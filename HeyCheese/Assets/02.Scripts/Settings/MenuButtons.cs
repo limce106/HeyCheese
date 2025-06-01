@@ -102,6 +102,9 @@ public class MenuButtons : MonoBehaviour
 
         // 환경 설정 패널 열기
         settingWindow.SetActive(true);
+
+        // 시간 일시정지
+        Time.timeScale = 0f;
     }
 
     // 설정창 닫기
@@ -110,6 +113,9 @@ public class MenuButtons : MonoBehaviour
         settingWindow.SetActive(false);
         parentGuideGO.SetActive(false);
         madeByGO.SetActive(false);
+
+        // 시간 일시정지 해제
+        Time.timeScale = 1f;
     }
     #endregion
 }
