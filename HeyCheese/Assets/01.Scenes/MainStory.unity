@@ -2376,7 +2376,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC120\uBB3C"
+  m_text: "\U0001F381 \uC120\uBB3C \U0001F381"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 24836adf7ad32244dbc179efc28a6a26, type: 2}
   m_sharedMaterial: {fileID: -6211306273715906506, guid: 24836adf7ad32244dbc179efc28a6a26, type: 2}
@@ -7378,14 +7378,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MainStoryManager: {fileID: 970218344}
-  inputfield: {fileID: 665019063}
   nameInputField: {fileID: 146183931}
   confirmationPanel: {fileID: 1865995350}
   confrimationBtn: {fileID: 1508749160}
   confirmationText: {fileID: 1637148114}
-  nameWarningText: {fileID: 1640322930}
-  shakeDuration: 0.3
-  shakeMagnitude: 10
 --- !u!114 &970218347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10073,7 +10069,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1384029643
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10108,7 +10104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8509804, g: 0.8509804, b: 0.8509804, a: 0.98039216}
+  m_Color: {r: 1, g: 0.9184945, b: 0.73018867, a: 0.98039216}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -10145,7 +10141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0.64705884, g: 0.64705884, b: 0.64705884, a: 0.5}
+  m_EffectColor: {r: 1, g: 0.78431374, b: 0.20784314, a: 0.5}
   m_EffectDistance: {x: 5, y: -5}
   m_UseGraphicAlpha: 1
 --- !u!114 &1384029647
