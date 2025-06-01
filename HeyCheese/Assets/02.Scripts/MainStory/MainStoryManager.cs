@@ -5,10 +5,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.XR.ARFoundation;
 
-// UI¿¡ ÀÌº¥Æ® Ç¥½Ã ¿ªÇÒ
-// ½ºÅä¸®<->¹Ì´Ï°ÔÀÓ ½Ã ÇØ´ç ³»¿ëÀº À¯Áö, ±â¾ïµÇ¾î¾ß µÇÁö¸¸
-// ½ºÅä¸® -> ¸ñ·Ï ¼ø°£, ³»¿ë ÃÊ±âÈ­ ÇÊ¿ä
+// UIì— ì´ë²¤íŠ¸ í‘œì‹œ ì—­í• 
+// ìŠ¤í† ë¦¬<->ë¯¸ë‹ˆê²Œì„ ì‹œ í•´ë‹¹ ë‚´ìš©ì€ ìœ ì§€, ê¸°ì–µë˜ì–´ì•¼ ë˜ì§€ë§Œ
+// ìŠ¤í† ë¦¬ -> ëª©ë¡ ìˆœê°„, ë‚´ìš© ì´ˆê¸°í™” í•„ìš”
 public class MainStoryManager : MonoBehaviour
 {
     #region Singleton
@@ -16,6 +17,8 @@ public class MainStoryManager : MonoBehaviour
     //public PlayerNameManager playerNameManager;
     public DialogueManager dialougeManager;
     //public Speaker speaker;
+    public ARFaceFilterApplier arFaceFilterApplier;
+    public FrameApplier frameApplier;
     #endregion
 
     #region UI References
@@ -24,6 +27,7 @@ public class MainStoryManager : MonoBehaviour
     public GameObject dialogueCanvas;
     public GameObject choiceCanvas;
     public GameObject inputFieldCanvas;
+    public GameObject cameraCanvas;
     public GameObject emotionCameraCanvas;
     public GameObject storyCameraCanvas;
     public GameObject giftCanvas;
@@ -56,23 +60,38 @@ public class MainStoryManager : MonoBehaviour
     public TMP_Text inputNameText;
     [Header("UI Elements_Emotion Camera")] // Emotion Camera
     public TMP_Text emoQuestionText;
-    public Button ecCameraBtn;
+    public Button emoCameraBtn;
+    // ì¹´ë©”ë¼ë¥¼ ë³€ê²½í•´ì•¼ ë˜ë‚˜? XROrigin í™œì„±í™”ë¼ë˜ê°€
+
     [Header("UI Elements_Story Camera")] // Story Camera
-    public Button scCameraBtn;
+
+
     [Header("UI Elements_Gift")] // Gift
 
     [Header("UI Elements_Setting")] // Setting
+
+    [Header("Camera")]
+    public Camera arCamera;
+    public Camera storyCamera;
+    public ARSession arSession;
+
     #endregion
 
     #region Data
     // Data Structure
-    public Dictionary<int, MainStory> CurrentEpisode; // Àü´ŞÇÑ ¿¡ÇÇ¼Òµå¿¡ ÇØ´çÇÏ´Â {id:MainStory CSVÀÇ ÇÑ ¿­(step), ..}
-    public int CurrentID {
+    public Dictionary<int, MainStory> CurrentEpisode; // ì „ë‹¬í•œ ì—í”¼ì†Œë“œì— í•´ë‹¹í•˜ëŠ” {id:MainStory CSVì˜ í•œ ì—´(step), ..}
+    public int CurrentID
+    {
         get => MainStoryGameManager.MainStoryGM.currentID;
         set => MainStoryGameManager.MainStoryGM.currentID = value;
     }
+    public float BondScore // ì‹¤ì œë¡œ ì €ì¥ë˜ëŠ” BondScore
+    {
+        get => BondScoreDataManager.Instance.BondScore;
+        set => BondScoreDataManager.Instance.BondScore = value;
+    }
+    [SerializeField] private float episodeBondScore = 0f; // ì¤‘ë‹¨ ì‹œ ì ìˆ˜ ì´ˆê¸°í™” ê´€ë¦¬ë¥¼ ìœ„í•œ BondScore
     public string PlayerName;
-    public float bondScore = 0; // À¯´ë°¨ Á¡¼ö
     #endregion
 
     #region Unity Lifecycle
@@ -83,7 +102,7 @@ public class MainStoryManager : MonoBehaviour
     //    selectedSituation = "None";
     //}
 
-    //// ¸ŞÀÎ ¾À ³Ñ¾î°¬À» ¶§ È£Ãâ ÇÊ¿ä
+    //// ë©”ì¸ ì”¬ ë„˜ì–´ê°”ì„ ë•Œ í˜¸ì¶œ í•„ìš”
     //public void DestroySelf()
     //{
     //    Clear();
@@ -91,7 +110,7 @@ public class MainStoryManager : MonoBehaviour
     //    Instance = null;
     //}
 
-    //// !!¸ŞÀÎ ¾À °¬À» ¶§ ¾Æ·¡ ÀÛ¼ºÇØÁÖ±â!!
+    //// !!ë©”ì¸ ì”¬ ê°”ì„ ë•Œ ì•„ë˜ ì‘ì„±í•´ì£¼ê¸°!!
     ////void Start()
     ////{
     ////    if (StoryManagerTest.Instance != null)
@@ -102,19 +121,47 @@ public class MainStoryManager : MonoBehaviour
 
     //void Start()
     //{
-    //    // ¿¡ÇÇ¼Òµå ¸Ş´º¿¡¼­ ¼±ÅÃµÈ 
+    //    // ì—í”¼ì†Œë“œ ë©”ë‰´ì—ì„œ ì„ íƒëœ 
     //    string episodeID = PlayerPrefs.GetString("SelectedEpisodeID");
-    //    print("¸Å´ÏÀú: " + episodeID);
+    //    print("ë§¤ë‹ˆì €: " + episodeID);
 
-    //    // ½ÃÀÛÇÒ ¶§ ÀúÀåµÈ ÀÌ¸§ ºÒ·¯¿À±â
+    //    // ì‹œì‘í•  ë•Œ ì €ì¥ëœ ì´ë¦„ ë¶ˆëŸ¬ì˜¤ê¸°
     //    //LoadPlayerName();
 
     //    //loadingCanvas.gameObject.SetActive(true);
     //    ShowCurrentID(CurrentID);
     //}
 
+    //public GameObject imageObject; // í™œì„±í™” ì—¬ë¶€ë¥¼ ê°ì§€í•  Image GameObject
+    //private bool wasActive = false;
+    //private void Update()
+    //{
+    //    if (imageObject.activeSelf)
+    //    {
+    //        wasActive = true;
+    //        OnImageActivated();
+    //    }
+    //    else if (!imageObject.activeSelf)
+    //    {
+    //        wasActive = false;
+    //        OnImageDeactivated();
+    //    }
+    //}
 
-    // ÄÚ·çÆ¾À¸·Î MainStoryGameManager.cs¿¡¼­ csv ÆÄ½Ì ¿Ï·áµÉ ¶§±îÁö ±â´Ù¸®±â
+    //void OnImageActivated()
+    //{
+    //    Debug.Log("ì´ë¯¸ì§€ê°€ í™œì„±í™”ë˜ì—ˆìŠµë‹ˆë‹¤!");
+    //    // ì—¬ê¸°ì— í™œì„±í™” ì‹œ ì‹¤í–‰í•  ì½”ë“œ ì‘ì„±
+    //}
+
+    //void OnImageDeactivated()
+    //{
+    //    Debug.Log("ì´ë¯¸ì§€ê°€ ë¹„í™œì„±í™”ë˜ì—ˆìŠµë‹ˆë‹¤!");
+    //    // ì—¬ê¸°ì— ë¹„í™œì„±í™” ì‹œ ì‹¤í–‰í•  ì½”ë“œ ì‘ì„±
+    //}
+
+
+    // ì½”ë£¨í‹´ìœ¼ë¡œ MainStoryGameManager.csì—ì„œ csv íŒŒì‹± ì™„ë£Œë  ë•Œê¹Œì§€ ê¸°ë‹¤ë¦¬ê¸°
     IEnumerator Start() 
     {
         yield return new WaitUntil(() => MainStoryGameManager.MainStoryGM?.currentEpisode != null);
@@ -122,12 +169,17 @@ public class MainStoryManager : MonoBehaviour
         CurrentEpisode = MainStoryGameManager.MainStoryGM.currentEpisode;
         PlayerName = MainStoryGameManager.MainStoryGM.playerName;
 
+        // ìœ ëŒ€ê° ìŠ¬ë¼ì´ë“œ ë‚´ì—­ ë°˜ì˜
+        bondSlider.value = BondScore;
+        episodeBondScore = BondScore;
+
+        ShowARView();
         ShowCurrentID(CurrentID);
     }
     #endregion
 
     #region Story Logic
-    // ÇöÀç ½ºÅÜ(ID)¿¡ ¸Â´Â ÀÌº¥Æ® ½ÇÇà
+    // í˜„ì¬ ìŠ¤í…(ID)ì— ë§ëŠ” ì´ë²¤íŠ¸ ì‹¤í–‰
     void ShowCurrentID(int id)
     {
         MainStory step = CurrentEpisode[id];
@@ -135,19 +187,20 @@ public class MainStoryManager : MonoBehaviour
 
         if (step.NextID == 0)
         {
-            Debug.Log("½ºÅä¸® Á¾·á ÁöÁ¡¿¡ µµ´ŞÇß½À´Ï´Ù.");
+            Debug.Log("ìŠ¤í† ë¦¬ ì¢…ë£Œ ì§€ì ì— ë„ë‹¬í–ˆìŠµë‹ˆë‹¤.");
             EndEpisode();
             return;
         }
 
-        // Àß¸øµÈ ½ºÅÜ °Ç³Ê¶Ù±â
-        // id°¡ -1(¹®Á¦o)ÀÎ °æ¿ì, ÇØ´ç ½ºÅÜ(csvÀÇ ¿­)À» ½ºÅµÇÔ
+        // ì˜ëª»ëœ ìŠ¤í… ê±´ë„ˆë›°ê¸°
+        // idê°€ -1(ë¬¸ì œo)ì¸ ê²½ìš°, í•´ë‹¹ ìŠ¤í…(csvì˜ ì—´)ì„ ìŠ¤í‚µí•¨
         if (id == -1)
         {
-            Debug.LogWarning($"[MainStory] ID ÆÄ½Ì ½ÇÆĞ: ¹®Á¦ ½ºÅÜ(¿­): {step}");
+            Debug.LogWarning($"[MainStory] ID íŒŒì‹± ì‹¤íŒ¨: ë¬¸ì œ ìŠ¤í…(ì—´): {step}");
             NextStep();
         }
 
+        ShowStoryView();
         switch (step.EventType)
         {
             case "Loading":
@@ -155,19 +208,19 @@ public class MainStoryManager : MonoBehaviour
                 TurnOffEveryCanvas();
                 loadingCanvas.SetActive(true);
 
-                SetImage(backgroundImg, step.ImageID); // ¹è°æ º¯°æ
+                SetImage(backgroundImg, step.ImageID); // ë°°ê²½ ë³€ê²½
                 
-                episodeIDText.text = step.EpisodeID; // ¿¡ÇÇ¼ÒµåID º¯°æ
-                chapterTitleText.text = step.ChapterTitle; // ¿¡ÇÇ¼Òµå Á¦¸ñ º¯°æ
+                episodeIDText.text = step.EpisodeID; // ì—í”¼ì†Œë“œID ë³€ê²½
+                chapterTitleText.text = step.ChapterTitle; // ì—í”¼ì†Œë“œ ì œëª© ë³€ê²½
                 break;
             case "Video":
-                print("Video Àç»ı");
+                print("Video ì¬ìƒ");
                 break;
             case "Dialogue":
                 TurnOffEveryCanvas();
                 dialogueCanvas.SetActive(true);
 
-                // ´ë»ç¿¡ ÇÃ·¹ÀÌ¾î ÀÌ¸§ Àû¿ë
+                // ëŒ€ì‚¬ì— í”Œë ˆì´ì–´ ì´ë¦„ ì ìš©
                 string rawScriptText = step.ScriptID;
                 string namedScriptText = rawScriptText.Replace("{PlayerName}", PlayerName);
 
@@ -179,54 +232,81 @@ public class MainStoryManager : MonoBehaviour
                 {
                     nameImgObj.SetActive(true);
                 }
-                speakerNameText.text = step.SpeakerID; // ÀÌ¸§ º¯°æ
-                dialogueText.text = namedScriptText; // ´ë»ç º¯°æ
-                SetImage(backgroundImg, step.ImageID); // ¹è°æ º¯°æ
-                SetImage(characterImg, step.SpeakerImageID); // Ä³¸¯ÅÍ º¯°æ
+                speakerNameText.text = step.SpeakerID; // ì´ë¦„ ë³€ê²½
+                dialogueText.text = namedScriptText; // ëŒ€ì‚¬ ë³€ê²½
+                SetImage(backgroundImg, step.ImageID); // ë°°ê²½ ë³€ê²½
+                SetImage(characterImg, step.SpeakerImageID); // ìºë¦­í„° ë³€ê²½
 
-                // ÀÌ¸§,´ë»ç ¹è°æ »ö º¯°æ
-                Speaker speaker = SpeakerUtil.ParseSpeakerID(step.SpeakerID); // speakerID ÅØ½ºÆ®¸¦ enum Å¸ÀÔÀ¸·Î º¯È¯
-                (Color nameColor, Color dialogueColor) = dialougeManager.GetColorBySpeaker(speaker); // ÀÌ¸§°ú ´ë»ç¿¡ speakerº° ÄÃ·¯ Àû¿ë
+                // ì´ë¦„,ëŒ€ì‚¬ ë°°ê²½ ìƒ‰ ë³€ê²½
+                Speaker speaker = SpeakerUtil.ParseSpeakerID(step.SpeakerID); // speakerID í…ìŠ¤íŠ¸ë¥¼ enum íƒ€ì…ìœ¼ë¡œ ë³€í™˜
+                (Color nameColor, Color dialogueColor) = dialougeManager.GetColorBySpeaker(speaker); // ì´ë¦„ê³¼ ëŒ€ì‚¬ì— speakerë³„ ì»¬ëŸ¬ ì ìš©
                 nameImg.color = nameColor;
                 dialogueImg.color = dialogueColor;
-                Canvas.ForceUpdateCanvases(); // UI ¾÷µ¥ÀÌÆ® - Á¦°Å ½Ã Á¤»óÀûÀ¸·Î »ö ¹İ¿µµÇÁö ¾ÊÀ½
+                Canvas.ForceUpdateCanvases(); // UI ì—…ë°ì´íŠ¸ - ì œê±° ì‹œ ì •ìƒì ìœ¼ë¡œ ìƒ‰ ë°˜ì˜ë˜ì§€ ì•ŠìŒ
                 break;
             case "Choice":
                 TurnOffEveryCanvas();
                 choiceCanvas.SetActive(true);
 
-                choiceQuestionText.text = step.ScriptID; // ´ë»ç º¯°æ
-                choice1Text.text = step.Choice1; // ¼±ÅÃÁö º¯°æ
-                choice2Text.text = step.Choice2; // ¼±ÅÃÁö º¯°æ
-                choice3Text.text = step.Choice3; // ¼±ÅÃÁö º¯°æ
+                choiceQuestionText.text = step.ScriptID; // ëŒ€ì‚¬ ë³€ê²½
+                choice1Text.text = step.Choice1; // ì„ íƒì§€ ë³€ê²½
+                choice2Text.text = step.Choice2; // ì„ íƒì§€ ë³€ê²½
+                choice3Text.text = step.Choice3; // ì„ íƒì§€ ë³€ê²½
 
                 break;
             case "NameInput":
-                nextDialogueBtn.interactable = false; // ´ë»ç ¹öÆ° ¸·±â
+                nextDialogueBtn.interactable = false; // ëŒ€ì‚¬ ë²„íŠ¼ ë§‰ê¸°
                 inputFieldCanvas.SetActive(true);
 
-                // ÀÌÈÄ ÀÌ¸§ ÀÎÇ², ÀúÀåÀº PlayerNameManager.cs°¡ Ã³¸®
+                // ì´í›„ ì´ë¦„ ì¸í’‹, ì €ì¥ì€ PlayerNameManager.csê°€ ì²˜ë¦¬
                 //playerNameManager.SavePlayerName();
-                //PlayerName = PlayerNameManager.PlayerName; // ¿¡ÇÇ¼Òµå1ÀÇ °æ¿ì ÀÌ ´Ü°è ÀÌÈÄ ÇÃ·¹ÀÌ¾îÀÇ ÀÌ¸§ ¾÷µ¥ÀÌÆ®
+                //PlayerName = PlayerNameManager.PlayerName; // ì—í”¼ì†Œë“œ1ì˜ ê²½ìš° ì´ ë‹¨ê³„ ì´í›„ í”Œë ˆì´ì–´ì˜ ì´ë¦„ ì—…ë°ì´íŠ¸
                 break;
             case "MiniGame":
-                // ¹Ì´Ï°ÔÀÓ ¾ÀÀ¸·Î ÀÌµ¿
+                // ë¯¸ë‹ˆê²Œì„ ì”¬ìœ¼ë¡œ ì´ë™
                 SceneManager.LoadScene(step.MiniGame);
-
                 break;
             case "EmotionCamera":
+                ShowARView();
                 TurnOffEveryCanvas();
+                cameraCanvas.SetActive(true);
                 emotionCameraCanvas.SetActive(true);
+
+                // ì§ˆë¬¸ì— í”Œë ˆì´ì–´ ì´ë¦„ ì ìš©
+                string rawQuestionText = "ì¹˜ì¦ˆê°€ {PlayerName}ì˜ ì–¼êµ´ì„ ë³´ëŠ” ì¤‘\ní‘œì •ìœ¼ë¡œ ë‚´ ê°ì •ì„ ì•Œë ¤ì£¼ì.";
+                emoQuestionText.text = rawQuestionText.Replace("{PlayerName}", PlayerName);
+
+                // í›„ì— ì¹´ë©”ë¼ ë²„íŠ¼ í´ë¦­ ê°€ëŠ¥í•˜ë„ë¡ í•˜ê¸° - ì´ë¦„ ë°”ë€Œì§€ë„ ì•Šì•˜ëŠ”ë° ì—°íƒ€í•˜ë‹¤ê°€ ë²„íŠ¼ ëˆ„ë¥´ë©´ ì•ˆë˜ë‹ˆê¹Œ
+
+                // ë­.. ì¹´ë©”ë¼ë¥¼ ë°”ê¾¼ë‹¤ê±°ë‚˜ ë‚´ìš© ì¶”ê°€
 
                 break;
             case "StoryCamera":
+                ShowARView();
                 TurnOffEveryCanvas();
+                cameraCanvas.SetActive(true);
                 storyCameraCanvas.SetActive(true);
+
+                // í•„í„° ì¶”ê°€
+                string filterName = ConvertEpisodeToFilterName(step.EpisodeID);
+                Debug.Log("í•„í„° ì´ë¦„"+ filterName);
+                arFaceFilterApplier.MainStory_Filter(filterName);
+                // í”„ë ˆì„ ì¶”ê°€
+                string frameName = ConvertEpisodeToFrameName(step.EpisodeID);
+                Debug.Log("í”„ë ˆì„ ì´ë¦„" + frameName);
+                frameApplier.ApplyFrame(frameName);
+
+                // í›„ì— ì¹´ë©”ë¼ ë²„íŠ¼ í´ë¦­ ê°€ëŠ¥í•˜ë„ë¡ í•˜ê¸° - ì´ë¦„ ë°”ë€Œì§€ë„ ì•Šì•˜ëŠ”ë° ì—°íƒ€í•˜ë‹¤ê°€ ë²„íŠ¼ ëˆ„ë¥´ë©´ ì•ˆë˜ë‹ˆê¹Œ
 
                 break;
             case "Gift":
+                TurnOffEveryCanvas();
+                storyCameraCanvas.SetActive(true);
+
+                BondScoreDataManager.Instance.SaveFinalBondScore(episodeBondScore); // ìœ ëŒ€ê° ì ìˆ˜ ì˜êµ¬ ì €ì¥
                 break;
         }
+        
     }
 
     public void NextStep()
@@ -236,6 +316,7 @@ public class MainStoryManager : MonoBehaviour
         int nextID = CurrentEpisode[CurrentID].NextID;
         ShowCurrentID(nextID);
     }
+    // EmotionCamera ë’¤ì˜ ëŒ€ì‚¬ì™€ ìœ ëŒ€ê° ì ìˆ˜ ì‹œìŠ¤í…œì„ ìœ„í•œ í•¨ìˆ˜
     public void NextDialogue(int nextID)
     {
         nextDialogueBtn.interactable = true;
@@ -244,14 +325,15 @@ public class MainStoryManager : MonoBehaviour
     #endregion
 
     #region Canvas Control
-    // Äµ¹ö½º ÀüÈ¯À» À§ÇÑ ¸ğµç Äµ¹ö½º ºñÈ°¼ºÈ­ ÇÔ¼ö
-    // NameInput ½Ã¿¡´Â Äµ¹ö½º ºñÈ°¼ºÈ­ ÇÏÁö ¾ÊÀ½
+    // ìº”ë²„ìŠ¤ ì „í™˜ì„ ìœ„í•œ ëª¨ë“  ìº”ë²„ìŠ¤ ë¹„í™œì„±í™” í•¨ìˆ˜
+    // NameInput ì‹œì—ëŠ” ìº”ë²„ìŠ¤ ë¹„í™œì„±í™” í•˜ì§€ ì•ŠìŒ
     void TurnOffEveryCanvas()
     {
         loadingCanvas.SetActive(false);
         dialogueCanvas.SetActive(false);
         choiceCanvas.SetActive(false);
         inputFieldCanvas.SetActive(false);
+        cameraCanvas.SetActive(false);
         emotionCameraCanvas.SetActive(false);
         storyCameraCanvas.SetActive(false);
         giftCanvas.SetActive(false);
@@ -260,7 +342,7 @@ public class MainStoryManager : MonoBehaviour
     #endregion
 
     //#region Player Name
-    //// ÇÃ·¹ÀÌ¾î ÀÌ¸§ ºÒ·¯¿À±â
+    //// í”Œë ˆì´ì–´ ì´ë¦„ ë¶ˆëŸ¬ì˜¤ê¸°
     //public void LoadPlayerName()
     //{
     //    if (PlayerPrefs.HasKey("PlayerName"))
@@ -269,27 +351,27 @@ public class MainStoryManager : MonoBehaviour
     //    }
     //    else
     //    {
-    //        PlayerName = "ÁÖÀÎ°ø";
+    //        PlayerName = "ì£¼ì¸ê³µ";
     //    }
     //}
     //#endregion
 
     #region Image Utility
-    // ¹è°æ, Ä³¸¯ÅÍ Image º¯°æ
-    // »çÁø Á¸Àç x, »çÁø ¼³Á¤ x, »çÁø ¼³Á¤ o·Î °æ¿ì¸¦ ³ª´² ¼³Á¤
-    // Get: Å¸°ÙÀÌ¹ÌÁö(¹è°æ ÀÌ¹ÌÁö ¿ÀºêÁ§Æ®/Ä³¸¯ÅÍ ÀÌ¹ÌÁö ¿ÀºêÁ§Æ®), MainStory ±â¹İ imageID
+    // ë°°ê²½, ìºë¦­í„° Image ë³€ê²½
+    // ì‚¬ì§„ ì¡´ì¬ x, ì‚¬ì§„ ì„¤ì • x, ì‚¬ì§„ ì„¤ì • oë¡œ ê²½ìš°ë¥¼ ë‚˜ëˆ  ì„¤ì •
+    // Get: íƒ€ê²Ÿì´ë¯¸ì§€(ë°°ê²½ ì´ë¯¸ì§€ ì˜¤ë¸Œì íŠ¸/ìºë¦­í„° ì´ë¯¸ì§€ ì˜¤ë¸Œì íŠ¸), MainStory ê¸°ë°˜ imageID
     void SetImage(UnityEngine.UI.Image targetImg, string imgPath)
     {
-        if (string.IsNullOrEmpty(imgPath)) // »çÁø Á¸Àç x ½Ã
+        if (string.IsNullOrEmpty(imgPath)) // ì‚¬ì§„ ì¡´ì¬ x ì‹œ
         {
-            //print("»çÁø Á¸Àç x");
-            return; // »çÁø º¯°æx
+            //print("ì‚¬ì§„ ì¡´ì¬ x");
+            return; // ì‚¬ì§„ ë³€ê²½x
         }
         if (imgPath == "NONE")
         {
-            targetImg.sprite = null; // »çÁø Á¦°Å
+            targetImg.sprite = null; // ì‚¬ì§„ ì œê±°
             targetImg.color = new Color(1, 1, 1, 0);
-            //print("»çÁø Á¦°Å");
+            //print("ì‚¬ì§„ ì œê±°");
             return;
         }
 
@@ -299,11 +381,11 @@ public class MainStoryManager : MonoBehaviour
         {
             targetImg.color = new Color(1, 1, 1, 1);
             targetImg.sprite = newSprite;
-            //print("»çÁø º¯°æ");
+            //print("ì‚¬ì§„ ë³€ê²½");
         }
         else
         {
-            Debug.LogWarning($"[ImageChanger] ÀÌ¹ÌÁö ·Îµå ½ÇÆĞ: Arts/{imgPath}, ±âº» ÀÌ¹ÌÁö »ç¿ë");
+            Debug.LogWarning($"[ImageChanger] ì´ë¯¸ì§€ ë¡œë“œ ì‹¤íŒ¨: Arts/{imgPath}, ê¸°ë³¸ ì´ë¯¸ì§€ ì‚¬ìš©");
 
             if (targetImg.name.Contains("background"))
             {
@@ -311,9 +393,9 @@ public class MainStoryManager : MonoBehaviour
             }
         }
     }
-    // ±âº» ¹è°æ ¼³Á¤
-    // ¹è°æ ÀÌ¹ÌÁö Á¸Àçx ½Ã ³»ÀåµÈ ±âº» ¹è°æÀ¸·Î º¯°æ
-    // ¹è°æÀÌ ¾øÀ» °æ¿ì ÀÌ»óÇÏ±â ¶§¹®¿¡ ¿¹¿ÜÃ³¸®¿ëÀ¸·Î ¼³Á¤
+    // ê¸°ë³¸ ë°°ê²½ ì„¤ì •
+    // ë°°ê²½ ì´ë¯¸ì§€ ì¡´ì¬x ì‹œ ë‚´ì¥ëœ ê¸°ë³¸ ë°°ê²½ìœ¼ë¡œ ë³€ê²½
+    // ë°°ê²½ì´ ì—†ì„ ê²½ìš° ì´ìƒí•˜ê¸° ë•Œë¬¸ì— ì˜ˆì™¸ì²˜ë¦¬ìš©ìœ¼ë¡œ ì„¤ì •
     void SetDefaultBackground(UnityEngine.UI.Image targetImg)
     {
         Sprite defaultSprite = Resources.Load<Sprite>($"Arts/2Back/defaultBackground");
@@ -324,29 +406,117 @@ public class MainStoryManager : MonoBehaviour
     }
     #endregion
 
-    // À¯´ë°¨ Á¡¼ö ¾÷µ¥ÀÌÆ®
+    #region Camera
+    void ShowARView()
+    {
+        arCamera.enabled = true;
+        storyCamera.enabled = false;
+        arSession.enabled = true;
+    }
+
+    void ShowStoryView()
+    {
+        arCamera.enabled = false;
+        storyCamera.enabled = true;
+        arSession.enabled = false;
+    }
+    #endregion
+
+    #region ìœ ëŒ€ê° ì ìˆ˜ì™€ ë‹¤ì´ì–¼ë¡œê·¸(EmotionCamera)
+    // ìœ ëŒ€ê° ì ìˆ˜ ì—…ë°ì´íŠ¸
+    // dominantEmotionì— ë”°ë¼ ì ìˆ˜ ë°˜ê²½
+    // emotionCamera > Dialogue
     public void UpdateDialogueAndBond(Emotion dominantEmotion)
     {
+        // ê°ì •ì— ë”°ë¼ ë‹¤ìŒ ID í™•ì •
+        int emotionIdx = 1;
+        switch (dominantEmotion)
+        {
+            case Emotion.Happy:
+                emotionIdx = 1;
+                break;
+            case Emotion.Sad:
+                emotionIdx = 2;
+                break;
+            case Emotion.Suprise:
+                emotionIdx = 3;
+                break;
+            case Emotion.Angry:
+                emotionIdx = 4;
+                break;
+            default:
+                emotionIdx = 1;
+                break;
+        }
 
-        // 
+        int nextID = CurrentID + emotionIdx;
+
+        // ìœ ëŒ€ê° ì ìˆ˜ ì¦ê°€
+        episodeBondScore += CurrentEpisode[nextID].Score;
+        Debug.Log($"í˜„ì¬ ìœ ëŒ€ê° ì ìˆ˜: {episodeBondScore}");
+
+        // ìœ ëŒ€ê° ìŠ¬ë¼ì´ë“œ ë‚´ì—­ ë°˜ì˜
+        bondSlider.value = episodeBondScore;
+
+        // ëŒ€ì‚¬ ë„ìš°ê¸°(ë‹¤ìŒ ë‹¨ê³„)
+        NextDialogue(nextID);
+        //NextStep();
     }
-    // ¾Æ´Ï¸é id¸¦ 1¾¿ Áõ°¡½ÃÄÑ¼­ NextDialogue(currentID + 1 + a)·Î ¹Ù²Û´Ù°Å³ª
-    // a´Â 0Çàº¹ 1½½ÇÄ 2³î¶÷ 3È­³² ÀÎ°Å°í
-    // ±×¸®°í ´ÙÀÌ¾ó·Î±× Àú°Å ÇÔ¼ö·Î ¹Ù²ã¼­
+    // ì•„ë‹ˆë©´ idë¥¼ 1ì”© ì¦ê°€ì‹œì¼œì„œ NextDialogue(currentID + 1 + a)ë¡œ ë°”ê¾¼ë‹¤ê±°ë‚˜
+    // aëŠ” 0í–‰ë³µ 1ìŠ¬í”” 2ë†€ëŒ 3í™”ë‚¨ ì¸ê±°ê³ 
+    // ê·¸ë¦¬ê³  ë‹¤ì´ì–¼ë¡œê·¸ ì €ê±° í•¨ìˆ˜ë¡œ ë°”ê¿”ì„œ
     // AddBond()
     // Dialogue()
-    // ¹¹ ÀÌ·± ½ÄÀ¸·Î À¯´ë°¨ Áõ°¡½ÃÅ°°í ´ÙÀÌ¾ó·Î±× Ç¥½ÃµÇ°Ô ÇÏ´Â °Íµµ ±¦ÂúÀº µí
+    // ë­ ì´ëŸ° ì‹ìœ¼ë¡œ ìœ ëŒ€ê° ì¦ê°€ì‹œí‚¤ê³  ë‹¤ì´ì–¼ë¡œê·¸ í‘œì‹œë˜ê²Œ í•˜ëŠ” ê²ƒë„ ê´œì°®ì€ ë“¯
 
     public void UpdateAffection(float bondChange)
     {
-        bondScore += bondChange;
-        // À¯´ë°¨ Á¡¼ö Ãâ·Â (µğ¹ö±×¿ë)
-        Debug.Log($"ÇöÀç À¯´ë°¨ Á¡¼ö: {bondScore}");
+        BondScore += bondChange;
+        // ìœ ëŒ€ê° ì ìˆ˜ ì¶œë ¥ (ë””ë²„ê·¸ìš©)
+        Debug.Log($"í˜„ì¬ ìœ ëŒ€ê° ì ìˆ˜: {BondScore}");
     }
 
+    // BondScore ì˜ ì—…ë°ì´íŠ¸ ë˜ëŠ”ì§€ í…ŒìŠ¤íŠ¸
+    public void CheckBondScoreUpdate()
+    {
+        UpdateDialogueAndBond(Emotion.Happy);
+    }
+    #endregion
+
+    #region í•„í„°ì™€ í”„ë ˆì„ ì ìš©(StoryCamera)
+    // ì—í”¼ì†Œë“œIDë¥¼ í•„í„° ì´ë¦„ìœ¼ë¡œ ë³€í™˜
+    private string ConvertEpisodeToFilterName(string episodeID)
+    {
+        // "Episode1" â†’ "Ep1"
+        if (episodeID.StartsWith("Episode"))
+        {
+            string number = episodeID.Substring("Episode".Length); // "1"
+            return $"Ep{number}";
+        }
+
+        Debug.LogWarning($"Invalid episodeID: {episodeID}");
+        return null;
+    }
+
+    // ì—í”¼ì†Œë“œIDë¥¼ í”„ë ˆì„ ì´ë¦„ìœ¼ë¡œ ë³€í™˜
+    private string ConvertEpisodeToFrameName(string episodeID)
+    {
+        // "Episode1" â†’ "Ep1_Frame"
+        if (episodeID.StartsWith("Episode"))
+        {
+            string number = episodeID.Substring("Episode".Length); // "1"
+            return $"Ep{number}_Frame";
+        }
+
+        Debug.LogWarning($"Invalid episodeID: {episodeID}");
+        return null;
+    }
+    #endregion
 
     void EndEpisode()
     {
 
     }
+
+    
 }
