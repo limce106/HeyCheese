@@ -8,9 +8,11 @@ Library: D:\Users\user\Documents\GitHub\HeyCheese\HeyCheese\Temp\BurstOutput\tem
 --float-precision=Standard
 --target-framework=NetFramework
 --assembly-defines=Assembly-CSharp;
+--assembly-defines=Kyub.EmojiSearch;
 --assembly-defines=Mono.Data.Sqlite;
 --assembly-defines=Mono.Security;
 --assembly-defines=mscorlib;
+--assembly-defines=NativeGallery.Runtime;
 --assembly-defines=System.Configuration;
 --assembly-defines=System.Core;
 --assembly-defines=System.Data;
