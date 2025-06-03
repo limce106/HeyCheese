@@ -34,6 +34,9 @@ public class MenuButtons : MonoBehaviour
     [Header("Panel MadeBy")]
     public GameObject madeByGO;
 
+    // 현재 TimeScale 상태 저장
+    private float prevTimeScale;
+
     private void Awake()
     {
         // 싱글톤 구현
@@ -100,11 +103,12 @@ public class MenuButtons : MonoBehaviour
         string currentScene = SceneManager.GetActiveScene().name;
         UpdateButtonsByScene(currentScene);
 
+        // 현재 timeScale 저장
+        prevTimeScale = Time.timeScale;
+
         // 환경 설정 패널 열기
         settingWindow.SetActive(true);
-
-        // 시간 일시정지
-        Time.timeScale = 0f;
+        Time.timeScale = 0f; // 무조건 일시정지
     }
 
     // 설정창 닫기
@@ -114,8 +118,8 @@ public class MenuButtons : MonoBehaviour
         parentGuideGO.SetActive(false);
         madeByGO.SetActive(false);
 
-        // 시간 일시정지 해제
-        Time.timeScale = 1f;
+        // 이전 timeScale로 복원
+        Time.timeScale = prevTimeScale;
     }
     #endregion
 
