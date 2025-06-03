@@ -51,6 +51,8 @@ public class MiniGame3Manager : MiniGameManager
             yield return new WaitForSecondsRealtime(1);
         }
 
+        SoundPlayer.Instance.SoundEffectPlay((int)SoundPlayer.SFX.StoryEpi3_SFX_1);
+
         countdownText.gameObject.SetActive(false);
         Time.timeScale = 1f; // 게임 시작
 
