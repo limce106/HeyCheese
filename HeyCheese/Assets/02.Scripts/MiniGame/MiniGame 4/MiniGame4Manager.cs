@@ -71,8 +71,8 @@ public class MiniGame4Manager : MiniGameManager
         // 시작 아직 안 했거나 클리어 한 상태면 터치 안 받음
         if (!isStart || isCleared) return;
 
-        // 게임 시작된 상태면 터치를 받아서 isTouching true로 변경
-        CheckTouchInput();
+        //// 게임 시작된 상태면 터치를 받아서 isTouching true로 변경
+        //CheckTouchInput();
 
         // 터치 상태에 따라 캐릭터 상태 변경
         HandleTouchEffects();
@@ -87,6 +87,20 @@ public class MiniGame4Manager : MiniGameManager
             TriggerRestart();
         }
     }
+
+    // Touch Panel에서 PointerDown일 때
+    public void OnTouchDown()
+    {
+        if (!isStart || isCleared) return;
+        isTouching = true;
+    }
+
+    // Touch Panel에서 PointerUp일 때
+    public void OnTouchUp()
+    {
+        isTouching = false;
+    }
+
 
     private void TriggerRestart()
     {
