@@ -3529,6 +3529,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settingWindow: {fileID: 1320437582}
+  settingButton: {fileID: 1352780067}
   ttsSlider: {fileID: 983284805}
   sfxSlider: {fileID: 837612352}
   bgmSlider: {fileID: 1298360855}
@@ -5741,7 +5742,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 28b6c01256f696e469ac5c3452f417d2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 72da9dd0be35e3a408afda06e03d63db, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
