@@ -15,13 +15,15 @@ public class MainStoryTakePhoto : MonoBehaviour
 
     public void OnClick_EmotionCamera()
     {
-        // 카메라 버튼 비활성화 및 표정 탐색 패널 보여주기
+        // 카메라 버튼 비활성화
         MainStoryManager.DeActivateCameraBtnInteraction();
-        MainStoryManager.ShowFaceSearching();
 
         // 사진 캡쳐 및 저장
         StartCoroutine(saveLoadPicture.CaptureAndSave((filepath, capturedAt) =>
         {
+            // 표정 탐색 패널 보여주기
+            MainStoryManager.ShowFaceSearching();
+
             // 캡쳐된 사진을 통해 감정 검출
             StartCoroutine(emotionDetector.DetectEmotionFromFile(filepath, (emotion) =>
             {
