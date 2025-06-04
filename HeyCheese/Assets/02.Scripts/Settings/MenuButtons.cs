@@ -98,36 +98,50 @@ public class MenuButtons : MonoBehaviour
         parentGuideBtn?.SetActive(isMenu);
     }
 
+    public void OnClickSettingButton()
+    {
+        if (!settingWindow.activeSelf)
+            OnClickSettingsOpen();
+        else
+            OnClickSettingsClose();
+    }
+
     // 환경 설정 버튼 클릭 시 환경 설정 화면 띄움
     public void OnClickSettingsOpen()
     {
-        // 안전하게 다시 확인 (sceneLoaded와 중복 가능)
-        string currentScene = SceneManager.GetActiveScene().name;
-        UpdateButtonsByScene(currentScene);
+        if (!settingWindow.activeSelf)
+        {
+            // 안전하게 다시 확인 (sceneLoaded와 중복 가능)
+            string currentScene = SceneManager.GetActiveScene().name;
+            UpdateButtonsByScene(currentScene);
 
-        // 현재 timeScale 저장
-        prevTimeScale = Time.timeScale;
+            // 현재 timeScale 저장
+            prevTimeScale = Time.timeScale;
 
-        // 환경 설정 패널 열기
-        settingWindow.SetActive(true);
-        Time.timeScale = 0f; // 무조건 일시정지
+            // 환경 설정 패널 열기
+            settingWindow.SetActive(true);
+            Time.timeScale = 0f; // 무조건 일시정지
 
-        // 설정 버튼 interactable 비활성화
-        settingButton.interactable = false;
+            //// 설정 버튼 interactable 비활성화
+            //settingButton.interactable = false;
+        }
     }
 
     // 설정창 닫기
     public void OnClickSettingsClose()
     {
-        settingWindow.SetActive(false);
-        parentGuideGO.SetActive(false);
-        madeByGO.SetActive(false);
+        if (settingWindow.activeSelf)
+        {
+            settingWindow.SetActive(false);
+            parentGuideGO.SetActive(false);
+            madeByGO.SetActive(false);
 
-        // 이전 timeScale로 복원
-        Time.timeScale = prevTimeScale;
+            // 이전 timeScale로 복원
+            Time.timeScale = prevTimeScale;
 
-        // 설정 버튼 interactable 활성화
-        settingButton.interactable = true;
+            //// 설정 버튼 interactable 활성화
+            //settingButton.interactable = true;
+        }
     }
     #endregion
 

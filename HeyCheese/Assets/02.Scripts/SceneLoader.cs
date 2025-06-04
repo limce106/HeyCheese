@@ -13,6 +13,7 @@ public class SceneLoader : MonoBehaviour
         // 메인 메뉴로 이동 시, 메인 메뉴 브금 재생
         if (sceneName == "MainMenu")
         {
+            Time.timeScale = 1f;
             SoundPlayer.Instance.ChangeBGM((int)SoundPlayer.BGM.DEFAULT_BGM);
         }
     }
