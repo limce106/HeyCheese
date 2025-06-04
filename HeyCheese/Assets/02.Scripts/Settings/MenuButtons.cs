@@ -1,4 +1,4 @@
-using System.Collections;
+ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,6 +17,8 @@ public class MenuButtons : MonoBehaviour
 
     [SerializeField]
     public GameObject settingWindow;
+
+    [SerializeField] private Button settingButton;
 
     [Header("Panel Setting")]
     // Slider
@@ -109,6 +111,9 @@ public class MenuButtons : MonoBehaviour
         // 환경 설정 패널 열기
         settingWindow.SetActive(true);
         Time.timeScale = 0f; // 무조건 일시정지
+
+        // 설정 버튼 interactable 비활성화
+        settingButton.interactable = false;
     }
 
     // 설정창 닫기
@@ -120,6 +125,9 @@ public class MenuButtons : MonoBehaviour
 
         // 이전 timeScale로 복원
         Time.timeScale = prevTimeScale;
+
+        // 설정 버튼 interactable 활성화
+        settingButton.interactable = true;
     }
     #endregion
 
