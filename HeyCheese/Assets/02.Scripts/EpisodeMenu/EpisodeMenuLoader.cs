@@ -32,6 +32,7 @@ public class EpisodeMenuLoader : MonoBehaviour
         // Prolog는 맨 앞에 오도록, Episode_뒤에 오는 숫자 기반으로 나열
         // 숫자가 없거나 파싱 실패 시 맨 뒤로 보내짐
         var sortedMenus = storyMenus.Values
+            .Where(menu => menu.EpisodeID != "HappyEnding" && menu.EpisodeID != "NormalEnding") // 제외 조건 - 근데 메뉴엔 이 내용 안 들어가서 상관없긴함
             .OrderBy(menu =>
             {
                 if (menu.EpisodeID == "Prolog") return -1; // Prolog은 맨 앞
@@ -41,6 +42,10 @@ public class EpisodeMenuLoader : MonoBehaviour
                 return int.TryParse(numberPart, out int num) ? num : int.MaxValue; // 에피소드 뒤의 숫자를 기준으로 정렬, 숫자 없거나 파싱 실패 시 맨 뒤로 보내기
             })
             .ToList();
+
+        // 마지막 에피소드 저장
+        string lastEpisode = sortedMenus[sortedMenus.Count - 1].EpisodeID;
+        PlayerPrefsControll.SavePref_SetString("LastEpisode", lastEpisode);
 
         bool previousCleared = true; // prolog는 항상 해금
 
