@@ -1,9 +1,9 @@
 EpisodeID,ChapterTitle,ID,NextID,EventType,ScreenEffect,SpeakerID,ScriptID,Score,Choice1,Choice2,Choice3,MiniGame,SpeakerImageID,ImageID,VideoID,ARFilterID,FrameID,BGM,SFX
 Prolog,『밤하늘의 방문자』,0,1,Loading,FadeOut,,,,,,,,,,,,,STOP_BGM,
-Prolog,『밤하늘의 방문자』,1,2,Dialogue,,시스템,"어두운 밤, 별이 가득한 하늘.",,,,,,NONE,,,,,,
-Prolog,『밤하늘의 방문자』,2,3,Dialogue,,시스템,갑자기 하늘을 가르는 빛. UFO가 놀이터 위로 착륙.,,,,,,NONE,,,,,,
+Prolog,『밤하늘의 방문자』,1,2,Dialogue,,시스템,"어두운 밤, 별이 가득한 하늘.",,,,,,NONE,,,,,Prolog_BGM,
+Prolog,『밤하늘의 방문자』,2,3,Dialogue,,시스템,갑자기 하늘을 가르는 빛. UFO가 놀이터 위로 착륙.,,,,,,NONE,,,,,,Prolog_SFX_1
 Prolog,『밤하늘의 방문자』,3,4,Dialogue,,시스템,놀이터의 풀숲에서 이상한 인형처럼 보이는 무언가 등장.,,,,,,NONE,,,,,,
-Prolog,『밤하늘의 방문자』,4,5,Dialogue,,치즈,"""(설레는 미소를 지으며) 드디어 지구에 도착했다!!""",,,,,,9Speaker/기본_표정_치즈,,,,,Prolog_BGM,Prolog_SFX_1
+Prolog,『밤하늘의 방문자』,4,5,Dialogue,,치즈,"""(설레는 미소를 지으며) 드디어 지구에 도착했다!!""",,,,,,9Speaker/기본_표정_치즈,,,,,,
 Prolog,『밤하늘의 방문자』,5,6,Dialogue,,치즈,"""빨리 친구들을 만나고 싶어.""",,,,,,9Speaker/미소_표정_치즈,,,,,,
 Prolog,『밤하늘의 방문자』,6,0,End,,,,,,,,,,,,,,,
 Episode1,『우리 반에 새 친구가 왔어!』,0,1,Loading,FadeOut,,,,,,,,,2Back/Epi1_1,,,,STOP_BGM,
@@ -177,7 +177,7 @@ Episode4,『내 생일 파티에 놀러와!』,17,18,Dialogue,,치즈,{PlayerNam
 Episode4,『내 생일 파티에 놀러와!』,18,19,Dialogue,,부기,생일 진심으로 축하해!!!,,,,,,9Speaker/미소_부기,,,,,,
 Episode4,『내 생일 파티에 놀러와!』,19,20,Dialogue,,부기,(수줍은 표정으로) {PlayerName}. 이제 우리가 준비한 선물을 주고 싶어!,,,,,,9Speaker/부끄_부기,,,,,,
 Episode4,『내 생일 파티에 놀러와!』,20,21,Dialogue,,부기,(엄청 큰 연필을 건네며) 나는 ‘대왕 연필’을 가져왔어.. 어때??,,,,,,9Speaker/선물_부기,,,,,,
-Episode4,『내 생일 파티에 놀러와!』,21,22,Dialogue,,치즈,(치즈를 닮은 인형을 건네며) 나는 ‘인형’을 가져왔어!! 어때?,,,,,,9Speaker/선물_치즈,,,,,StoryEpi4_BGM,
+Episode4,『내 생일 파티에 놀러와!』,21,22,Dialogue,,치즈,(치즈를 닮은 인형을 건네며) 나는 ‘인형’을 가져왔어!! 어때?,,,,,,9Speaker/선물_치즈,,,,,StoryEpi4_BGM,STOP_SFX
 Episode4,『내 생일 파티에 놀러와!』,22,23,EmotionCamera,,,"치즈가 {PlayerName}의 얼굴을 보는 중, 표정으로 내 감정을 알려주자.",,,,,,,,,,,,
 Episode4,『내 생일 파티에 놀러와!』,23,27,Dialogue,,치즈,{PlayerName} 웃고있구나😄. 기쁘다고 표현해 줘서 고마워! 선물을 준 우리도 행복해졌어!!,25,,,,,9Speaker/기본_표정_치즈,,,,,,
 Episode4,『내 생일 파티에 놀러와!』,24,27,Dialogue,,치즈,{PlayerName} 슬퍼보여😢. 혹시 감동 받은 거야?? 표현해 줘서 고마워! 우리도 정말 감동이야!,15,,,,,9Speaker/미소_표정_치즈,,,,,,
@@ -254,5 +254,5 @@ BadEnding,『우주로 여행을 떠난 치즈』,17,18,Dialogue,,치즈,약속�
 BadEnding,『우주로 여행을 떠난 치즈』,18,19,Dialogue,,치즈,부기랑 기다려줘!!,,,,,,,,,,,,
 BadEnding,『우주로 여행을 떠난 치즈』,19,20,Dialogue,,치즈,다음엔… 내가 더 용기내서 먼저 다가갈게.,,,,,,,,,,,,
 BadEnding,『우주로 여행을 떠난 치즈』,20,21,Dialogue,,치즈,"그때는, 우리… 조금 더 오래 함께 있자.",,,,,,,,,,,,
-BadEnding,『우주로 여행을 떠난 치즈』,21,21,Gallary,,,,,,,,,,,,,,,
+BadEnding,『우주로 여행을 떠난 치즈』,21,22,Gallary,,,,,,,,,,,,,,,
 BadEnding,『우주로 여행을 떠난 치즈』,22,0,End,,,,,,,,,,,,,,,
