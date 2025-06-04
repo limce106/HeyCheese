@@ -1,4 +1,4 @@
-using System.Collections;
+ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,6 +18,8 @@ public class MenuButtons : MonoBehaviour
     [SerializeField]
     public GameObject settingWindow;
 
+    [SerializeField] private Button settingButton;
+
     [Header("Panel Setting")]
     // Slider
     public Slider ttsSlider;
@@ -33,6 +35,9 @@ public class MenuButtons : MonoBehaviour
 
     [Header("Panel MadeBy")]
     public GameObject madeByGO;
+
+    // 현재 TimeScale 상태 저장
+    private float prevTimeScale;
 
     private void Awake()
     {
@@ -100,11 +105,15 @@ public class MenuButtons : MonoBehaviour
         string currentScene = SceneManager.GetActiveScene().name;
         UpdateButtonsByScene(currentScene);
 
+        // 현재 timeScale 저장
+        prevTimeScale = Time.timeScale;
+
         // 환경 설정 패널 열기
         settingWindow.SetActive(true);
+        Time.timeScale = 0f; // 무조건 일시정지
 
-        // 시간 일시정지
-        Time.timeScale = 0f;
+        // 설정 버튼 interactable 비활성화
+        settingButton.interactable = false;
     }
 
     // 설정창 닫기
@@ -114,8 +123,11 @@ public class MenuButtons : MonoBehaviour
         parentGuideGO.SetActive(false);
         madeByGO.SetActive(false);
 
-        // 시간 일시정지 해제
-        Time.timeScale = 1f;
+        // 이전 timeScale로 복원
+        Time.timeScale = prevTimeScale;
+
+        // 설정 버튼 interactable 활성화
+        settingButton.interactable = true;
     }
     #endregion
 
