@@ -34,9 +34,7 @@ public class CSVDownloader : MonoBehaviour
         foreach (var sheet in sheetIds)
         {
             string url = string.Format(baseSheetURL, documentID, sheet.Value);
-            print(url);
             string filePath = Path.Combine(Application.persistentDataPath, $"{sheet.Key}.csv");
-            print(filePath);
 
             using (UnityWebRequest request = UnityWebRequest.Get(url))
             {
