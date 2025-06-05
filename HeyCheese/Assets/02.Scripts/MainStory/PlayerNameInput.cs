@@ -63,6 +63,7 @@ public class PlayerNameInput : MonoBehaviour
 
         // MainStoryManager의 NextStep() 호출
         PlayerDataManager.Instance.LoadPlayerName(); // 이름 로드
+        MainStoryGameManager.MainStoryGM.playerName = PlayerDataManager.Instance.PlayerName; // 이름 가져오기
         MainStoryManager.PlayerName = PlayerDataManager.Instance.PlayerName; // 이름 가져오기
         MainStoryManager.NextStep();
 
