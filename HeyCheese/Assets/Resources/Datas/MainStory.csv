@@ -1,6 +1,6 @@
 EpisodeID,ChapterTitle,ID,NextID,EventType,ScreenEffect,SpeakerID,ScriptID,Score,Choice1,Choice2,Choice3,MiniGame,SpeakerImageID,ImageID,VideoID,ARFilterID,FrameID,BGM,SFX
-Prolog,『밤하늘의 방문자』,0,1,Loading,FadeOut,,,,,,,,,,,,,STOP_BGM,
-Prolog,『밤하늘의 방문자』,1,2,Dialogue,,시스템,"어두운 밤, 별이 가득한 하늘.",,,,,,NONE,,,,,Prolog_BGM,
+Prolog,『밤하늘의 방문자』,0,1,Loading,FadeOut,,"어두운 밤, 별이 가득한 하늘.",,,,,,,,,,,STOP_BGM,
+Prolog,『밤하늘의 방문자』,1,2,Dialogue,,시스템,흠흠 이것은 테스트라네!,,,,,,NONE,,,,,Prolog_BGM,
 Prolog,『밤하늘의 방문자』,2,3,Dialogue,,시스템,갑자기 하늘을 가르는 빛. UFO가 놀이터 위로 착륙.,,,,,,NONE,,,,,,Prolog_SFX_1
 Prolog,『밤하늘의 방문자』,3,4,Dialogue,,시스템,놀이터의 풀숲에서 이상한 인형처럼 보이는 무언가 등장.,,,,,,NONE,,,,,,
 Prolog,『밤하늘의 방문자』,4,5,Dialogue,,치즈,"""(설레는 미소를 지으며) 드디어 지구에 도착했다!!""",,,,,,9Speaker/기본_표정_치즈,,,,,,
