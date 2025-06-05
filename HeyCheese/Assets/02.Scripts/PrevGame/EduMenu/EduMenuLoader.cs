@@ -7,93 +7,93 @@ using System.Linq;
 
 public class EduMenuLoader : MonoBehaviour
 {
-    [Header("UI Elements")]
-    // ÆĞ³Î
-    public GameObject eduMenuPanel;
-    public GameObject situationMenuPanel;
-    public GameObject eduPopupMenuPanel;
+    //[Header("UI Elements")]
+    //// íŒ¨ë„
+    //public GameObject eduMenuPanel;
+    //public GameObject situationMenuPanel;
+    //public GameObject eduPopupMenuPanel;
 
-    // ¹öÆ°
-    public Button[] emotionButtons; // Emotion ¹öÆ° 4°³
-    public GameObject[] situationButtons; // Situation ¹öÆ° 4°³ - ÀÌ¹ÌÁö ¹Ş¾Æ¼­ go
+    //// ë²„íŠ¼
+    //public Button[] emotionButtons; // Emotion ë²„íŠ¼ 4ê°œ
+    //public GameObject[] situationButtons; // Situation ë²„íŠ¼ 4ê°œ - ì´ë¯¸ì§€ ë°›ì•„ì„œ go
 
-    // ID °ª
-    private string[] emotionIDs = { "happiness", "sadness", "surprise", "anger" };
-    private string selectedEmotionID;
+    //// ID ê°’
+    //private string[] emotionIDs = { "happiness", "sadness", "surprise", "anger" };
+    //private string selectedEmotionID;
 
-    // Data Structure
-    private Dictionary<string, List<EduMenu>> eduMenus = new Dictionary<string, List<EduMenu>>();
+    //// Data Structure
+    //private Dictionary<string, List<EduMenu>> eduMenus = new Dictionary<string, List<EduMenu>>();
 
-    private void Awake()
-    {
-        // ÆÄ½ÌÇÑ ³»¿ë ºÒ·¯¿À±â
-        CSVParser csvParser = new CSVParser();
-        eduMenus = csvParser.ParseEduMenus();
-    }
+    //private void Awake()
+    //{
+    //    // íŒŒì‹±í•œ ë‚´ìš© ë¶ˆëŸ¬ì˜¤ê¸°
+    //    CSVParser csvParser = new CSVParser();
+    //    eduMenus = csvParser.ParseEduMenus();
+    //}
 
-    private void Start()
-    {
-        // Emotion ¹öÆ° ÀÌº¥Æ® ¿¬°á
-        for(int i = 0; i < emotionButtons.Length; i++)
-        {
-            string id = emotionIDs[i]; // Å¬·ÎÀú ¹®Á¦ ¹æÁö À§ÇÑ °ª º¹»ç
-            emotionButtons[i].onClick.AddListener(() => OnEmotionSelected(id));
-        }
+    //private void Start()
+    //{
+    //    // Emotion ë²„íŠ¼ ì´ë²¤íŠ¸ ì—°ê²°
+    //    for(int i = 0; i < emotionButtons.Length; i++)
+    //    {
+    //        string id = emotionIDs[i]; // í´ë¡œì € ë¬¸ì œ ë°©ì§€ ìœ„í•œ ê°’ ë³µì‚¬
+    //        emotionButtons[i].onClick.AddListener(() => OnEmotionSelected(id));
+    //    }
 
-        // ÃÊ±â ÆĞ³Î ¼³Á¤
-        eduMenuPanel.SetActive(true);
-        situationMenuPanel.SetActive(false);
-        eduPopupMenuPanel.SetActive(false);
-    }
+    //    // ì´ˆê¸° íŒ¨ë„ ì„¤ì •
+    //    eduMenuPanel.SetActive(true);
+    //    situationMenuPanel.SetActive(false);
+    //    eduPopupMenuPanel.SetActive(false);
+    //}
 
-    // EduMenu > SituationMenu
-    // EduMenu Áß °¨Á¤ ¹öÆ° ¼±ÅÃ ½Ã ÀÌº¥Æ® Ã³¸®
-    // ÀÎ½ºÆåÅÍ Ã¢¿¡¼­ °¢ ¹öÆ°¿¡ ¿¬°á ¹× °¨Á¤ ¸í½Ã ÇÊ¿ä
-    // ´­·ÈÀ» ¶§ SituationMenu ÆĞ³Î ¿ÀÇÂµÇ¸ç »óÈ² µ¥ÀÌÅÍ ´­¸° °¨Á¤¿¡ ¸Â°Ô ÀüÈ¯
-    public void OnEmotionSelected(string emotionID)
-    {
-        // ´­¸° °¨Á¤ È®ÀÎ
-        selectedEmotionID = emotionID;
+    //// EduMenu > SituationMenu
+    //// EduMenu ì¤‘ ê°ì • ë²„íŠ¼ ì„ íƒ ì‹œ ì´ë²¤íŠ¸ ì²˜ë¦¬
+    //// ì¸ìŠ¤í™í„° ì°½ì—ì„œ ê° ë²„íŠ¼ì— ì—°ê²° ë° ê°ì • ëª…ì‹œ í•„ìš”
+    //// ëˆŒë ¸ì„ ë•Œ SituationMenu íŒ¨ë„ ì˜¤í”ˆë˜ë©° ìƒí™© ë°ì´í„° ëˆŒë¦° ê°ì •ì— ë§ê²Œ ì „í™˜
+    //public void OnEmotionSelected(string emotionID)
+    //{
+    //    // ëˆŒë¦° ê°ì • í™•ì¸
+    //    selectedEmotionID = emotionID;
 
-        if (!eduMenus.ContainsKey(emotionID))
-        {
-            Debug.LogError("ÇØ´ç °¨Á¤¿¡ ´ëÇÑ »óÈ²ÀÌ ¾ø½À´Ï´Ù: " + emotionID);
-            return;
-        }
+    //    if (!eduMenus.ContainsKey(emotionID))
+    //    {
+    //        Debug.LogError("í•´ë‹¹ ê°ì •ì— ëŒ€í•œ ìƒí™©ì´ ì—†ìŠµë‹ˆë‹¤: " + emotionID);
+    //        return;
+    //    }
 
-        // »óÈ²¿¡ ¸Â°Ô ¹öÆ° ¾ÆÀÌÄÜ, ¸®½º³Ê º¯°æ
-        var situations = eduMenus[emotionID];
-        for (int i = 0; i < situationButtons.Length; i++)
-        {
-            if (i >= situations.Count) continue;
+    //    // ìƒí™©ì— ë§ê²Œ ë²„íŠ¼ ì•„ì´ì½˜, ë¦¬ìŠ¤ë„ˆ ë³€ê²½
+    //    var situations = eduMenus[emotionID];
+    //    for (int i = 0; i < situationButtons.Length; i++)
+    //    {
+    //        if (i >= situations.Count) continue;
 
-            EduMenu data = situations[i]; // {emotionID, situationID, iconPath}
+    //        EduMenu data = situations[i]; // {emotionID, situationID, iconPath}
 
-            Image iconImage = situationButtons[i].GetComponent<Image>();
-            Sprite icon = Resources.Load<Sprite>(data.IconPath);
-            //if (icon != null) iconImage.sprite = icon;
+    //        Image iconImage = situationButtons[i].GetComponent<Image>();
+    //        Sprite icon = Resources.Load<Sprite>(data.IconPath);
+    //        //if (icon != null) iconImage.sprite = icon;
 
-            Button btn = situationButtons[i].GetComponent<Button>();
-            string situationID = data.SituationID;
-            btn.onClick.RemoveAllListeners();
-            btn.onClick.AddListener(() => OnSituationSelected(situationID));
-        }
+    //        Button btn = situationButtons[i].GetComponent<Button>();
+    //        string situationID = data.SituationID;
+    //        btn.onClick.RemoveAllListeners();
+    //        btn.onClick.AddListener(() => OnSituationSelected(situationID));
+    //    }
 
-        // SituationMenu·Î ÀüÈ¯
-        eduMenuPanel.SetActive(false);
-        situationMenuPanel.SetActive(true);
-        eduPopupMenuPanel.SetActive(false);
-    }
+    //    // SituationMenuë¡œ ì „í™˜
+    //    eduMenuPanel.SetActive(false);
+    //    situationMenuPanel.SetActive(true);
+    //    eduPopupMenuPanel.SetActive(false);
+    //}
 
-    // SituationMenu > EduPopupMenu
-    // SituationMenu Áß »óÈ² ¹öÆ° ¼±ÅÃ ½Ã ÀÌº¥Æ® Ã³¸®
-    // ´­·ÈÀ» ¶§ EduPopupMenu ÆĞ³Î ¿ÀÇÂµÇ¸ç ·¹º§ µ¥ÀÌÅÍ ´­¸° »óÈ²¿¡ ¸Â°Ô ÀüÈ¯
-    // -- EduStory¾ÀÀ¸·Î ÀüÈ¯ ½Ã, »óÈ², ·¹º§, °¨Á¤ Àü´Ş --
-    void OnSituationSelected(string situationID)
-    {
-        Debug.Log("¼±ÅÃµÈ »óÈ²: " + selectedEmotionID + "/" + situationID);
-        eduPopupMenuPanel.SetActive(true);
-        // ÆË¾÷ UI ¿ÀÇÂ ¹× »óÈ² ID Àü´Ş
-        //SituationPopupController.Instance.OpenPopup(selectedEmotionID, situationID);
-    }
+    //// SituationMenu > EduPopupMenu
+    //// SituationMenu ì¤‘ ìƒí™© ë²„íŠ¼ ì„ íƒ ì‹œ ì´ë²¤íŠ¸ ì²˜ë¦¬
+    //// ëˆŒë ¸ì„ ë•Œ EduPopupMenu íŒ¨ë„ ì˜¤í”ˆë˜ë©° ë ˆë²¨ ë°ì´í„° ëˆŒë¦° ìƒí™©ì— ë§ê²Œ ì „í™˜
+    //// -- EduStoryì”¬ìœ¼ë¡œ ì „í™˜ ì‹œ, ìƒí™©, ë ˆë²¨, ê°ì • ì „ë‹¬ --
+    //void OnSituationSelected(string situationID)
+    //{
+    //    Debug.Log("ì„ íƒëœ ìƒí™©: " + selectedEmotionID + "/" + situationID);
+    //    eduPopupMenuPanel.SetActive(true);
+    //    // íŒì—… UI ì˜¤í”ˆ ë° ìƒí™© ID ì „ë‹¬
+    //    //SituationPopupController.Instance.OpenPopup(selectedEmotionID, situationID);
+    //}
 }
