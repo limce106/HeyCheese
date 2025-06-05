@@ -38,7 +38,7 @@ public class MainStoryManager : MonoBehaviour
     [Header("UI Elements_Background")]
     public GameObject background;
     public Image backgroundImg;
-    [Header("UI Elements_Loading")] 
+    [Header("UI Elements_Loading")]
     public Button loadingBtn;
     public TMP_Text episodeIDText;
     public TMP_Text chapterTitleText;
@@ -108,7 +108,7 @@ public class MainStoryManager : MonoBehaviour
 
     #region Unity Lifecycle
     // 코루틴으로 MainStoryGameManager.cs에서 csv 파싱 완료될 때까지 기다리기
-    IEnumerator Start() 
+    IEnumerator Start()
     {
         loadingBtn.interactable = false; // 로딩 버튼 비활성화(파싱 중 급격한 전환 방지)
         yield return new WaitUntil(() => MainStoryGameManager.MainStoryGM?.currentEpisode != null);
@@ -118,7 +118,7 @@ public class MainStoryManager : MonoBehaviour
         PlayerName = MainStoryGameManager.MainStoryGM.playerName;
 
         // 스토리카메라 데이터 내역 초기화
-        ResetStoryPhotoData();        
+        ResetStoryPhotoData();
 
         // 유대감 슬라이드 내역 반영
         bondSlider.value = BondScore;
@@ -154,7 +154,7 @@ public class MainStoryManager : MonoBehaviour
                 loadingCanvas.SetActive(true);
 
                 SetImage(backgroundImg, step.ImageID); // 배경 변경
-                
+
                 episodeIDText.text = step.EpisodeID; // 에피소드ID 변경
                 chapterTitleText.text = step.ChapterTitle; // 에피소드 제목 변경
 
@@ -172,7 +172,7 @@ public class MainStoryManager : MonoBehaviour
                 string rawScriptText = step.ScriptID;
                 string namedScriptText = rawScriptText.Replace("{PlayerName}", PlayerName);
 
-                if(SpeakerUtil.ParseSpeakerID(step.SpeakerID) == Speaker.System)
+                if (SpeakerUtil.ParseSpeakerID(step.SpeakerID) == Speaker.System)
                 {
                     nameImgObj.SetActive(false);
                 }
@@ -239,7 +239,7 @@ public class MainStoryManager : MonoBehaviour
                 background.SetActive(false);
                 cameraCanvas.SetActive(true);
                 emotionCameraCanvas.SetActive(true);
-                
+
                 // 질문에 플레이어 이름 적용
                 string rawQuestionText = "치즈가 {PlayerName}의 얼굴을 보는 중\n표정으로 내 감정을 알려주자.";
                 emoQuestionText.text = rawQuestionText.Replace("{PlayerName}", PlayerName);
@@ -251,7 +251,7 @@ public class MainStoryManager : MonoBehaviour
                 background.SetActive(false);
                 cameraCanvas.SetActive(true);
                 storyCameraCanvas.SetActive(true);
-                
+
                 // 필터 추가
                 filterName = ConvertEpisodeToFilterName(step.EpisodeID);
                 arFaceFilterApplier.MainStory_Filter(filterName);
@@ -275,26 +275,15 @@ public class MainStoryManager : MonoBehaviour
                 string processedText = rawText.Replace("\\n", "\n");
                 giftInfoText.text = processedText; // 변경될 수 있음
 
-                StartCoroutine(HandleGiftPopupAndEnd(step)); // 패널 표시(애니메이션 적용)
+                StartCoroutine(HandleGiftPopup(step)); // 패널 표시(애니메이션 적용)
                 break;
-        }
-
-        if (step.NextID == 0 && step.EventType != "Gift")
-        {
-            Debug.Log("스토리 종료 지점에 도달했습니다.");
-            EndEpisode();
-        }
-    }
-
-    private IEnumerator HandleGiftPopupAndEnd(MainStory step)
-    {
-        yield return PopupAnimator.OnPanelPopup(giftAlarmPanel); // 애니메이션 끝날 때까지 기다림, 패널 표시(애니메이션 적용)
-
-        // 애니메이션 후 종료 처리
-        if (step.NextID == 0)
-        {
-            Debug.Log("스토리 종료 지점에 도달했습니다.");
-            EndEpisode();
+            case "End":
+                if (step.NextID == 0)
+                {
+                    Debug.Log("스토리 종료 지점에 도달했습니다.");
+                    EndEpisode();
+                }
+                break;
         }
     }
 
@@ -597,6 +586,66 @@ public class MainStoryManager : MonoBehaviour
     }
     #endregion
 
+    // GiftPopup 애니메이션 재생 후 엔딩 여부 체크
+    private IEnumerator HandleGiftPopup(MainStory step)
+    {
+        yield return PopupAnimator.OnPanelPopup(giftAlarmPanel); // 애니메이션 끝날 때까지 기다림, 패널 표시(애니메이션 적용)
+
+        TurnOffEveryCanvas();
+        loadingCanvas.SetActive(true);
+
+        // 엔딩 여부 체크
+        CheckEnding(step);
+    }
+
+    // 엔딩 체크 후 에피소드 끝내기
+    private void CheckEnding(MainStory step)
+    {
+        string lastEpisodeID = PlayerPrefs.GetString("LastEpisode");
+        Debug.Log("마지막 에피소드(4여야함): " + lastEpisodeID);
+        if (step.EpisodeID == lastEpisodeID) // 마지막 에피소드라면
+        {
+            // 유대감 수치에 따른 엔딩 재생
+            if (episodeBondScore >= 70)
+            {
+                // HappyEnding
+                Ending(lastEpisodeID, "HappyEnding");
+            }
+            else
+            {
+                // BadEnding
+                Ending(lastEpisodeID, "NormalEnding");
+            }
+        }
+        else // 마지막 에피소드가 아니라면
+        {
+            if (step.NextID == 0)
+            {
+                Debug.Log("스토리 종료 지점에 도달했습니다.");
+                EndEpisode();
+            }
+        }
+    }
+
+    // 에피소드 끝내기(엔딩용)
+    void Ending(string lastEpisodeID, string endingID)
+    {
+        string episodeID = CurrentEpisode[CurrentID].EpisodeID;
+
+        // 다음 스토리 해금을 위한 데이터 저장
+        BondScoreDataManager.Instance.SaveFinalBondScore(episodeBondScore); // 유대감 점수 영구 저장
+        PlayerPrefsControll.SavePref_SetInt(episodeID + "_Cleared", 1);
+
+        // episodeID를 PlayerPrefs에 저장
+        PlayerPrefsControll.SavePref_SetString("SelectedEpisodeID", endingID);
+
+        // MainStory로 재전환
+        SceneManager.LoadScene("MainStory");
+    }
+
+    // 에피소드 끝내기
+    // 프롤로그면 바로 Episode1로 전환
+    // 그냥 에피소드면 EpisodeMenu로 나가기
     void EndEpisode()
     {
         string episodeID = CurrentEpisode[CurrentID].EpisodeID;

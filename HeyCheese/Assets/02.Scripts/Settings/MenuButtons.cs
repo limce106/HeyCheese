@@ -36,8 +36,13 @@ public class MenuButtons : MonoBehaviour
     [Header("Panel MadeBy")]
     public GameObject madeByGO;
 
+
+    [Header("PlayerPrefs 테스트")]
+    [SerializeField] private Toggle toggle;
+
     // 현재 TimeScale 상태 저장
     private float prevTimeScale;
+
 
     private void Awake()
     {
@@ -50,6 +55,8 @@ public class MenuButtons : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject); // 씬 전환 시 유지
+
+        toggle.onValueChanged.AddListener(OnToggleValueChanged);
     }
 
 
@@ -150,9 +157,18 @@ public class MenuButtons : MonoBehaviour
     {
         PlayerPrefsControll.PrintAllPrefs(); // 저장 확인용
     }
+    // 에피소드 클리어 상태 삭제
     public void OnClickDeletePlayerPrefs_EpisodeUnLock()
     {
         PlayerPrefsControll.DeleteEpisodeUnLock();
+    }
+    // 에피소드 클리어 상태 모두 클리어로 변경
+    public void OnToggleValueChanged(bool isOn)
+    {
+        PlayerPrefsControll.SavePref_SetInt("Episode1_Cleared", isOn ? 1 : 0);
+        PlayerPrefsControll.SavePref_SetInt("Episode2_Cleared", isOn ? 1 : 0);
+        PlayerPrefsControll.SavePref_SetInt("Episode3_Cleared", isOn ? 1 : 0);
+        PlayerPrefsControll.SavePref_SetInt("Episode4_Cleared", isOn ? 1 : 0);
     }
     #endregion
 }
