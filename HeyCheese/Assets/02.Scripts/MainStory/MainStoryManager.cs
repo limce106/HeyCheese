@@ -38,18 +38,20 @@ public class MainStoryManager : MonoBehaviour
     [Header("UI Elements_Background")]
     public GameObject background;
     public Image backgroundImg;
+    public GameObject fadePanel;
     [Header("UI Elements_Loading")]
     public Button loadingBtn;
     public TMP_Text episodeIDText;
     public TMP_Text chapterTitleText;
     [Header("UI Elements_Dialogue")] // Dialogue
+    public Image dialogueColorBlockerImage;
     public Button nextDialogueBtn;
-    public UnityEngine.UI.Image characterImg;
+    public Image characterImg;
     public TMP_Text speakerNameText;
     public TMP_Text dialogueText;
     public GameObject nameImgObj;
-    public UnityEngine.UI.Image nameImg;
-    public UnityEngine.UI.Image dialogueImg;
+    public Image nameImg;
+    public Image dialogueImg;
     public Slider bondSlider;
     [Header("UI Elements_Choice")] // Choice
     public TMP_Text choiceQuestionText;
@@ -146,6 +148,7 @@ public class MainStoryManager : MonoBehaviour
 
         background.SetActive(true);
         ShowStoryView();
+
         switch (step.EventType)
         {
             case "Loading":
@@ -291,6 +294,8 @@ public class MainStoryManager : MonoBehaviour
                 }
                 break;
         }
+        // 스크린 이펙트 반영
+        ApplyScreenEffect(step.ScreenEffect);
     }
 
     public void NextStep()
@@ -326,20 +331,72 @@ public class MainStoryManager : MonoBehaviour
     }
     #endregion
 
-    //#region Player Name
-    //// 플레이어 이름 불러오기
-    //public void LoadPlayerName()
-    //{
-    //    if (PlayerPrefs.HasKey("PlayerName"))
-    //    {
-    //        PlayerName = PlayerPrefs.GetString("PlayerName");
-    //    }
-    //    else
-    //    {
-    //        PlayerName = "주인공";
-    //    }
-    //}
-    //#endregion
+    #region ScreenEffect
+    // 스크린이펙트 적용
+    void ApplyScreenEffect(string effectType)
+    {
+        if (string.IsNullOrEmpty(effectType))
+            return;
+
+        string[] effects = effectType.Split('|');
+
+        foreach (var effect in effects)
+        {
+            switch (effect.Trim())
+            {
+                case "FadeIn":
+                    StartCoroutine(FadeInEffect());
+                    break;
+                case "FadeOut":
+                    StartCoroutine(FadeOutEffect());
+                    break;
+                case "NoDialogBg":
+                    print("NoDialogBg 색 바꿈");
+                    dialogueColorBlockerImage.color = new Color(0.16f, 0.16f, 0.16f, 0.4f);
+                    break;
+                case "YesDialogBg":
+                    dialogueColorBlockerImage.color = new Color(0.85f, 0.85f, 0.85f, 0.4f);
+                    break;
+                default:
+                    // 아무 효과 없음
+                    break;
+            }
+        }
+    }
+    IEnumerator FadeInEffect()
+    {
+        fadePanel.gameObject.SetActive(true);
+        Image img = fadePanel.GetComponent<Image>();
+        Color c = img.color;
+        c.a = 1f;
+        img.color = c;
+
+        while (img.color.a > 0)
+        {
+            c.a -= Time.deltaTime;
+            img.color = c;
+            yield return null;
+        }
+
+        fadePanel.gameObject.SetActive(false);
+    }
+
+    IEnumerator FadeOutEffect()
+    {
+        fadePanel.gameObject.SetActive(true);
+        Image img = fadePanel.GetComponent<Image>();
+        Color c = img.color;
+        c.a = 0f;
+        img.color = c;
+
+        while (img.color.a < 1)
+        {
+            c.a += Time.deltaTime;
+            img.color = c;
+            yield return null;
+        }
+    }
+    #endregion
 
     #region Image Utility
     // 배경, 캐릭터 Image 변경
