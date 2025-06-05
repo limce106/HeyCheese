@@ -1,4 +1,4 @@
-using System.Collections;
+ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,6 +18,8 @@ public class MenuButtons : MonoBehaviour
     [SerializeField]
     public GameObject settingWindow;
 
+    [SerializeField] private Button settingButton;
+
     [Header("Panel Setting")]
     // Slider
     public Slider ttsSlider;
@@ -34,8 +36,13 @@ public class MenuButtons : MonoBehaviour
     [Header("Panel MadeBy")]
     public GameObject madeByGO;
 
+
     [Header("PlayerPrefs 테스트")]
     [SerializeField] private Toggle toggle;
+
+    // 현재 TimeScale 상태 저장
+    private float prevTimeScale;
+
 
     private void Awake()
     {
@@ -98,29 +105,50 @@ public class MenuButtons : MonoBehaviour
         parentGuideBtn?.SetActive(isMenu);
     }
 
+    public void OnClickSettingButton()
+    {
+        if (!settingWindow.activeSelf)
+            OnClickSettingsOpen();
+        else
+            OnClickSettingsClose();
+    }
+
     // 환경 설정 버튼 클릭 시 환경 설정 화면 띄움
     public void OnClickSettingsOpen()
     {
-        // 안전하게 다시 확인 (sceneLoaded와 중복 가능)
-        string currentScene = SceneManager.GetActiveScene().name;
-        UpdateButtonsByScene(currentScene);
+        if (!settingWindow.activeSelf)
+        {
+            // 안전하게 다시 확인 (sceneLoaded와 중복 가능)
+            string currentScene = SceneManager.GetActiveScene().name;
+            UpdateButtonsByScene(currentScene);
 
-        // 환경 설정 패널 열기
-        settingWindow.SetActive(true);
+            // 현재 timeScale 저장
+            prevTimeScale = Time.timeScale;
 
-        // 시간 일시정지
-        Time.timeScale = 0f;
+            // 환경 설정 패널 열기
+            settingWindow.SetActive(true);
+            Time.timeScale = 0f; // 무조건 일시정지
+
+            //// 설정 버튼 interactable 비활성화
+            //settingButton.interactable = false;
+        }
     }
 
     // 설정창 닫기
     public void OnClickSettingsClose()
     {
-        settingWindow.SetActive(false);
-        parentGuideGO.SetActive(false);
-        madeByGO.SetActive(false);
+        if (settingWindow.activeSelf)
+        {
+            settingWindow.SetActive(false);
+            parentGuideGO.SetActive(false);
+            madeByGO.SetActive(false);
 
-        // 시간 일시정지 해제
-        Time.timeScale = 1f;
+            // 이전 timeScale로 복원
+            Time.timeScale = prevTimeScale;
+
+            //// 설정 버튼 interactable 활성화
+            //settingButton.interactable = true;
+        }
     }
     #endregion
 
