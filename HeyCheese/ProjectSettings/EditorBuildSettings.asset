@@ -38,4 +38,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/01.Scenes/MiniGame/MiniGame_4.unity
     guid: f6a2a9a95bae8b444b8b6145889da617
-  m_configObjects: {}
+  m_configObjects:
+    UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 2f1402586e1131f4a94180c5d74a583c, type: 2}
+    UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: 84c67cd34797d8146804029a29ae22a4, type: 2}
+    com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: 88cccd3dd62f6af49b1cb0ceca433b9f, type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 01f3928e6a99cf349b77185049aa1350, type: 2}
