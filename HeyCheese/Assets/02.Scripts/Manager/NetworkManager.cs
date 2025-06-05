@@ -12,6 +12,8 @@ public class NetworkManager : MonoBehaviour
     public bool IsWifiConnected => 
         Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork;
 
+    private Coroutine networkMonitorCoroutine;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -24,11 +26,16 @@ public class NetworkManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    private void Start()
+    {
+        networkMonitorCoroutine = null;
+    }
+
     // WiFi 연결 패널
     public void ShowNetworkPanel() => networkPanel?.SetActive(true);
     public void HideNetworkPanel() => networkPanel?.SetActive(false);
 
-    // WiFi 연결 확인
+    // 1회성 WiFi 연결 확인
     public void CheckNetworkAndRun(System.Action onConnected)
     {
 #if UNITY_EDITOR || UNITY_STANDALONE
@@ -51,5 +58,40 @@ public class NetworkManager : MonoBehaviour
         HideNetworkPanel();
         Debug.Log("Wifi Connected");
         onConnected?.Invoke();
+    }
+
+    // WiFi 연결 지속 감시
+    public void StartNetworkMonitor()
+    {
+        if (networkMonitorCoroutine == null)
+            networkMonitorCoroutine = StartCoroutine(NetworkMonitorLoop());
+    }
+
+    // 메인스토리에서 에피소드 목록으로 나갈 때 불러줘야 함
+    public void StopNetworkMonitor()
+    {
+        if (networkMonitorCoroutine != null)
+        {
+            StopCoroutine(networkMonitorCoroutine);
+            networkMonitorCoroutine = null;
+        }
+    }
+
+    private IEnumerator NetworkMonitorLoop()
+    {
+        while (true)
+        {
+            if (!IsWifiConnected)
+            {
+                Debug.LogWarning("Wifi disconnected!");
+                ShowNetworkPanel();
+            }
+            else
+            {
+                HideNetworkPanel();
+            }
+
+            yield return new WaitForSeconds(3);
+        }
     }
 }
