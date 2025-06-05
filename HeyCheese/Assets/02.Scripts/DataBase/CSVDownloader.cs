@@ -21,26 +21,28 @@ public class CSVDownloader : MonoBehaviour
     {
         NetworkManager.Instance.CheckNetworkAndRun(() =>
         {
-            StartCoroutine(DownloadCSVs(() =>
-            {
-                
-            }));
+            //StartCoroutine(DownloadCSVs(() =>
+            //{
+
+            //}));
+            DownloadCSVs();
         });
     }
 
     // CSV 다운로드 
-    public IEnumerator DownloadCSVs(System.Action onComplete = null)
+    public static void DownloadCSVs(System.Action onComplete = null) //IEnumerator
     {
         foreach (var sheet in sheetIds)
         {
             string url = string.Format(baseSheetURL, documentID, sheet.Value);
-            print(url);
             string filePath = Path.Combine(Application.persistentDataPath, $"{sheet.Key}.csv");
-            print(filePath);
 
             using (UnityWebRequest request = UnityWebRequest.Get(url))
             {
-                yield return request.SendWebRequest();
+                //yield return request.SendWebRequest();
+                var asyncOperation = request.SendWebRequest();
+                while (!asyncOperation.isDone)
+                    System.Threading.Thread.Sleep(100); // 동기적 대기
 
                 if (request.result == UnityWebRequest.Result.Success)
                 {
