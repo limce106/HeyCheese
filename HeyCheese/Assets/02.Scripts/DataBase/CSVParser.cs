@@ -1,48 +1,45 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 public class CSVParser
 {
     // CSV 파일
-    private TextAsset eduMenuCSV = Resources.Load<TextAsset>("Datas/EduMenu");
+    // Resources 폴더에서 빌드 시 포함된 .csv 파일을 불러옴
+    // but 런타임에 외부에서 다운로드한 파일은 Resources.Load로 접근 불가
     private TextAsset storyMenuCSV = Resources.Load<TextAsset>("Datas/StoryMenu");
     private TextAsset mainStoryCSV = Resources.Load<TextAsset>("Datas/MainStory");
-    
+    // Android용
+    private string storyMenuCSVPath = Path.Combine(Application.persistentDataPath, "StoryMenu.csv");
+    private string mainStoryCSVPath = Path.Combine(Application.persistentDataPath, "MainStory.csv");
+
     // Data Structure
-    private Dictionary<string, List<EduMenu>> eduMenus = new Dictionary<string, List<EduMenu>>();
     private Dictionary<string, StoryMenu> storyMenus = new Dictionary<string, StoryMenu>();
     //public List<MainStory> storyDataList = new List<MainStory>();
 
-    // EduMenu
-    // emotionID 하위에 situationID들이 리스트로 저장되는 형태의 딕셔너리
-    // 키: emotionID, 값: [{emotionID, situationID, iconPath}, ...]
-    public Dictionary<string, List<EduMenu>> ParseEduMenus()
+    // CSV 파일 로드
+    private string[] LoadCSV(string filename, string fallbackResourcePath)
     {
-        string[] lines = eduMenuCSV.text.Split('\n');
+        string fullPath = Path.Combine(Application.persistentDataPath, filename);
 
-        for (int i = 1; i < lines.Length; i++) // 0은 헤더라 1부터 시작
+        // 플랫폼과 상관없이 저장된 파일 있다면 먼저 사용
+        if (File.Exists(fullPath))
         {
-            if (string.IsNullOrWhiteSpace(lines[i])) continue;
-
-            string[] fields = lines[i].Split(',');
-            //if (fields.Length < 3) continue; // 열은 항상 3개, 데이터가 모두 차있어야 함
-
-            string emotionID = fields[0].Trim();
-            string situationID = fields[1].Trim();
-            string iconPath = fields[2].Trim();
-
-            EduMenu eduMenu = new EduMenu(emotionID, situationID, iconPath);
-
-            if (!eduMenus.ContainsKey(emotionID))
-            {
-                eduMenus[emotionID] = new List<EduMenu>();
-            }
-
-            eduMenus[emotionID].Add(eduMenu); // 리스트에 추가
+            Debug.Log($"[CSVParser] Using downloaded file: {fullPath}");
+            return File.ReadAllLines(fullPath);
         }
 
-        return eduMenus;
+        // 저장된 파일이 없다면 Resources에서 fallback
+        TextAsset resourceFile = Resources.Load<TextAsset>(fallbackResourcePath);
+        if (resourceFile != null)
+        {
+            Debug.LogWarning($"[CSVParser] Using fallback resource: {fallbackResourcePath}");
+            return resourceFile.text.Split('\n');
+        }
+
+        Debug.LogError($"CSV 파일을 찾을 수 없습니다: {filename}");
+        return new string[0];
     }
 
     // StoryMenu
@@ -53,7 +50,13 @@ public class CSVParser
     {
         Dictionary<string, StoryMenu> parsedMenusDict = new Dictionary<string, StoryMenu>();
 
-        string[] lines = storyMenuCSV.text.Split('\n');
+        string[] lines = LoadCSV("StoryMenu.csv", "Datas/StoryMenu");
+
+        if(lines.Length == 0)
+        {
+            Debug.LogError("StoryMenu CSV 에 아무것도 없습니다.");
+            return parsedMenusDict;
+        }
 
         for (int i = 1; i < lines.Length; i++) // 0은 헤더라 1부터 시작
         {
@@ -87,7 +90,14 @@ public class CSVParser
     public Dictionary<int, MainStory> ParseMainStories(string episodeID)
     {
         var episodeDict = new Dictionary<int, MainStory>();
-        string[] lines = mainStoryCSV.text.Split('\n');
+
+        string[] lines = LoadCSV("MainStory.csv", "Datas/MainStory");
+
+        if (lines.Length == 0)
+        {
+            Debug.LogError("MainStory CSV 에 아무것도 없습니다.");
+            return episodeDict;
+        }
 
         for (int i = 1; i < lines.Length; i++) // 0은 헤더라 1부터 시작
         {
