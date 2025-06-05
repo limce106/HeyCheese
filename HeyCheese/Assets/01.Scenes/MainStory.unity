@@ -4970,6 +4970,9 @@ MonoBehaviour:
   confirmationPanel: {fileID: 1865995350}
   confrimationBtn: {fileID: 1508749160}
   confirmationText: {fileID: 1637148114}
+  inputField: {fileID: 146183929}
+  shakeDuration: 0.3
+  shakeMagnitude: 10
 --- !u!114 &970218347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6540,6 +6543,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settingWindow: {fileID: 0}
+  settingButton: {fileID: 0}
   ttsSlider: {fileID: 0}
   sfxSlider: {fileID: 0}
   bgmSlider: {fileID: 0}
@@ -6548,6 +6552,7 @@ MonoBehaviour:
   parentGuideBtn: {fileID: 0}
   parentGuideGO: {fileID: 0}
   madeByGO: {fileID: 0}
+  toggle: {fileID: 0}
 --- !u!114 &1240570803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10665,7 +10670,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1865995351
 RectTransform:
   m_ObjectHideFlags: 0
