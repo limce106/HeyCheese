@@ -235,7 +235,7 @@ public class MainStoryManager : MonoBehaviour
             case "EmotionCamera":
                 ShowARView();
                 TurnOffEveryCanvas();
-                ActivateCameraBtnInteraction();
+                DeActivateCameraBtnInteraction();
                 background.SetActive(false);
                 cameraCanvas.SetActive(true);
                 emotionCameraCanvas.SetActive(true);
@@ -243,6 +243,12 @@ public class MainStoryManager : MonoBehaviour
                 // 질문에 플레이어 이름 적용
                 string rawQuestionText = "치즈가 {PlayerName}의 얼굴을 보는 중\n표정으로 내 감정을 알려주자.";
                 emoQuestionText.text = rawQuestionText.Replace("{PlayerName}", PlayerName);
+
+                // 와이파이 연결 확인 후 카메라 버튼 활성화
+                NetworkManager.Instance.CheckNetworkAndRun(() =>
+                {
+                    ActivateCameraBtnInteraction();
+                });
                 break;
             case "StoryCamera":
                 ShowARView();
