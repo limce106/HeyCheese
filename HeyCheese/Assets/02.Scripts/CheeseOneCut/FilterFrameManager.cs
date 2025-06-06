@@ -69,13 +69,13 @@ public class FilterFrameManager : MonoBehaviour
     {
         if(faceCount == 1)
         {
-            ARFaceFilterApplier aRFaceFilterApplier = GameObject.Find("GameManager").GetComponent<ARFaceFilterApplier>();
+            ARFaceFilterApplier arFaceFilterApplier = GameObject.Find("GameManager").GetComponent<ARFaceFilterApplier>();
 
             if (!filterUnlocked["Mission1"])
             {
                 Unlockfilter("Mission1");
             }
-            else if(aRFaceFilterApplier.IsFilterValid() && !filterUnlocked["Mission2"])
+            else if(arFaceFilterApplier.IsFilterValid() && !filterUnlocked["Mission2"])
             {
                 Unlockfilter("Mission2");
             }

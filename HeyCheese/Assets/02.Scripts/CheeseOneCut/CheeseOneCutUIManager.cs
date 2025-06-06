@@ -41,7 +41,7 @@ public class CheeseOneCutUIManager : MonoBehaviour
 
     public void OnClick_Camera()
     {
-        SoundPlayer.Instance.SoundEffectPlay((int)SoundPlayer.SFX.Camera_SFX);
+        SoundPlayer.Instance?.SoundEffectPlay((int)SoundPlayer.SFX.Camera_SFX);
 
         int faceCountAtCapture = arFaceManager.trackables.count;
         StartCoroutine(CaptureAndCheckMission(faceCountAtCapture));
