@@ -165,6 +165,7 @@ public class MenuButtons : MonoBehaviour
     // 에피소드 클리어 상태 모두 클리어로 변경
     public void OnToggleValueChanged(bool isOn)
     {
+        PlayerPrefsControll.SavePref_SetInt("Prolog_Cleared", isOn ? 1 : 0);
         PlayerPrefsControll.SavePref_SetInt("Episode1_Cleared", isOn ? 1 : 0);
         PlayerPrefsControll.SavePref_SetInt("Episode2_Cleared", isOn ? 1 : 0);
         PlayerPrefsControll.SavePref_SetInt("Episode3_Cleared", isOn ? 1 : 0);
