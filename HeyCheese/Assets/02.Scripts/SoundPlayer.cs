@@ -71,6 +71,7 @@ public class SoundPlayer : MonoBehaviour
         Correct_SFX =13,
         TimeOut_SFX =14,
         Booster_SFX = 15,
+        Camera_SFX =16,
     }
 
     // 외부에서 string 타입으로 받은 sound ID를 enum의 BGM이나 SFX과 매핑해서 
