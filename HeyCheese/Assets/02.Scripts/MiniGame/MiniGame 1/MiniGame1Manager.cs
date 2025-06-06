@@ -169,6 +169,8 @@ public class MiniGame1Manager : MiniGameManager
             // 숨바꼭질 모든 단계 클리어
             if(currentStageLevel == maxStageLevel)
             {
+                SoundPlayer.Instance.SoundEffectPlay((int)SoundPlayer.SFX.Shouting_SFX);
+
                 // 숨바꼭질 끝!
                 ClearPanel.SetActive(true);
 
@@ -247,6 +249,8 @@ public class MiniGame1Manager : MiniGameManager
         // 제한 시간 동안 다 못 찾으면
         if(findOutScore<2)
         {
+            SoundPlayer.Instance.SoundEffectPlay((int)SoundPlayer.SFX.TimeOut_SFX);
+
             // restart 패널 켜짐
             isRestart = true;
             SetRestartActive(true);

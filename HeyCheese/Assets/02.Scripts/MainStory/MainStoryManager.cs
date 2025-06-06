@@ -39,6 +39,7 @@ public class MainStoryManager : MonoBehaviour
     public GameObject background;
     public Image backgroundImg;
     public GameObject fadePanel;
+    public GameObject DialougeBackColorBlackPanel;
     [Header("UI Elements_Loading")]
     public Button loadingBtn;
     public TMP_Text episodeIDText;
@@ -147,6 +148,7 @@ public class MainStoryManager : MonoBehaviour
         }
 
         background.SetActive(true);
+        DialougeBackColorBlackPanel.SetActive(true);
         ShowStoryView();
 
         switch (step.EventType)
@@ -240,6 +242,7 @@ public class MainStoryManager : MonoBehaviour
                 TurnOffEveryCanvas();
                 DeActivateCameraBtnInteraction();
                 background.SetActive(false);
+                DialougeBackColorBlackPanel.SetActive(false);
                 cameraCanvas.SetActive(true);
                 emotionCameraCanvas.SetActive(true);
 
@@ -258,6 +261,7 @@ public class MainStoryManager : MonoBehaviour
                 TurnOffEveryCanvas();
                 ActivateCameraBtnInteraction();
                 background.SetActive(false);
+                DialougeBackColorBlackPanel.SetActive(false);
                 cameraCanvas.SetActive(true);
                 storyCameraCanvas.SetActive(true);
 
@@ -676,7 +680,7 @@ public class MainStoryManager : MonoBehaviour
             }
             else
             {
-                // BadEnding
+                // NormalEnding
                 Ending(lastEpisodeID, "NormalEnding");
             }
         }

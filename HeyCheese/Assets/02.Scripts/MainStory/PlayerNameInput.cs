@@ -20,11 +20,14 @@ public class PlayerNameInput : MonoBehaviour
     private string pendingName;
     public static string PlayerName { get; private set; }
 
+    public GameObject nameWarningText;
+
     void Start()
     {
         nameInputField.characterLimit = 8;
 
         confirmationPanel.SetActive(false);
+        nameWarningText.SetActive(false);
     }
 
     // 입력 완료 처리(입력 완료 버튼)
@@ -35,9 +38,11 @@ public class PlayerNameInput : MonoBehaviour
         // 입력값이 없다면 경고 메시지를 띄우며 입력 필드를 흔듦
         if (string.IsNullOrEmpty(pendingName))
         {
+            nameWarningText.SetActive(true);
             ShakeInputField();
             return;
         }
+        nameWarningText.SetActive(false);
 
         // 입력이 정상인 경우
         confirmationPanel.SetActive(true);
@@ -51,6 +56,8 @@ public class PlayerNameInput : MonoBehaviour
     // 이름 입력 확인 시
     public void OnConfirmYes()
     {
+        nameWarningText.SetActive(false);
+
         PlayerName = pendingName;
 
         // 이름 저장
@@ -71,6 +78,8 @@ public class PlayerNameInput : MonoBehaviour
     // 이름 입력 취소 시
     public void OnConfirmNo()
     {
+        nameWarningText.SetActive(false);
+
         confirmationPanel.SetActive(false);
         nameInputField.interactable = true;
         confrimationBtn.interactable = true;
