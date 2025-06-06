@@ -27,6 +27,8 @@ public class HiddenCharacterButton : MonoBehaviour
 
     public void onClick()
     {
+        SoundPlayer.Instance.SoundEffectPlay((int)SoundPlayer.SFX.Correct_SFX);
+
         CorrectCircleImage.SetActive(true);
         characterButton.interactable = false;
 
