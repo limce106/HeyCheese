@@ -23,7 +23,7 @@ public class FilterFrameManager : MonoBehaviour
 
     private Dictionary<string, bool> filterUnlocked = new Dictionary<string, bool>
     {
-        {"Ep1", true},
+        {"Ep1", false},
         {"Ep2", false },
         {"Ep3", false },
         {"Ep4", false },
@@ -101,6 +101,9 @@ public class FilterFrameManager : MonoBehaviour
             }
         }
 
+        CheeseOneCutUIManager cheeseOneCutUIManager = GameObject.Find("GameManager").GetComponent<CheeseOneCutUIManager>();
+        cheeseOneCutUIManager.EnableFilterButtonByName(key);
+
         // 현재까지의 필터 해금 여부 저장
         PlayerPrefsControll.SavePref_SetString("FilterUnlocked", JsonUtility.ToJson(new PrefDictionary(filterUnlocked)));
     }
@@ -111,6 +114,9 @@ public class FilterFrameManager : MonoBehaviour
         {
             frameUnlocked[key] = true;
         }
+
+        CheeseOneCutUIManager cheeseOneCutUIManager = GameObject.Find("GameManager").GetComponent<CheeseOneCutUIManager>();
+        cheeseOneCutUIManager.EnableFrameButtonByName(key);
 
         // 현재까지의 프레임 해금 여부 저장
         PlayerPrefsControll.SavePref_SetString("FrameUnlocked", JsonUtility.ToJson(new PrefDictionary(frameUnlocked)));

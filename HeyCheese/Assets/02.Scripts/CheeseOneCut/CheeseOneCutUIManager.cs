@@ -18,11 +18,20 @@ public class CheeseOneCutUIManager : MonoBehaviour
     // 하단 버튼
     public GameObject bottomButtons;
 
+    private Dictionary<string, Button> filterButtonDict;
+    private Dictionary<string, Button> frameButtonDict;
+
     public EmotionGalleryDBWriter emotionGalleryDBWriter;
 
     [SerializeField]
     private ARFaceManager arFaceManager;
     public SaveLoadPicture saveLoadPicture;
+
+    private void Awake()
+    {
+        InitFilterButtons();
+        InitFrameButtons();
+    }
 
     public void OnClick_Gallery()
     {
@@ -38,7 +47,7 @@ public class CheeseOneCutUIManager : MonoBehaviour
 
     public void OnClick_Frame()
     {
-        UpdateFrameButtons();
+        //UpdateFrameButtons();
         framePanel.SetActive(true);
         bottomButtons.SetActive(false);
 
@@ -47,7 +56,7 @@ public class CheeseOneCutUIManager : MonoBehaviour
 
     public void OnClick_Filter()
     {
-        UpdateFilterButtons();
+        //UpdateFilterButtons();
         filterPanel.SetActive(true);
         bottomButtons.SetActive(false);
 
@@ -70,21 +79,45 @@ public class CheeseOneCutUIManager : MonoBehaviour
     }
 
     // 필터 버튼 이름, 이미지 설정
-    private void UpdateFilterButtons()
+    private void InitFilterButtons()
     {
-        Button[] filterButtons = filterPanel.GetComponentsInChildren<Button>();
+        Button[] filterButtons = filterPanel.GetComponentsInChildren<Button>(true);
         var filterUnlockedItems = FilterFrameManager.instance.GetFilterUnlockedReadOnly();
-        UpdateButtons(filterButtons, filterUnlockedItems, "5AR");
+        InitButtons(filterButtons, filterUnlockedItems, "5AR");
+
+        filterButtonDict = new Dictionary<string, Button>();
+
+        foreach (var button in filterButtons)
+        {
+            string name = button.gameObject.name;
+
+            if(!filterButtonDict.ContainsKey(name))
+            {
+                filterButtonDict.Add(name, button);
+            }
+        }
     }
 
-    private void UpdateFrameButtons()
+    private void InitFrameButtons()
     {
-        Button[] frameButtons = framePanel.GetComponentsInChildren<Button>();
+        Button[] frameButtons = framePanel.GetComponentsInChildren<Button>(true);
         var frameUnlockedItems = FilterFrameManager.instance.GetFrameUnlockedReadOnly();
-        UpdateButtons(frameButtons, frameUnlockedItems, "6Frame");
+        InitButtons(frameButtons, frameUnlockedItems, "6Frame");
+
+        frameButtonDict = new Dictionary<string, Button>();
+
+        foreach (var button in frameButtons)
+        {
+            string name = button.gameObject.name;
+
+            if (!frameButtonDict.ContainsKey(name))
+            {
+                frameButtonDict.Add(name, button);
+            }
+        }
     }
 
-    private void UpdateButtons(Button[] buttons, ReadOnlyDictionary<string, bool> items, string resourcesPath)
+    private void InitButtons(Button[] buttons, ReadOnlyDictionary<string, bool> items, string resourcesPath)
     {
         string[] itemKeys = items.Keys.ToArray();
         bool[] itemValues = items.Values.ToArray();
@@ -105,6 +138,22 @@ public class CheeseOneCutUIManager : MonoBehaviour
             buttonImage.sprite = itemSprite;
 
             buttons[i + 1].gameObject.name = itemName;
+        }
+    }
+
+    public void EnableFilterButtonByName(string name)
+    {
+        if(filterButtonDict.TryGetValue(name, out Button button))
+        {
+            button.interactable = true;
+        }
+    }
+
+    public void EnableFrameButtonByName(string name)
+    {
+        if (frameButtonDict.TryGetValue(name, out Button button))
+        {
+            button.interactable = true;
         }
     }
 
