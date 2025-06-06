@@ -32,19 +32,22 @@ public class PlayerController : MonoBehaviour
         // 경쟁자들 초기 딜레이 이동
         StartCoroutine(DelayAndMoveRival(rival1));
         StartCoroutine(DelayAndMoveRival(rival2));
+
+        HandleTouch();
     }
 
-    void Update()
-    {
-        // 클릭할 때 한 번만 실행해야 하기 때문에 
-        // 아래와 같은 코드 사용
-        if (Input.touchCount > 0 || Input.GetMouseButtonDown(0))
-        {
-            HandleTouch();
-        }
-    }
+    //void Update()
+    //{
+    //    // 클릭할 때 한 번만 실행해야 하기 때문에 
+    //    // 아래와 같은 코드 사용
+    //    if (Input.touchCount > 0 || Input.GetMouseButtonDown(0))
+    //    {
+    //        HandleTouch();
+    //    }
+    //}
 
-    void HandleTouch()
+    // Touch Panel의 버튼 컴포넌트에 붙여서 사용함.
+    public void HandleTouch()
     {
         if (!hasStartedRunning)
         {
@@ -71,6 +74,8 @@ public class PlayerController : MonoBehaviour
     IEnumerator BurstSpeed()
     {
         isInBurst = true;
+
+        SoundPlayer.Instance.SoundEffectPlay((int)SoundPlayer.SFX.Booster_SFX);
 
         // 버스트 시, 경쟁자 뒤쳐짐
         StartCoroutine(MoveRivalOnPlayerBurst());
