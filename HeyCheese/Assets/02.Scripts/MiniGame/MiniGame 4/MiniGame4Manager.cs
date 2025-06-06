@@ -225,6 +225,8 @@ public class MiniGame4Manager : MiniGameManager
         // 조건 달성 시 게임 시간 멈추고 ClearPanel 표시
         if (progressSlider.value >= 1f)
         {
+            SoundPlayer.Instance.SoundEffectPlay((int)SoundPlayer.SFX.Shouting_SFX);
+
             isCleared = true;
             Time.timeScale = 0f;
 
