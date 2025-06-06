@@ -12,6 +12,7 @@ Library: D:\Users\jieun\Unity\HeyCheese\HeyCheese\Temp\BurstOutput\tempburstlibs
 --assembly-defines=Mono.Data.Sqlite;
 --assembly-defines=Mono.Security;
 --assembly-defines=mscorlib;
+--assembly-defines=NativeGallery.Runtime;
 --assembly-defines=System.Configuration;
 --assembly-defines=System.Core;
 --assembly-defines=System.Data;

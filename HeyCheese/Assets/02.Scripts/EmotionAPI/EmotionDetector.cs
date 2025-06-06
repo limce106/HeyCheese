@@ -259,7 +259,7 @@ public class EmotionDetector : MonoBehaviour
             if (request.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogError("Error: " + request.error);
-                emotionText.text = "API 요청 실패";
+                //emotionText.text = "API 요청 실패";
             }
             else // API 요청 성공
             {
@@ -271,13 +271,13 @@ public class EmotionDetector : MonoBehaviour
                     FaceAnnotation face = faceResponse.responses[0].faceAnnotations[0];
                     Emotion dominantEmotion = GetDominantEmotion(face);
 
-                    emotionText.text = dominantEmotion.ToString();
+                    //emotionText.text = dominantEmotion.ToString();
 
                     onComplete?.Invoke(dominantEmotion);
                 }
                 else
                 {
-                    emotionText.text = "얼굴이 감지되지 않았습니다.";
+                    //emotionText.text = "얼굴이 감지되지 않았습니다.";
                 }
             }
         }

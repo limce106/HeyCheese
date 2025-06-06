@@ -13,59 +13,102 @@ public class PlayerNameInput : MonoBehaviour
     public Button confrimationBtn;
     public TMP_Text confirmationText;
 
+    public GameObject inputField;
+    public float shakeDuration = 0.3f;
+    public float shakeMagnitude = 10f;
+
     private string pendingName;
     public static string PlayerName { get; private set; }
+
+    public GameObject nameWarningText;
 
     void Start()
     {
         nameInputField.characterLimit = 8;
 
         confirmationPanel.SetActive(false);
+        nameWarningText.SetActive(false);
     }
 
-    // ÀÔ·Â ¿Ï·á Ã³¸®(ÀÔ·Â ¿Ï·á ¹öÆ°)
+    // ì…ë ¥ ì™„ë£Œ ì²˜ë¦¬(ì…ë ¥ ì™„ë£Œ ë²„íŠ¼)
     public void OnNameInputComplete()
     {
+        pendingName = nameInputField.text.Trim();
+
+        // ì…ë ¥ê°’ì´ ì—†ë‹¤ë©´ ê²½ê³  ë©”ì‹œì§€ë¥¼ ë„ìš°ë©° ì…ë ¥ í•„ë“œë¥¼ í”ë“¦
+        if (string.IsNullOrEmpty(pendingName))
+        {
+            nameWarningText.SetActive(true);
+            ShakeInputField();
+            return;
+        }
+        nameWarningText.SetActive(false);
+
+        // ì…ë ¥ì´ ì •ìƒì¸ ê²½ìš°
         confirmationPanel.SetActive(true);
         nameInputField.interactable = false;
         confrimationBtn.interactable = false;
 
-        pendingName = nameInputField.text.Trim();
-
-        if (!string.IsNullOrEmpty(pendingName))
-        {
-            confirmationText.text = $"\"{pendingName}\"";
-            confirmationPanel.SetActive(true);
-        }
+        confirmationText.text = $"\"{pendingName}\"";
+        confirmationPanel.SetActive(true);
     }
 
-    // ÀÌ¸§ ÀÔ·Â È®ÀÎ ½Ã
+    // ì´ë¦„ ì…ë ¥ í™•ì¸ ì‹œ
     public void OnConfirmYes()
     {
+        nameWarningText.SetActive(false);
+
         PlayerName = pendingName;
 
-        // ÀÌ¸§ ÀúÀå
+        // ì´ë¦„ ì €ì¥
         //PlayerPrefs.SetString("PlayerName", PlayerName);
         //PlayerPrefs.Save();
-        //Debug.Log($"ÇÃ·¹ÀÌ¾î ÀÌ¸§ ÀúÀåµÊ: {PlayerName}");
+        //Debug.Log($"í”Œë ˆì´ì–´ ì´ë¦„ ì €ì¥ë¨: {PlayerName}");
         PlayerDataManager.Instance.SetPlayerName(pendingName);
 
         confirmationPanel.SetActive(false);
 
-        // MainStoryManagerÀÇ NextStep() È£Ãâ
-        PlayerDataManager.Instance.LoadPlayerName(); // ÀÌ¸§ ·Îµå
-        MainStoryManager.PlayerName = PlayerDataManager.Instance.PlayerName; // ÀÌ¸§ °¡Á®¿À±â
+        // MainStoryManagerì˜ NextStep() í˜¸ì¶œ
+        PlayerDataManager.Instance.LoadPlayerName(); // ì´ë¦„ ë¡œë“œ
+        MainStoryGameManager.MainStoryGM.playerName = PlayerDataManager.Instance.PlayerName; // ì´ë¦„ ê°€ì ¸ì˜¤ê¸°
+        MainStoryManager.PlayerName = PlayerDataManager.Instance.PlayerName; // ì´ë¦„ ê°€ì ¸ì˜¤ê¸°
         MainStoryManager.NextStep();
 
     }
-    // ÀÌ¸§ ÀÔ·Â Ãë¼Ò ½Ã
+    // ì´ë¦„ ì…ë ¥ ì·¨ì†Œ ì‹œ
     public void OnConfirmNo()
     {
+        nameWarningText.SetActive(false);
+
         confirmationPanel.SetActive(false);
         nameInputField.interactable = true;
         confrimationBtn.interactable = true;
 
         nameInputField.text = pendingName;
-        nameInputField.ActivateInputField(); // ´Ù½Ã ÀÔ·Â¹Ş°Ô Æ÷Ä¿½º ÁÜ
+        nameInputField.ActivateInputField(); // ë‹¤ì‹œ ì…ë ¥ë°›ê²Œ í¬ì»¤ìŠ¤ ì¤Œ
+    }
+
+    // ì¸í’‹ í•„ë“œ nullì¼ ê²½ìš° ì‰ì´í¬
+
+    public void ShakeInputField()
+    {
+        StartCoroutine(Shake(nameInputField.transform));
+    }
+
+    IEnumerator Shake(Transform target)
+    {
+        Vector3 originalPos = target.localPosition;
+        float elapsed = 0f;
+
+        while (elapsed < shakeDuration)
+        {
+            float x = Random.Range(-1f, 1f) * shakeMagnitude;
+            target.localPosition = originalPos + new Vector3(x, 0, 0);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        target.localPosition = originalPos;
     }
 }

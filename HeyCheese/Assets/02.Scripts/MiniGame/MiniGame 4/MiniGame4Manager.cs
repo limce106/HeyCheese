@@ -15,8 +15,8 @@ public class MiniGame4Manager : MiniGameManager
     [SerializeField] private Image barHandleImage;
     // 터치 안 하면 878787 헥사 코드로 변경 
 
-    public float fillDuration = 15f; // 15초에 다 채워짐
-    public float decayRate = 0.1f;   // 초당 감소 비율
+    public float fillDuration = 10f; // 10초에 다 채워짐
+    public float decayRate = 0.05f;   // 초당 감소 비율
 
     [Header("Adult 이미지 | Sprite 리스트 0:LightOn, 1:LightOff")]
     [SerializeField] private Image AdultImage;
@@ -24,7 +24,7 @@ public class MiniGame4Manager : MiniGameManager
 
     // 어른 랜덤으로 등장(효과음 재생 이후 2초 후에 등장)
     [Header("Adult 랜덤으로 등장할 확률")]
-    [SerializeField] private int apprearanceProbability = 40;
+    [SerializeField] private int apprearanceProbability = 50;
     public bool isAdultComing = false;
     private bool isTouching;
     private bool previousTouchState; // 이전 터치 상태 저장
@@ -71,8 +71,8 @@ public class MiniGame4Manager : MiniGameManager
         // 시작 아직 안 했거나 클리어 한 상태면 터치 안 받음
         if (!isStart || isCleared) return;
 
-        // 게임 시작된 상태면 터치를 받아서 isTouching true로 변경
-        CheckTouchInput();
+        //// 게임 시작된 상태면 터치를 받아서 isTouching true로 변경
+        //CheckTouchInput();
 
         // 터치 상태에 따라 캐릭터 상태 변경
         HandleTouchEffects();
@@ -88,11 +88,27 @@ public class MiniGame4Manager : MiniGameManager
         }
     }
 
+    // Touch Panel에서 PointerDown일 때
+    public void OnTouchDown()
+    {
+        if (!isStart || isCleared) return;
+        isTouching = true;
+    }
+
+    // Touch Panel에서 PointerUp일 때
+    public void OnTouchUp()
+    {
+        isTouching = false;
+    }
+
+
     private void TriggerRestart()
     {
         if (isRestart) return; // 이미 처리된 경우 중복 방지
 
         isRestart = true;
+
+        SoundPlayer.Instance.SoundEffectPlay((int)SoundPlayer.SFX.TimeOut_SFX);
 
         SetRestartActive(true);
 
@@ -123,9 +139,10 @@ public class MiniGame4Manager : MiniGameManager
     private void CheckTouchInput()
     {
 #if UNITY_EDITOR
-        isTouching = Input.GetMouseButton(0); // 에디터용
+        isTouching = Input.GetMouseButton(0);
 #else
-    isTouching = Input.touchCount > 0;    // 모바일 터치 감지
+    Touch[] touches = Input.touches;
+    isTouching = touches != null && touches.Length > 0;
 #endif
     }
 
