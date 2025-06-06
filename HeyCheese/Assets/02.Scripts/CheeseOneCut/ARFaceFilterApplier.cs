@@ -107,6 +107,11 @@ public class ARFaceFilterApplier : MonoBehaviour
         filterName = name;
     }
 
+    public bool IsFilterValid()
+    {
+        return filterName != null;
+    }
+
     public void OnClick_Filter()
     {
         string selectedFilter = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name;
