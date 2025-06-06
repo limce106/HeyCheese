@@ -10,6 +10,8 @@ using UnityEngine.InputSystem;
 
 public class FilterFrameManager : MonoBehaviour
 {
+    private Coroutine hiddenMissionCoroutine;
+
     public static FilterFrameManager instance;
     void Awake()
     {
@@ -36,7 +38,7 @@ public class FilterFrameManager : MonoBehaviour
 
     private Dictionary<string, bool> filterUnlocked = new Dictionary<string, bool>
     {
-        {"Ep1", false},
+        {"Ep1", true},
         {"Ep2", false },
         {"Ep3", false },
         {"Ep4", false },
@@ -48,12 +50,6 @@ public class FilterFrameManager : MonoBehaviour
     {
         {"Mission1", "외계 고양이 치즈 필터 👽😺"},
         {"Mission2", "부끄럼쟁이 부기 필터 🐢💛" }
-    };
-
-    private Dictionary<int, string> faceCountToHiddenMissionKey = new Dictionary<int, string>
-    {
-        { 2, "Mission1" },
-        { 3, "Mission2" }
     };
 
     public ReadOnlyDictionary<string, bool> GetFrameUnlockedReadOnly()
@@ -68,11 +64,17 @@ public class FilterFrameManager : MonoBehaviour
 
     public void CheckHiddenMission(int faceCount)
     {
-        if(faceCountToHiddenMissionKey.TryGetValue(faceCount, out string filterName))
+        if(faceCount == 1)
         {
-            if(filterUnlocked.TryGetValue(filterName, out bool isUnlocked) && !isUnlocked)
+            ARFaceFilterApplier aRFaceFilterApplier = GameObject.Find("GameManager").GetComponent<ARFaceFilterApplier>();
+
+            if (!filterUnlocked["Mission1"])
             {
-                Unlockfilter(filterName);
+                Unlockfilter("Mission1");
+            }
+            else if(aRFaceFilterApplier.IsFilterValid() && !filterUnlocked["Mission2"])
+            {
+                Unlockfilter("Mission2");
             }
         }
     }
@@ -86,7 +88,13 @@ public class FilterFrameManager : MonoBehaviour
 
             if(SceneManager.GetActiveScene().name == "CheeseOneCut")
             {
-                StartCoroutine(OnHiddenMissionPopup(hiddenMissionFilterMessage[key]));
+                if(hiddenMissionCoroutine != null)
+                {
+                    StopCoroutine(hiddenMissionCoroutine);
+                    hiddenMissionCoroutine = null;
+                }
+
+                hiddenMissionCoroutine = StartCoroutine(OnHiddenMissionPopup(hiddenMissionFilterMessage[key]));
             }
         }
     }
@@ -118,8 +126,10 @@ public class FilterFrameManager : MonoBehaviour
             yield break;
         }
 
-        missionClearText.text += "AR 패션 아이템: " + filterMessage;
+        missionClearText.text = "AR 패션 아이템: " + filterMessage;
 
         yield return PopupAnimator.OnPanelPopup(hiddenMissionPanel);
+
+        hiddenMissionCoroutine = null;
     }
 }
