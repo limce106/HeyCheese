@@ -75,6 +75,8 @@ public class PlayerController : MonoBehaviour
     {
         isInBurst = true;
 
+        SoundPlayer.Instance.SoundEffectPlay((int)SoundPlayer.SFX.Booster_SFX);
+
         // 버스트 시, 경쟁자 뒤쳐짐
         StartCoroutine(MoveRivalOnPlayerBurst());
 
