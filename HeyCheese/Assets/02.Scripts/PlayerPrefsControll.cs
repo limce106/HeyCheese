@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 using UnityEngine;
 
 public static class PlayerPrefsControll
@@ -15,6 +16,35 @@ public static class PlayerPrefsControll
     public class PrefEntryList
     {
         public List<PrefEntry> entries = new List<PrefEntry>();
+    }
+
+    [System.Serializable]
+    public class PrefDictionary
+    {
+        public List<string> keys = new();
+        public List<bool> values = new();
+
+        public PrefDictionary() { }
+
+        public PrefDictionary(Dictionary<string, bool> dict)
+        {
+            foreach(var kv in dict)
+            {
+                keys.Add(kv.Key);
+                values.Add(kv.Value);
+            }
+        }
+
+        public Dictionary<string, bool> ToDictionary()
+        {
+            Dictionary<string, bool> result = new();
+            for(int i = 0; i < keys.Count; i++)
+            {
+                result[keys[i]] = values[i];
+            }
+
+            return result;
+        }
     }
 
     #region PlayerPrefs 저장

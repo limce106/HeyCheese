@@ -7,25 +7,10 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections.ObjectModel;
 using UnityEngine.InputSystem;
+using static PlayerPrefsControll;
 
 public class FilterFrameManager : MonoBehaviour
 {
-    private Coroutine hiddenMissionCoroutine;
-
-    public static FilterFrameManager instance;
-    void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
     private Dictionary<string, bool> frameUnlocked = new Dictionary<string, bool>
     {
         {"Ep1_Frame", false},
@@ -51,6 +36,24 @@ public class FilterFrameManager : MonoBehaviour
         {"Mission1", "외계 고양이 치즈 필터 👽😺"},
         {"Mission2", "부끄럼쟁이 부기 필터 🐢💛" }
     };
+
+    private Coroutine hiddenMissionCoroutine;
+
+    public static FilterFrameManager instance;
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+
+            LoadFilterFrameUnlockData();
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     public ReadOnlyDictionary<string, bool> GetFrameUnlockedReadOnly()
     {
@@ -97,6 +100,9 @@ public class FilterFrameManager : MonoBehaviour
                 hiddenMissionCoroutine = StartCoroutine(OnHiddenMissionPopup(hiddenMissionFilterMessage[key]));
             }
         }
+
+        // 현재까지의 필터 해금 여부 저장
+        PlayerPrefsControll.SavePref_SetString("FilterUnlocked", JsonUtility.ToJson(new PrefDictionary(filterUnlocked)));
     }
 
     public void Unlockframe(string key)
@@ -105,6 +111,9 @@ public class FilterFrameManager : MonoBehaviour
         {
             frameUnlocked[key] = true;
         }
+
+        // 현재까지의 프레임 해금 여부 저장
+        PlayerPrefsControll.SavePref_SetString("FrameUnlocked", JsonUtility.ToJson(new PrefDictionary(frameUnlocked)));
     }
 
     // 히든 미션 달성 팝업 띄우기
@@ -131,5 +140,36 @@ public class FilterFrameManager : MonoBehaviour
         yield return PopupAnimator.OnPanelPopup(hiddenMissionPanel);
 
         hiddenMissionCoroutine = null;
+    }
+
+    public void LoadFilterFrameUnlockData()
+    {
+        string filterJson = PlayerPrefs.GetString("FilterUnlocked", "");
+        if(!string.IsNullOrEmpty(filterJson))
+        {
+            PrefDictionary data = JsonUtility.FromJson<PrefDictionary>(filterJson);
+
+            foreach(var kv in data.ToDictionary())
+            {
+                if(filterUnlocked.ContainsKey(kv.Key))
+                {
+                    filterUnlocked[kv.Key] = kv.Value;
+                }
+            }
+        }
+
+        string frameJson = PlayerPrefs.GetString("FrameUnlocked", "");
+        if (!string.IsNullOrEmpty(frameJson))
+        {
+            PrefDictionary data = JsonUtility.FromJson<PrefDictionary>(frameJson);
+            
+            foreach (var kv in data.ToDictionary())
+            {
+                if (frameUnlocked.ContainsKey(kv.Key))
+                {
+                    frameUnlocked[kv.Key] = kv.Value;
+                }
+            }
+        }
     }
 }
