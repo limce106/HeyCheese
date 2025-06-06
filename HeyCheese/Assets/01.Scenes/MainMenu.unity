@@ -5179,6 +5179,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 7def1665e03c12c43a945b96d9f27e55, type: 3}
   - {fileID: 8300000, guid: 8eb9c96427653f84280358487acaf8b6, type: 3}
   - {fileID: 8300000, guid: fd6aa8f955f82604e96f0dd9432f0e76, type: 3}
+  - {fileID: 8300000, guid: 485b1daebe5cf0e4692099b56a7092c5, type: 3}
   touchSFXClip: {fileID: 8300000, guid: fddb5532683d01043b3715e4d2f8eb38, type: 3}
   BGMSlider: {fileID: 1298360855}
   SoundEffectSlider: {fileID: 837612352}

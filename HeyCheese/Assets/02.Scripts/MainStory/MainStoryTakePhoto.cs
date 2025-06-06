@@ -25,6 +25,8 @@ public class MainStoryTakePhoto : MonoBehaviour
 
     public void OnClick_EmotionCamera()
     {
+        SoundPlayer.Instance.SoundEffectPlay((int)SoundPlayer.SFX.Camera_SFX);
+
         // 카메라 버튼 비활성화
         MainStoryManager.DeActivateCameraBtnInteraction();
 
@@ -41,6 +43,8 @@ public class MainStoryTakePhoto : MonoBehaviour
 
     public void OnClick_StoryCamera()
     {
+        SoundPlayer.Instance.SoundEffectPlay((int)SoundPlayer.SFX.Camera_SFX);
+
         // 카메라 버튼 비활성화
         MainStoryManager.DeActivateCameraBtnInteraction();
 
