@@ -144,6 +144,8 @@ public class FilterFrameManager : MonoBehaviour
             yield break;
         }
 
+        SoundPlayer.Instance?.SoundEffectPlay((int)SoundPlayer.SFX.GetItem_SFX);
+
         missionClearText.text = "AR 패션 아이템: " + filterMessage;
 
         yield return PopupAnimator.OnPanelPopup(hiddenMissionPanel);
