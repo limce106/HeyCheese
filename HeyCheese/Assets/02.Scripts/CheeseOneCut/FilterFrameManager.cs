@@ -91,7 +91,10 @@ public class FilterFrameManager : MonoBehaviour
 
             if(SceneManager.GetActiveScene().name == "CheeseOneCut")
             {
-                if(hiddenMissionCoroutine != null)
+                CheeseOneCutUIManager cheeseOneCutUIManager = GameObject.Find("GameManager").GetComponent<CheeseOneCutUIManager>();
+                cheeseOneCutUIManager.EnableFilterButtonByName(key);
+
+                if (hiddenMissionCoroutine != null)
                 {
                     StopCoroutine(hiddenMissionCoroutine);
                     hiddenMissionCoroutine = null;
@@ -100,9 +103,6 @@ public class FilterFrameManager : MonoBehaviour
                 hiddenMissionCoroutine = StartCoroutine(OnHiddenMissionPopup(hiddenMissionFilterMessage[key]));
             }
         }
-
-        CheeseOneCutUIManager cheeseOneCutUIManager = GameObject.Find("GameManager").GetComponent<CheeseOneCutUIManager>();
-        cheeseOneCutUIManager.EnableFilterButtonByName(key);
 
         // 현재까지의 필터 해금 여부 저장
         PlayerPrefsControll.SavePref_SetString("FilterUnlocked", JsonUtility.ToJson(new PrefDictionary(filterUnlocked)));
@@ -113,10 +113,13 @@ public class FilterFrameManager : MonoBehaviour
         if (frameUnlocked.ContainsKey(key))
         {
             frameUnlocked[key] = true;
-        }
 
-        CheeseOneCutUIManager cheeseOneCutUIManager = GameObject.Find("GameManager").GetComponent<CheeseOneCutUIManager>();
-        cheeseOneCutUIManager.EnableFrameButtonByName(key);
+            if (SceneManager.GetActiveScene().name == "CheeseOneCut")
+            {
+                CheeseOneCutUIManager cheeseOneCutUIManager = GameObject.Find("GameManager").GetComponent<CheeseOneCutUIManager>();
+                cheeseOneCutUIManager.EnableFrameButtonByName(key);
+            }
+        }
 
         // 현재까지의 프레임 해금 여부 저장
         PlayerPrefsControll.SavePref_SetString("FrameUnlocked", JsonUtility.ToJson(new PrefDictionary(frameUnlocked)));
