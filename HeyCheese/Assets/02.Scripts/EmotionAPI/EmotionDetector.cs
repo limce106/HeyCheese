@@ -32,6 +32,8 @@ public class EmotionDetector : MonoBehaviour
 
     void Start()
     {
+        StartCoroutine(EnvLoader.LoadEnvCoroutine());
+
 #if UNITY_ANDROID
         if (!Permission.HasUserAuthorizedPermission(Permission.Camera))
         {
@@ -243,7 +245,7 @@ public class EmotionDetector : MonoBehaviour
         };
 
         string jsonData = JsonUtility.ToJson(visionRequest);
-        string apiKey = ApiKeyManager.GetApiKey();
+        string apiKey = Environment.GetEnvironmentVariable("MY_API_KEY");
         string url = $"https://vision.googleapis.com/v1/images:annotate?key={apiKey}";
 
         using (UnityWebRequest request = new UnityWebRequest(url, "POST"))
