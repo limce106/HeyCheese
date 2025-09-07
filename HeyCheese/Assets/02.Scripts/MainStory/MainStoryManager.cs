@@ -656,6 +656,8 @@ public class MainStoryManager : MonoBehaviour
     // GiftPopup 애니메이션 재생 후 엔딩 여부 체크
     private IEnumerator HandleGiftPopup(MainStory step)
     {
+        SoundPlayer.Instance?.SoundEffectPlay((int)SoundPlayer.SFX.GetItem_SFX);
+
         yield return PopupAnimator.OnPanelPopup(giftAlarmPanel); // 애니메이션 끝날 때까지 기다림, 패널 표시(애니메이션 적용)
 
         TurnOffEveryCanvas();

@@ -24,7 +24,6 @@ public class EmotionDetector : MonoBehaviour
     };
 
     public RawImage webcamDisplay;
-    [SerializeField] private Text emotionText;
     private WebCamTexture webCamTexture;
 
     private bool isUsingWebcam = false;
@@ -33,6 +32,8 @@ public class EmotionDetector : MonoBehaviour
 
     void Start()
     {
+        StartCoroutine(EnvLoader.LoadEnvCoroutine());
+
 #if UNITY_ANDROID
         if (!Permission.HasUserAuthorizedPermission(Permission.Camera))
         {
@@ -244,7 +245,7 @@ public class EmotionDetector : MonoBehaviour
         };
 
         string jsonData = JsonUtility.ToJson(visionRequest);
-        string apiKey = "REMOVED";
+        string apiKey = Environment.GetEnvironmentVariable("MY_API_KEY");
         string url = $"https://vision.googleapis.com/v1/images:annotate?key={apiKey}";
 
         using (UnityWebRequest request = new UnityWebRequest(url, "POST"))
@@ -259,7 +260,6 @@ public class EmotionDetector : MonoBehaviour
             if (request.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogError("Error: " + request.error);
-                //emotionText.text = "API 요청 실패";
             }
             else // API 요청 성공
             {
@@ -271,13 +271,10 @@ public class EmotionDetector : MonoBehaviour
                     FaceAnnotation face = faceResponse.responses[0].faceAnnotations[0];
                     Emotion dominantEmotion = GetDominantEmotion(face);
 
-                    //emotionText.text = dominantEmotion.ToString();
-
                     onComplete?.Invoke(dominantEmotion);
                 }
                 else
                 {
-                    //emotionText.text = "얼굴이 감지되지 않았습니다.";
                 }
             }
         }

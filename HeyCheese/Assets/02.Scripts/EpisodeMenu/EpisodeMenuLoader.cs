@@ -43,6 +43,12 @@ public class EpisodeMenuLoader : MonoBehaviour
             })
             .ToList();
 
+        //// sortedMenus 순서 검증용
+        //foreach (var menu in sortedMenus)
+        //{
+        //    Debug.Log($"정렬결과: {menu.EpisodeID}");
+        //}
+
         // 마지막 에피소드 저장
         string lastEpisode = sortedMenus[sortedMenus.Count - 1].EpisodeID;
         PlayerPrefsControll.SavePref_SetString("LastEpisode", lastEpisode);
@@ -99,8 +105,10 @@ public class EpisodeMenuLoader : MonoBehaviour
             // 이전 에피 해금되었으면 지금 에피 해금되어야 함 but 전 에피가 prolog면 지금 에피도 해금되어있어야 진짜 해금 표시 가능
 
             // 해금 조건: 이전 에피소드 클리어 된 경우에만
-            bool isCleared = PlayerPrefs.GetInt($"{episodeID}_Cleared", 0) == 1; 
+            bool isCleared = PlayerPrefs.GetInt($"{episodeID}_Cleared", 0) == 1;
             bool isUnlocked = previousCleared;
+
+            Debug.Log($"[DEBUG] EpisodeID: {episodeID} | isCleared: {isCleared} | previousCleared: {previousCleared} → isUnlocked: {isUnlocked}");
 
             if (isCleared)  previousCleared = true;
             else            previousCleared = false;
