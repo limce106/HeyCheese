@@ -192,7 +192,7 @@
 
 ## 🧩 시스템 구조
 
-<img src="https://github.com/limce106/HeyCheese/blob/main/readme/heycheese_system.png?raw=true" width="720"/>
+<img src="https://github.com/limce106/HeyCheese/blob/main/readme/heycheese_system.png?raw=true" width="800"/>
 
 <br>
 
