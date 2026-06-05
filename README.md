@@ -4,7 +4,7 @@
 
 > 감정을 배우고, 표현하고, 관계를 만들어가는 얼굴 인식 기반 인터랙티브 게임
 
-<img src="https://github.com/limce106/HeyCheese/blob/main/readme/heycheese_1.png?raw=true" width="640"/>
+<img src="https://github.com/limce106/HeyCheese/blob/main/readme/heycheese_1.png?raw=true" width="420"/>
 
 <br>
 
@@ -93,7 +93,7 @@
 
 ### 1) 얼굴 인식 기반 감정 표현 시스템
 
-<img src="https://github.com/limce106/HeyCheese/blob/main/readme/heycheese_8.png?raw=true" width="640"/>
+<img src="https://github.com/limce106/HeyCheese/blob/main/readme/heycheese_8.png?raw=true" width="420"/>
 
 스토리 진행 중 사용자는 카메라를 통해 자신의 표정을 촬영합니다.
 게임은 Google Cloud Vision API를 활용하여 표정 속 감정 정보를 인식하고, 이를 스토리 상호작용에 반영합니다.
@@ -104,7 +104,7 @@
 
 ### 2) 에피소드 기반 인터랙티브 스토리
 
-<img src="https://github.com/limce106/HeyCheese/blob/main/readme/heycheese_9.png?raw=true" width="640"/>
+<img src="https://github.com/limce106/HeyCheese/blob/main/readme/heycheese_9.png?raw=true" width="420"/>
 
 게임은 초등 저학년 아동이 일상에서 경험할 수 있는 상황을 바탕으로 한 에피소드 구조로 구성됩니다.
 
